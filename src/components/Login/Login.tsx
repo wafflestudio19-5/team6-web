@@ -61,7 +61,10 @@ const Login = () => {
                     <img src={kakaoLogo} className="kakao-logo" alt="logo"/>
                     <span>카카오 로그인</span>
                 </button>
-
+                <div className="sign-up-wrapper">
+                    <span>동네 주민들과 가깝고 따뜻한 거래를</span>
+                    <button className="sign-up-button"><i><u>회원가입</u></i></button>
+                </div>
             </div>
         </div>
     )
