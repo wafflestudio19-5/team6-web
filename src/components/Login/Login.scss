@@ -88,7 +88,7 @@ body {
     }
   }
   .kakao {
-    top: 320px;
+    top: 310px;
     border: none;
     background: yellow;
   }
@@ -106,7 +106,7 @@ body {
   height: 30px;
 
   left: calc(50% - 135px);
-  top: 363px;
+  top: 353px;
 
   span {
     position: absolute;
@@ -117,10 +117,11 @@ body {
     color: rgba(255,143,69,255);
   }
 
-  button {
+  .sign-up-button {
     position: absolute;
-    right: 0;
+    right: 4%;
 
+    font-size: 14px;
     border: none;
     background: white;
     color: blue;

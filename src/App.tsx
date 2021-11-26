@@ -3,6 +3,7 @@ import './App.scss';
 import Login from "./components/Login/Login";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Main from "./components/Main";
+import SignUp from "./components/SignUpPage/SignUp";
 
 function App() {
   const token : string | null = localStorage.getItem("token");
@@ -12,6 +13,7 @@ function App() {
         <Routes>
             <Route path="/login" element={<Login/>}/>
             <Route path="/main" element={<Main/>}/>
+            <Route path="/signup" element={<SignUp/>}/>
             <Route path="/*" element={<Navigate replace to={token ? "/main" : "/login"} />}/>
         </Routes>
     </BrowserRouter>
