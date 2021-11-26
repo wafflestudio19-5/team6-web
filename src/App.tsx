@@ -1,8 +1,8 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.scss';
 import Login from "./components/Login/Login";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import Main from "./components/Main";
 
 function App() {
   const token : string | null = localStorage.getItem("token");
@@ -10,7 +10,9 @@ function App() {
   return (
     <BrowserRouter>
         <Routes>
-            <Route path="/" element={<Login/>}/>
+            <Route path="/" element={<Navigate to={token ? "/main" : "/login"} replace={true} />}/>
+            <Route path="/login" element={<Login/>}/>
+            <Route path="/main" element={<Main/>}/>
         </Routes>
     </BrowserRouter>
     /*<div className="App">
