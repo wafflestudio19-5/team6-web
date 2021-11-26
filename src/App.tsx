@@ -1,10 +1,19 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.scss';
+import Login from "./components/Login/Login";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 function App() {
+  const token : string | null = localStorage.getItem("token");
+
   return (
-    <div className="App">
+    <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<Login/>}/>
+        </Routes>
+    </BrowserRouter>
+    /*<div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -19,7 +28,8 @@ function App() {
           Learn React
         </a>
       </header>
-    </div>
+      <Login />
+    </div>*/
   );
 }
 
