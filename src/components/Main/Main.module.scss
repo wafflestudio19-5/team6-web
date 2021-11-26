@@ -1,0 +1,161 @@
+.wrapper {
+  position: fixed;
+
+  width: 100%;
+  min-width: 320px;
+  max-width: 450px;
+  height: 100%;
+  min-height: 568px;
+  max-height: 900px;
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  .header {
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid #777777;
+
+    display: flex;
+
+    .locationBox {
+      padding: 2px;
+      display: flex;
+      margin-right: calc(100% - 200px);
+
+      .location {
+        margin: 0;
+        padding-top: 4px;
+        padding-left: 15px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .locationArrow {
+        position: relative;
+        height: 15px;
+
+        top: 50%;
+        transform: translate(0, -50%);
+
+        padding-left: 5px;
+      }
+    }
+
+    .headerImg {
+      position: relative;
+      top: 50%;
+      transform: translate(0, -50%);
+
+      height: 25px;
+
+      margin-right: 10px;
+    }
+  }
+
+  .goodsList {
+    width: 100%;
+    height: calc(100% - 105px);
+
+    .writeBox{
+      position: relative;
+      width: 130px;
+      height: 30px;
+      top: calc(100% - 70px);
+      left: calc(100% - 160px);
+
+      padding: 5px;
+
+      display: flex;
+      transform: translate(0px, -60px);
+      transition-property: all;
+      transition-duration: 0.2s;
+
+      .writeTag{
+        margin: 0;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+      }
+
+      .writeImg{
+        width: 30px;
+        height: 30px;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .closeButton {
+    position: absolute;
+    top: calc(100% - 140px);
+    left: calc(100% - 80px);
+    width: 60px;
+    transform: rotate(-45deg);
+    transition-duration: 0.3s;
+    filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.3));
+  }
+
+  .openButton {
+    position: absolute;
+    top: calc(100% - 140px);
+    left: calc(100% - 80px);
+    width: 60px;
+    transition-duration: 0.3s;
+    filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.3));
+  }
+
+  .footer {
+    position: absolute;
+    width: 100%;
+    height: 55px;
+    padding-top: 5px;
+
+    display: flex;
+
+    border-top: 1px solid #777777;
+
+    .footerBox {
+      width: 18%;
+      margin-left: 7.7%;
+      margin-right: 7.7%;
+      height: 100%;
+
+      .footerImg {
+        position: relative;
+        height: 63%;
+
+        left: 50%;
+        transform: translate(-50%);
+      }
+      .footerTag {
+        height: 33%;
+        font-size: 12px;
+
+        margin: 0;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.backShadow{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  opacity: 0;
+  transition-delay: 0.1s;
+  transition-duration: 0.2s;
+}
+
+.backShadow.show{
+  visibility: visible;
+  background: black;
+  opacity: 0.4;
+  transition-duration: 0.2s;
+}
+
+
+
