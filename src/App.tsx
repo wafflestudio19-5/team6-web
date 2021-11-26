@@ -10,9 +10,9 @@ function App() {
   return (
     <BrowserRouter>
         <Routes>
-            <Route path="/" element={<Navigate to={token ? "/main" : "/login"} replace={true} />}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/main" element={<Main/>}/>
+            <Route path="/*" element={<Navigate replace to={token ? "/main" : "/login"} />}/>
         </Routes>
     </BrowserRouter>
     /*<div className="App">

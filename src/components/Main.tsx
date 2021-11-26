@@ -10,7 +10,7 @@ const Main = () => {
 
     return (
         <div>
-            {token === null && <Navigate to="/login" />}
+            {token === null && <Navigate replace to="/login" />}
             <Link to="/login" onClick={handleLogout}>로그 아웃</Link>
         </div>
     );

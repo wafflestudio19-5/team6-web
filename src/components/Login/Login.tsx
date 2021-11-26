@@ -35,7 +35,7 @@ const Login = () => {
 
     return (
         <div>
-            {token && (<Navigate to="/main" replace={true} />)}
+            {token && (<Navigate replace to="/main" />)}
             <div className="login-wrapper">
                 <img src={carrotLogo} className="daangn-logo" alt="logo" />
                 <form onSubmit={ handleSubmit }>
@@ -61,6 +61,7 @@ const Login = () => {
                     <img src={kakaoLogo} className="kakao-logo" alt="logo"/>
                     <span>카카오 로그인</span>
                 </button>
+
             </div>
         </div>
     )
