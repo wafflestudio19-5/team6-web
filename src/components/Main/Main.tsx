@@ -8,6 +8,8 @@ import User2 from "../../Image/Footer/user-unselected.png";
 import {useEffect, useState} from "react";
 import HomeGoods from "./Home/HomeGoods";
 import HomeHeader from "./Home/HomeHeader";
+import {Navigate} from "react-router-dom";
+import * as React from "react";
 
 const Main = () => {
   const [location, setLocation] = useState("301동");
@@ -32,6 +34,7 @@ const Main = () => {
 
   return (
     <>
+      {localStorage.getItem("token") === null && (<Navigate replace to="/login" />)}
       <div className={styles.test}>
       </div>
       <div
