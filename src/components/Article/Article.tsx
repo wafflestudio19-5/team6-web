@@ -62,7 +62,7 @@ const Article = () => {
   };
   const onClickHome = () => {
     navigate("/main");
-  }; // 화살표랑 홈버튼 기능 차이를 모르겠네요
+  }; // 뒤로가기랑 홈버튼 기능 차이를 모르겠네요
   const onClickShare = () => {
     console.log("share");
   };
@@ -74,11 +74,16 @@ const Article = () => {
   };
   const onClickPriceProposal = () => {
     console.log("Propose Price");
+    // navigate("/proposal");
   };
   const onClickChatButton = () => {
     console.log("chat");
+    // navigate("/chat");
   };
-
+  const onClickProfileImg = () => {
+    console.log("progile image");
+    // navigate("/profile/{id}");
+  };
   return (
     <>
       <div className={styles.articleWrapper}>
@@ -110,6 +115,22 @@ const Article = () => {
         </div>
         <div className={styles.carousel}>
           <Slider {...settings}>{carouselImg}</Slider>
+        </div>
+        <div className={styles.profile}>
+          <img
+            src={user?.profile_img}
+            className={styles.profileImg}
+            onClick={onClickProfileImg}
+          />
+          <h1 className={styles.userName}>
+            {user?.name}
+          </h1>
+          <p className={styles.userRegion}>
+            {user?.region}
+          </p>
+          <h1 className={styles.mannerTemp}>
+            {user?.temperature}°C
+          </h1>
         </div>
         <div className={styles.footer}>
           <img

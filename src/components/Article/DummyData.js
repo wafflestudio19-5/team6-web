@@ -3,7 +3,8 @@ const dummyData = [
     id: 1,
     name: "김와플",
     region: "관악구 낙성대동",
-    profile_img: "",
+    profile_img:
+      "https://img1.daumcdn.net/thumb/R1280x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/7r5X/image/9djEiPBPMLu_IvCYyvRPwmZkM1g.jpg",
     title: "아이패드",
     product_img: [
       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-pro-12-select-wifi-spacegray-202104_FMT_WHH?wid=1945&hei=2000&fmt=jpeg&qlt=95&.v=1617126635000",
