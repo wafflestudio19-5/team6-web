@@ -1,0 +1,46 @@
+
+
+.articleWrapper {
+  position: fixed;
+  width: 100%;
+  min-width: 320px;
+  max-width: 450px;
+  height: 100%;
+  min-height: 568px;
+  max-height: 900px;
+  background: #ffffff;
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  .header {
+    position: fixed;
+    .backButton {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      margin: 15px;
+    }
+    .homeButton {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      margin: 15px;
+    }
+    .shareButton {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      margin: 15px;
+      left: 100%;
+    }
+    .reportButton {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      margin: 15px;
+      left: 100%;
+    }
+  }
+
+}
