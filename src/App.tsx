@@ -4,6 +4,7 @@ import Login from "./components/Login/Login";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Main from "./components/Main";
 import Article from "./components/Article/Article";
+import SignUp from "./components/SignUpPage/SignUp";
 
 function App() {
   const token: string | null = localStorage.getItem("token");
@@ -12,6 +13,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp/>}/>
         <Route path="/main" element={<Main />} />
         <Route path="/article/:id" element={<Article />} />
         <Route
@@ -20,23 +22,6 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
-    /*<div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <Login />
-    </div>*/
   );
 }
 

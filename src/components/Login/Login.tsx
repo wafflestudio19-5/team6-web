@@ -1,10 +1,9 @@
 import "./Login.scss";
 import carrotLogo from "../../icons/daangn-logo.svg";
-import googleLogo from "../../icons/google-logo.svg";
 import kakaoLogo from "../../icons/kakao-logo.svg";
-import {ChangeEventHandler, useEffect, useState} from "react";
+import {ChangeEventHandler, useState} from "react";
 import * as React from "react";
-import {Navigate, useNavigate} from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 
 type TLoginForm = {
     username: string;
@@ -61,7 +60,10 @@ const Login = () => {
                     <img src={kakaoLogo} className="kakao-logo" alt="logo"/>
                     <span>카카오 로그인</span>
                 </button>
-
+                <div className="sign-up-wrapper">
+                    <span>동네 주민들과 가깝고 따뜻한 거래를</span>
+                    <Link to="/signup" className="sign-up-button"><i><u>회원가입</u></i></Link>
+                </div>
             </div>
         </div>
     )
