@@ -6,6 +6,8 @@ import leftArrowIcon from "../../icons/leftArrow.png";
 import homeIcon from "../../icons/home.png";
 import shareIcon from "../../icons/share.png";
 import moreIcon from "../../icons/more.png";
+import redHeartIcon from "../../icons/redHeart.png";
+import blackHeartIcon from "../../icons/blackHeart.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -40,6 +42,7 @@ const settings = {
 const Article = () => {
   const { id } = useParams() as { id: string };
   const [user, setUser] = useState<userData | null>(null);
+  const [isHeartClicked, setIsHeartClicked] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,6 +68,15 @@ const Article = () => {
   };
   const onClickReport = () => {
     console.log("Report this user");
+  };
+  const onClickHeart = () => {
+    setIsHeartClicked((prevState) => !prevState);
+  };
+  const onClickPriceProposal = () => {
+    console.log("Propose Price");
+  };
+  const onClickChatButton = () => {
+    console.log("chat");
   };
 
   return (
@@ -98,6 +110,20 @@ const Article = () => {
         </div>
         <div className={styles.carousel}>
           <Slider {...settings}>{carouselImg}</Slider>
+        </div>
+        <div className={styles.footer}>
+          <img
+            className={styles.heart}
+            src={isHeartClicked ? redHeartIcon : blackHeartIcon}
+            onClick={onClickHeart}
+          />
+          <h1 className={styles.price}>{user?.price}원</h1>
+          <p className={styles.priceProposal} onClick={onClickPriceProposal}>
+            가격 제안하기
+          </p>
+          <button className={styles.chatButton} onClick={onClickChatButton}>
+            채팅으로 거래하기
+          </button>
         </div>
       </div>
     </>
