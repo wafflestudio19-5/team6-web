@@ -1,21 +1,26 @@
-import React from 'react';
-import './App.scss';
+import React from "react";
+import "./App.scss";
 import Login from "./components/Login/Login";
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Main from "./components/Main";
+import Article from "./components/Article/Article";
 import SignUp from "./components/SignUpPage/SignUp";
 
 function App() {
-  const token : string | null = localStorage.getItem("token");
+  const token: string | null = localStorage.getItem("token");
 
   return (
     <BrowserRouter>
-        <Routes>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/main" element={<Main/>}/>
-            <Route path="/signup" element={<SignUp/>}/>
-            <Route path="/*" element={<Navigate replace to={token ? "/main" : "/login"} />}/>
-        </Routes>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp/>}/>
+        <Route path="/main" element={<Main />} />
+        <Route path="/article/:id" element={<Article />} />
+        <Route
+          path="/*"
+          element={<Navigate replace to={token ? "/main" : "/login"} />}
+        />
+      </Routes>
     </BrowserRouter>
   );
 }
