@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import {Navigate, useNavigate, useParams} from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./Article.module.scss";
 import dummyData from "./DummyData";
@@ -11,6 +11,7 @@ import blackHeartIcon from "../../icons/blackHeart.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import * as React from "react";
 
 type userData = {
   id: number;
@@ -88,6 +89,7 @@ const Article = () => {
   };
   return (
     <>
+      {localStorage.getItem("token") === null && (<Navigate replace to="/login" />)}
       <div className={styles.articlePageWrapper}>
         <div className={styles.header}>
           <img
