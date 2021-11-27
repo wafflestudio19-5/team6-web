@@ -1,10 +1,10 @@
-import styles from "./MainGoods.module.scss";
-import Close from "../../Image/Home/add-2.png";
-import Write from "../../Image/Home/write.png";
-import Open from "../../Image/Home/add-1.png";
+import styles from "./HomeGoods.module.scss";
+import Close from "../../../Image/Home/add-2.png";
+import Write from "../../../Image/Home/write.png";
+import Open from "../../../Image/Home/add-1.png";
 import { Dispatch, SetStateAction } from "react";
 
-const MainGoods = (props: {
+const HomeGoods = (props: {
   writeHandle: boolean;
   setWriteHandle: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -26,7 +26,7 @@ const MainGoods = (props: {
           onClick={handleWrite}
         >
           <p className={styles.writeTag}>중고거래</p>
-          <img className={styles.writeImg} src={Write} />
+          <img className={styles.writeImg} src={Write} alt="쓰기" />
         </div>
       </div>
     );
@@ -41,10 +41,10 @@ const MainGoods = (props: {
       />
       <div className={styles.writeBox}>
         <p className={styles.writeTag}>중고거래</p>
-        <img className={styles.writeImg} src={Write} />
+        <img className={styles.writeImg} src={Write} alt="쓰기" />
       </div>
     </div>
   );
 };
 
-export default MainGoods;
+export default HomeGoods;

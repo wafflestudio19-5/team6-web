@@ -28,13 +28,13 @@
     position: relative;
     width: 130px;
     height: 30px;
-    top: calc(100% - 70px);
+    top: calc(100% - 100px);
     left: calc(100% - 160px);
 
     padding: 5px;
     display: flex;
     transform: scale(1, 0.8);
-    transition: all 0.15s;
+    transition: all 0.1s;
     visibility: hidden;
 
     .writeTag {
@@ -53,7 +53,7 @@
 
   .writeBox.show {
     visibility: visible;
-    transform: translate(0px, -60px);
+    transform: translate(0px, -40px);
     transition: all 0.15s;
   }
 }

@@ -2,7 +2,7 @@
   position: fixed;
 
   width: 100%;
-  min-width: 320px;
+  min-width: 280px;
   max-width: 450px;
   height: 100%;
   min-height: 568px;
@@ -16,42 +16,7 @@
     width: 100%;
     height: 40px;
     border-bottom: 1px solid #777777;
-
     display: flex;
-
-    .locationBox {
-      padding: 2px;
-      display: flex;
-      margin-right: calc(100% - 200px);
-
-      .location {
-        margin: 0;
-        padding-top: 4px;
-        padding-left: 15px;
-        font-size: 20px;
-        font-weight: bold;
-      }
-
-      .locationArrow {
-        position: relative;
-        height: 15px;
-
-        top: 50%;
-        transform: translate(0, -50%);
-
-        padding-left: 5px;
-      }
-    }
-
-    .headerImg {
-      position: relative;
-      top: 50%;
-      transform: translate(0, -50%);
-
-      height: 25px;
-
-      margin-right: 10px;
-    }
   }
 
   .contents {
@@ -108,5 +73,7 @@
   opacity: 0.4;
 }
 
-
+.test{
+  background: #61dafb;
+}
 
