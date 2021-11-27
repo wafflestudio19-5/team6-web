@@ -8,7 +8,6 @@
   height: 100%;
   min-height: 568px;
   max-height: 900px;
-  background: #ffffff;
 
   left: 50%;
   top: 50%;
@@ -43,4 +42,13 @@
     }
   }
 
+}
+.carousel {
+  position: relative;
+  top: 50px;
+}
+.carouselImg {
+  position: relative;
+  width: 100%;
+  height: 50%;
 }
