@@ -1,4 +1,4 @@
-.articleWrapper {
+.articlePageWrapper {
   position: fixed;
   width: 100%;
   min-width: 320px;
@@ -76,6 +76,15 @@
     }
   }
 
+  .article {
+    position: relative;
+    top: 70px;
+    margin: 15px;
+    .title {
+      font-size: 24px;
+    }
+  }
+
 
   .footer {
     position: fixed;
@@ -119,5 +128,5 @@
 .carouselImg {
   position: relative;
   width: 100%;
-  height: 50%;
+  height: 500px;
 }

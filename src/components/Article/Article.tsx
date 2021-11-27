@@ -46,7 +46,9 @@ const Article = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setUser(dummyData.filter((data) => data.id === parseInt(id))[0]);
+    const currentUser = dummyData.filter((data) => data.id === parseInt(id))[0];
+    if (!currentUser) navigate("/main");
+    else setUser(currentUser);
   }, [id]);
 
   const carouselImg = user?.product_img.map((image) => {
@@ -86,7 +88,7 @@ const Article = () => {
   };
   return (
     <>
-      <div className={styles.articleWrapper}>
+      <div className={styles.articlePageWrapper}>
         <div className={styles.header}>
           <img
             className={styles.backButton}
@@ -122,15 +124,21 @@ const Article = () => {
             className={styles.profileImg}
             onClick={onClickProfileImg}
           />
-          <h1 className={styles.userName}>
-            {user?.name}
-          </h1>
-          <p className={styles.userRegion}>
-            {user?.region}
+          <h1 className={styles.userName}>{user?.name}</h1>
+          <p className={styles.userRegion}>{user?.region}</p>
+          <h1 className={styles.mannerTemp}>{user?.temperature}°C</h1>
+        </div>
+        <div className={styles.article}>
+          <h1 className={styles.title}>{user?.title}</h1>
+          <p>
+            {user?.category}
+            {user?.time}
           </p>
-          <h1 className={styles.mannerTemp}>
-            {user?.temperature}°C
-          </h1>
+          {user?.article}
+          <p>
+            관심{user?.interest}
+            조회{user?.hit}
+          </p>
         </div>
         <div className={styles.footer}>
           <img
