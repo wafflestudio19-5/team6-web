@@ -1,4 +1,4 @@
-import {Navigate, useNavigate, useParams} from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./Article.module.scss";
 import dummyData from "./DummyData";
@@ -65,7 +65,7 @@ const Article = () => {
   };
   const onClickHome = () => {
     navigate("/main");
-  }; // 뒤로가기랑 홈버튼 기능 차이를 모르겠네요
+  };
   const onClickShare = () => {
     console.log("share");
   };
@@ -84,12 +84,14 @@ const Article = () => {
     // navigate("/chat");
   };
   const onClickProfileImg = () => {
-    console.log("progile image");
+    console.log("profile image");
     // navigate("/profile/{id}");
   };
   return (
     <>
-      {localStorage.getItem("token") === null && (<Navigate replace to="/login" />)}
+      {localStorage.getItem("token") === null && (
+        <Navigate replace to="/login" />
+      )}
       <div className={styles.articlePageWrapper}>
         <div className={styles.header}>
           <img
@@ -117,31 +119,6 @@ const Article = () => {
             onClick={onClickReport}
           />
         </div>
-        <div className={styles.carousel}>
-          <Slider {...settings}>{carouselImg}</Slider>
-        </div>
-        <div className={styles.profile}>
-          <img
-            src={user?.profile_img}
-            className={styles.profileImg}
-            onClick={onClickProfileImg}
-          />
-          <h1 className={styles.userName}>{user?.name}</h1>
-          <p className={styles.userRegion}>{user?.region}</p>
-          <h1 className={styles.mannerTemp}>{user?.temperature}°C</h1>
-        </div>
-        <div className={styles.article}>
-          <h1 className={styles.title}>{user?.title}</h1>
-          <p>
-            {user?.category}
-            {user?.time}
-          </p>
-          {user?.article}
-          <p>
-            관심{user?.interest}
-            조회{user?.hit}
-          </p>
-        </div>
         <div className={styles.footer}>
           <img
             className={styles.heart}
@@ -155,6 +132,33 @@ const Article = () => {
           <button className={styles.chatButton} onClick={onClickChatButton}>
             채팅으로 거래하기
           </button>
+        </div>
+        <div className={styles.contentWrapper}>
+          <div className={styles.carousel}>
+            <Slider {...settings}>{carouselImg}</Slider>
+          </div>
+          <div className={styles.profile}>
+            <img
+              src={user?.profile_img}
+              className={styles.profileImg}
+              onClick={onClickProfileImg}
+            />
+            <h1 className={styles.userName}>{user?.name}</h1>
+            <p className={styles.userRegion}>{user?.region}</p>
+            <h1 className={styles.mannerTemp}>{user?.temperature}°C</h1>
+          </div>
+          <div className={styles.article}>
+            <h1 className={styles.title}>{user?.title}</h1>
+            <p>
+              {user?.category}
+              {user?.time}
+            </p>
+            {user?.article}
+            <p>
+              관심{user?.interest}
+              조회{user?.hit}
+            </p>
+          </div>
         </div>
       </div>
     </>
