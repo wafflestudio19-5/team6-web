@@ -8,6 +8,7 @@
     top: calc(100% - 80px);
     left: calc(100% - 80px);
     width: 60px;
+    z-index: 2;
 
     transform: rotate(-45deg);
     transition: all 0.3s;
@@ -19,6 +20,7 @@
     top: calc(100% - 80px);
     left: calc(100% - 80px);
     width: 60px;
+    z-index: 2;
 
     transition: all 0.3s;
     filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.3));
@@ -26,7 +28,7 @@
 
   .writeBox {
     position: relative;
-    width: 130px;
+    width: 120px;
     height: 30px;
     top: calc(100% - 100px);
     left: calc(100% - 160px);
@@ -36,6 +38,7 @@
     transform: scale(1, 0.8);
     transition: all 0.1s;
     visibility: hidden;
+    z-index: 2;
 
     .writeTag {
       margin: 0;

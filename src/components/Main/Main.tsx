@@ -5,10 +5,10 @@ import Chat1 from "../../Image/Footer/chat-selected.png";
 import Chat2 from "../../Image/Footer/chat-unselected.png";
 import User1 from "../../Image/Footer/user-selected.png";
 import User2 from "../../Image/Footer/user-unselected.png";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import HomeGoods from "./Home/HomeGoods";
 import HomeHeader from "./Home/HomeHeader";
-import {Navigate} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import * as React from "react";
 
 const Main = () => {
@@ -34,15 +34,15 @@ const Main = () => {
 
   return (
     <>
-      {localStorage.getItem("token") === null && (<Navigate replace to="/login" />)}
-      <div className={styles.test}>
-      </div>
-      <div
-        className={`${styles.backShadow} ${writeHandle ? styles.show : ""}`}
-      />
+      {localStorage.getItem("token") === null && (
+        <Navigate replace to="/login" />
+      )}
+      <div className={styles.test}></div>
       <div className={styles.wrapper}>
         <div className={styles.header}>
-          {page === "home" && <HomeHeader location={location} setLocation={setLocation}/>}
+          {page === "home" && (
+            <HomeHeader location={location} setLocation={setLocation} />
+          )}
           {page === "chat" && <></>}
           {page === "user" && <></>}
         </div>
@@ -82,6 +82,9 @@ const Main = () => {
             <p className={styles.footerTag}>나의 당근</p>
           </div>
         </div>
+        <div
+            className={`${styles.backShadow} ${writeHandle ? styles.show : ""}`} onClick={()=>setWriteHandle(false)}
+        />
       </div>
     </>
   );
