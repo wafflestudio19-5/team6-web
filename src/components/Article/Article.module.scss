@@ -80,6 +80,7 @@
   .contentWrapper {
     position: relative;
     top: 0;
+    height: calc(100% - 64px);
     overflow: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;

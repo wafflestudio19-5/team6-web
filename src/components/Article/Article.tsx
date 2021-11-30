@@ -125,7 +125,7 @@ const Article = () => {
             src={isHeartClicked ? redHeartIcon : blackHeartIcon}
             onClick={onClickHeart}
           />
-          <h1 className={styles.price}>{user?.price}원</h1>
+          <h1 className={styles.price}>{user?.price.toLocaleString("ko-KR")}원</h1>
           <p className={styles.priceProposal} onClick={onClickPriceProposal}>
             가격 제안하기
           </p>
