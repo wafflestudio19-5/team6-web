@@ -13,7 +13,8 @@
   transform: translate(-50%, -50%);
   .header {
     position: fixed;
-    background-color: #ffffff;
+    z-index: 2;
+    background-color: transparent;
     width: 100%;
     .backButton {
       position: relative;
@@ -42,50 +43,6 @@
       right: 0;
     }
   }
-
-  .profile {
-    position: relative;
-    display: block;
-    background-color: #ffffff;
-    width: 100%;
-    height: 72px;
-    top: 80px;
-    .profileImg {
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      margin: 15px;
-    }
-    .userName {
-      position: relative;
-      font-size: 16px;
-      left: 80px;
-      top: -80px;
-    }
-    .userRegion {
-      position: relative;
-      font-size: 14px;
-      left: 80px;
-      top: -92px;
-    }
-    .mannerTemp {
-      position: absolute;
-      font-size: 16px;
-      top: 0;
-      right: 20px;
-    }
-  }
-
-  .article {
-    position: relative;
-    top: 70px;
-    margin: 15px;
-    .title {
-      font-size: 24px;
-    }
-  }
-
-
   .footer {
     position: fixed;
     width: 100%;
@@ -120,11 +77,64 @@
       right: 15px;
     }
   }
+  .contentWrapper {
+    position: relative;
+    top: 0;
+    height: calc(100% - 64px);
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    .profile {
+      position: relative;
+      display: block;
+      background-color: #ffffff;
+      width: 100%;
+      height: 72px;
+      top: 130px;
+      .profileImg {
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        margin: 15px;
+      }
+      .userName {
+        position: relative;
+        font-size: 16px;
+        left: 80px;
+        top: -80px;
+      }
+      .userRegion {
+        position: relative;
+        font-size: 14px;
+        left: 80px;
+        top: -92px;
+      }
+      .mannerTemp {
+        position: absolute;
+        font-size: 16px;
+        top: 0;
+        right: 20px;
+      }
+    }
+    .carousel {
+      position: relative;
+      width: 100%;
+      height: 50%;
+    }
+    .article {
+      position: relative;
+      top: 120px;
+      margin: 15px;
+      .title {
+        font-size: 24px;
+      }
+    }
+  }
 }
-.carousel {
-  position: relative;
-  top: 50px;
-}
+
 .carouselImg {
   position: relative;
   width: 100%;
