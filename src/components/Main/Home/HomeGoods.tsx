@@ -1,7 +1,7 @@
 import styles from "./HomeGoods.module.scss";
-import Close from "../../../Image/Home/add-2.png";
-import Write from "../../../Image/Home/write.png";
-import Open from "../../../Image/Home/add-1.png";
+import Close from "../../../icons/Home/add-2.png";
+import Write from "../../../icons/Home/write.png";
+import Open from "../../../icons/Home/add-1.png";
 import { Dispatch, SetStateAction } from "react";
 
 const HomeGoods = (props: {

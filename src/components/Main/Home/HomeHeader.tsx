@@ -1,8 +1,8 @@
 import styles from "./HomeHeader.module.scss";
-import DownArrow from "../../../Image/Header/down-arrow.png";
-import Search from "../../../Image/Header/search.png";
-import Category from "../../../Image/Header/category.png";
-import Notice from "../../../Image/Header/bell.png";
+import DownArrow from "../../../icons/Header/down-arrow.png";
+import Search from "../../../icons/Header/search.png";
+import Category from "../../../icons/Header/category.png";
+import Notice from "../../../icons/Header/bell.png";
 import {Dispatch, SetStateAction} from "react";
 
 const HomeHeader = (props: {location:string, setLocation:Dispatch<SetStateAction<string>>}) => {

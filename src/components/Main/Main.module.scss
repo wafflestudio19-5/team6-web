@@ -49,8 +49,10 @@
         transform: translate(-50%);
       }
       .footerTag {
+        position: relative;
         height: 33%;
         font-size: 12px;
+        top: -2px;
 
         margin: 0;
         text-align: center;
