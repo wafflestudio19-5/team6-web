@@ -1,10 +1,10 @@
 import styles from "./Main.module.scss";
-import Home1 from "../../Image/Footer/home-selected.png";
-import Home2 from "../../Image/Footer/home-unselected.png";
-import Chat1 from "../../Image/Footer/chat-selected.png";
-import Chat2 from "../../Image/Footer/chat-unselected.png";
-import User1 from "../../Image/Footer/user-selected.png";
-import User2 from "../../Image/Footer/user-unselected.png";
+import Home1 from "../../icons/Footer/home-selected.png";
+import Home2 from "../../icons/Footer/home-unselected.png";
+import User1 from "../../icons/Footer/user-selected.png";
+import User2 from "../../icons/Footer/user-unselected.png";
+import Set1 from "../../icons/Footer/settings-selected.png";
+import Set2 from "../../icons/Footer/settings-unselected.png";
 import { useEffect, useState } from "react";
 import HomeGoods from "./Home/HomeGoods";
 import HomeHeader from "./Home/HomeHeader";
@@ -20,12 +20,12 @@ const Main = () => {
     setPage("home");
   };
 
-  const changeToChat = () => {
-    setPage("chat");
-  };
-
   const changeToUser = () => {
     setPage("user");
+  };
+
+  const changeToSettings = () => {
+    setPage("settings");
   };
 
   if (location === "") {
@@ -43,8 +43,8 @@ const Main = () => {
           {page === "home" && (
             <HomeHeader location={location} setLocation={setLocation} />
           )}
-          {page === "chat" && <></>}
           {page === "user" && <></>}
+          {page === "settings" && <></>}
         </div>
         <div className={styles.contents}>
           {page === "home" && (
@@ -53,8 +53,8 @@ const Main = () => {
               setWriteHandle={setWriteHandle}
             />
           )}
-          {page === "chat" && <></>}
           {page === "user" && <></>}
+          {page === "settings" && <></>}
         </div>
         <div className={styles.footer}>
           <div className={styles.footerBox} onClick={changeToHome}>
@@ -65,14 +65,6 @@ const Main = () => {
             )}
             <p className={styles.footerTag}>홈</p>
           </div>
-          <div className={styles.footerBox} onClick={changeToChat}>
-            {page === "chat" ? (
-              <img className={styles.footerImg} src={Chat1} alt="chat" />
-            ) : (
-              <img className={styles.footerImg} src={Chat2} alt="chat" />
-            )}
-            <p className={styles.footerTag}>채팅</p>
-          </div>
           <div className={styles.footerBox} onClick={changeToUser}>
             {page === "user" ? (
               <img className={styles.footerImg} src={User1} alt="user" />
@@ -80,6 +72,14 @@ const Main = () => {
               <img className={styles.footerImg} src={User2} alt="user" />
             )}
             <p className={styles.footerTag}>나의 당근</p>
+          </div>
+          <div className={styles.footerBox} onClick={changeToSettings}>
+            {page === "settings" ? (
+                <img className={styles.footerImg} src={Set1} alt="settings" />
+            ) : (
+                <img className={styles.footerImg} src={Set2} alt="settings" />
+            )}
+            <p className={styles.footerTag}>세팅</p>
           </div>
         </div>
         <div

@@ -26,8 +26,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "aws s3 sync ./build s3://daangn-market-clone-service --profile=HyeongtaekOh",
-    "invalidate": "aws cloudfront create-invalidation --profile=HyeongtaekOh --distribution-id E1LYE1UK1H0HT7 --paths / /index.html /error.html /service-worker.js /manifest.json /favicon.ico"
+    "deploy": "aws s3 sync ./build s3://daangn-market-clone-service --profile=JiyeonP",
+    "invalidate": "aws cloudfront create-invalidation --profile=JiyeonP  --distribution-id E1LYE1UK1H0HT7 --paths / /index.html /error.html /service-worker.js /manifest.json /favicon.ico"
   },
   "eslintConfig": {
     "extends": [
