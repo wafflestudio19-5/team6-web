@@ -1,6 +1,7 @@
 import styles from "./Profile.module.scss";
 import ArrowIcon from "../../../../icons/MyCarrot/right-arrow.png";
 import EditIcon from "../../../../icons/MyCarrot/edit.png";
+import Test from "../../../../icons/MyCarrot/test-profile.png";
 import { SyntheticEvent } from "react";
 
 const ProfileBar = () => {
@@ -19,7 +20,7 @@ const ProfileBar = () => {
         <div className={styles.imageframe}>
           <img
             className={styles.image}
-            onError={handleImageError}
+            src={Test}
             alt="profile image"
           />
         </div>
