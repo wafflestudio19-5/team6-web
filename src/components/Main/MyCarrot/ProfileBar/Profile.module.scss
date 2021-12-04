@@ -76,6 +76,11 @@
   overflow: hidden;
   background: white;
 
+  &:hover {
+    background: #e5e5e5;
+    transition: 0.2s;
+  }
+
   .editicon {
     position: absolute;
     width: 15px;
