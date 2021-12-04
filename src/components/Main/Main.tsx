@@ -10,6 +10,7 @@ import HomeGoods from "./Home/HomeGoods";
 import HomeHeader from "./Home/HomeHeader";
 import { Navigate } from "react-router-dom";
 import * as React from "react";
+import MyCarrot from "./MyCarrot/MyCarrot";
 
 const Main = () => {
   const [location, setLocation] = useState("301동");
@@ -43,8 +44,11 @@ const Main = () => {
           {page === "home" && (
             <HomeHeader location={location} setLocation={setLocation} />
           )}
-          {page === "user" && <></>}
+          {page === "user" && <p>나의 당근</p>}
           {page === "settings" && <></>}
+        </div>
+        <div>
+          {page === "user" && <MyCarrot />}
         </div>
         <div className={styles.contents}>
           {page === "home" && (
