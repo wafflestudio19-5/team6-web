@@ -1,6 +1,6 @@
 import styles from "./SignUp.module.scss";
 import carrotLogo from "../../icons/daangn-logo.svg";
-import kakaologo from "../../icons/kakao-logo.svg"
+import kakaologo from "../../icons/kakao-logo.svg";
 import { Link, Navigate } from "react-router-dom";
 import * as React from "react";
 import { ChangeEventHandler, useState } from "react";
@@ -42,8 +42,12 @@ const SignUp = () => {
         <img src={carrotLogo} className={styles.daangnlogo} alt="logo" />
         <section className={styles["social-login-wrapper"]}>
           <h2>동네 사람들과 안 쓰는 물건을 거래하려면 가입하세요.</h2>
-          <button onClick={() => {console.log("소셜 로그인");}} >
-            <img src={kakaologo} alt="logo"/>
+          <button
+            onClick={() => {
+              console.log("소셜 로그인");
+            }}
+          >
+            <img src={kakaologo} alt="logo" />
             <span>카카오 로그인</span>
           </button>
           <div className={styles["hr-sect"]}>또는</div>
@@ -70,7 +74,7 @@ const SignUp = () => {
             placeholder="비밀번호 확인"
           />
           <input
-            name = "phone"
+            name="phone"
             value={inputs.phone}
             onChange={handleChange}
             placeholder="휴대폰 번호"
@@ -83,10 +87,12 @@ const SignUp = () => {
           />
           <button className={styles["set-location"]}>내 동네 설정하기</button>
         </form>
-        <hr/>
+        <hr />
         <section className={styles.backtologin}>
           <p>계정이 있으신가요?</p>
-          <Link to="/login" className={styles.goback}><i>로그인</i></Link>
+          <Link to="/login" className={styles.goback}>
+            <i>로그인</i>
+          </Link>
         </section>
       </div>
     </div>

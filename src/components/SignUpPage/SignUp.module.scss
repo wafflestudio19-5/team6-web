@@ -11,7 +11,6 @@
   transform: translate(-50%, 0);
   background: #ffffff;
 
-
   .daangnlogo {
     position: absolute;
     width: 160px;
@@ -35,11 +34,11 @@
       position: absolute;
       width: 70%;
 
-      color: rgba(var(--f52,142,142,142),1);
+      color: rgba(var(--f52, 142, 142, 142), 1);
       font-size: 17px;
       font-weight: 600;
       line-height: 20px;
-    };
+    }
 
     button {
       position: absolute;
@@ -110,7 +109,7 @@
       border: 1px solid #e5e5e5;
       background-color: #fff;
       font-size: 15px;
-      transition: border .2s ease-in-out;
+      transition: border 0.2s ease-in-out;
     }
 
     button {
@@ -158,5 +157,4 @@
       left: 25%;
     }
   }
-
 }

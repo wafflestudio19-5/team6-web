@@ -1,0 +1,71 @@
+.history-wrapper {
+  position: absolute;
+
+  width: 100%;
+  height: 130px;
+  top: 100px;
+
+  button {
+    position: absolute;
+    top: 10px;
+    width: 90px;
+    height: 110px;
+    border: none;
+    border-radius: 30%;
+
+    background: white;
+  }
+
+  // 추후 반응형 css 적용 필요
+  @media screen and (max-width: 320px) {
+    .sale {left: calc(50% - 150px);}
+    .purchase {left: calc(50% - 45px);}
+    .watchlist {left: calc(50% + 60px);}
+  }
+
+  @media screen and (min-width: 321px) and (max-width: 375px) {
+    .sale {left: calc(50% - 160px);}
+    .purchase {left: calc(50% - 45px);}
+    .watchlist {left: calc(50% + 70px);}
+  }
+
+  @media screen and (min-width: 376px) and (max-width: 425px) {
+    .sale {left: calc(50% - 180px);}
+    .purchase {left: calc(50% - 45px);}
+    .watchlist {left: calc(50% + 90px);}
+  }
+
+  @media screen and (min-width: 426px) {
+    .sale {left: calc(50% - 190px);}
+    .purchase {left: calc(50% - 45px);}
+    .watchlist {left: calc(50% + 100px);}
+  }
+
+
+
+  .background {
+    position: absolute;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    top: 10px;
+    left: 11px;
+
+    background: rgba(230,243,230,255);
+
+    img {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      top: 14px;
+      left: 14px;
+    }
+  }
+
+  p {
+    position: absolute;
+    top: 70px;
+    left: 21px;
+  }
+
+}
