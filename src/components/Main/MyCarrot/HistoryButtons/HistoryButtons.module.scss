@@ -14,34 +14,60 @@
     border-radius: 30%;
 
     background: white;
+
+    &:hover {
+      background: lavenderblush;
+      transition: 0.3s;
+    }
   }
 
-  // 추후 반응형 css 적용 필요
   @media screen and (max-width: 320px) {
-    .sale {left: calc(50% - 150px);}
-    .purchase {left: calc(50% - 45px);}
-    .watchlist {left: calc(50% + 60px);}
+    .sale {
+      left: calc(50% - 150px);
+    }
+    .purchase {
+      left: calc(50% - 45px);
+    }
+    .watchlist {
+      left: calc(50% + 60px);
+    }
   }
 
   @media screen and (min-width: 321px) and (max-width: 375px) {
-    .sale {left: calc(50% - 160px);}
-    .purchase {left: calc(50% - 45px);}
-    .watchlist {left: calc(50% + 70px);}
+    .sale {
+      left: calc(50% - 160px);
+    }
+    .purchase {
+      left: calc(50% - 45px);
+    }
+    .watchlist {
+      left: calc(50% + 70px);
+    }
   }
 
   @media screen and (min-width: 376px) and (max-width: 425px) {
-    .sale {left: calc(50% - 180px);}
-    .purchase {left: calc(50% - 45px);}
-    .watchlist {left: calc(50% + 90px);}
+    .sale {
+      left: calc(50% - 180px);
+    }
+    .purchase {
+      left: calc(50% - 45px);
+    }
+    .watchlist {
+      left: calc(50% + 90px);
+    }
   }
 
   @media screen and (min-width: 426px) {
-    .sale {left: calc(50% - 190px);}
-    .purchase {left: calc(50% - 45px);}
-    .watchlist {left: calc(50% + 100px);}
+    .sale {
+      left: calc(50% - 190px);
+    }
+    .purchase {
+      left: calc(50% - 45px);
+    }
+    .watchlist {
+      left: calc(50% + 100px);
+    }
   }
-
-
 
   .background {
     position: absolute;
@@ -51,7 +77,7 @@
     top: 10px;
     left: 11px;
 
-    background: rgba(230,243,230,255);
+    background: rgba(230, 243, 230, 255);
 
     img {
       position: absolute;
@@ -67,5 +93,4 @@
     top: 70px;
     left: 21px;
   }
-
 }

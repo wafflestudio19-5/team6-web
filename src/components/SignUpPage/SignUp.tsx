@@ -1,6 +1,6 @@
 import styles from "./SignUp.module.scss";
 import carrotLogo from "../../icons/daangn-logo.svg";
-import kakaologo from "../../icons/kakao-logo.svg";
+import kakaologo from "../../icons/kakao-logo.png";
 import { Link, Navigate } from "react-router-dom";
 import * as React from "react";
 import { ChangeEventHandler, useState } from "react";
@@ -41,7 +41,7 @@ const SignUp = () => {
       <div className={styles["signup-page-wrapper"]}>
         <img src={carrotLogo} className={styles.daangnlogo} alt="logo" />
         <section className={styles["social-login-wrapper"]}>
-          <h2>동네 사람들과 안 쓰는 물건을 거래하려면 가입하세요.</h2>
+          <h2>동네 주민들과 따뜻한 거래를 나누려면 가입하세요.</h2>
           <button
             onClick={() => {
               console.log("소셜 로그인");

@@ -32,10 +32,10 @@
       margin-top: 5px;
       text-align: center;
       position: absolute;
-      width: 70%;
+      width: 75%;
 
       color: rgba(var(--f52, 142, 142, 142), 1);
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 600;
       line-height: 20px;
     }
@@ -51,9 +51,10 @@
 
       img {
         position: absolute;
-        width: 30px;
+        width: 26px;
+        height: 26px;
         left: 32%;
-        top: 1px;
+        top: 2px;
       }
 
       span {
@@ -147,14 +148,31 @@
 
     .goback {
       position: absolute;
-      left: 58%;
       color: blue;
     }
 
     p {
       position: absolute;
       margin: 0;
-      left: 25%;
+
+      color: rgba(255, 143, 69, 255);
+    }
+
+    @media screen and (max-width: 330px) {
+      p {
+        left: 18%;
+      }
+      .goback {
+        left: 63%;
+      }
+    }
+    @media screen and (min-width: 330px) {
+      p {
+        left: calc(50% - 120px);
+      }
+      .goback {
+        left: calc(50% + 50px);
+      }
     }
   }
 }

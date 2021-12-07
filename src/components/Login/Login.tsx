@@ -1,6 +1,6 @@
 import "./Login.scss";
 import carrotLogo from "../../icons/daangn-logo.svg";
-import kakaoLogo from "../../icons/kakao-logo.svg";
+import kakaoLogo from "../../icons/kakao-logo.png";
 import { ChangeEventHandler, useState } from "react";
 import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
@@ -57,7 +57,7 @@ const Login = () => {
           <button className="login-button">로그인</button>
         </form>
         <button className="social-login-button kakao">
-          <img src={kakaoLogo} className="kakao-logo" alt="logo" />
+          <img src={kakaoLogo} alt="logo" />
           <span>카카오 로그인</span>
         </button>
         <div className="sign-up-wrapper">

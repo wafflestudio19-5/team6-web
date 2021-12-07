@@ -17,10 +17,45 @@
   }
 
   .settings {
+    display: flex;
+    flex-direction: column;
     margin-top: 8px;
     width: 100%;
     height: calc(100% - 238px);
 
     background: white;
+
+    button {
+      display: flex;
+      width: 100%;
+      height: 75px;
+      background: white;
+
+      border: none;
+
+      &:hover {
+        background: lavenderblush;
+        transition: 0.3s;
+      }
+
+      img {
+        position: relative;
+        width: 33px;
+        height: 33px;
+
+        top: 21px;
+        left: 13px;
+      }
+
+      p {
+        position: relative;
+        margin: 0;
+
+        top: 28px;
+        left: 41px;
+
+        font-size: 16px;
+      }
+    }
   }
 }
