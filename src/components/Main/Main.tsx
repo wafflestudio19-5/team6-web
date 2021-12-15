@@ -47,9 +47,7 @@ const Main = () => {
           {page === "user" && <p>나의 당근</p>}
           {page === "settings" && <></>}
         </div>
-        <div>
-          {page === "user" && <MyCarrot />}
-        </div>
+        <div>{page === "user" && <MyCarrot />}</div>
         <div className={styles.contents}>
           {page === "home" && (
             <HomeGoods
@@ -79,15 +77,16 @@ const Main = () => {
           </div>
           <div className={styles.footerBox} onClick={changeToSettings}>
             {page === "settings" ? (
-                <img className={styles.footerImg} src={Set1} alt="settings" />
+              <img className={styles.footerImg} src={Set1} alt="settings" />
             ) : (
-                <img className={styles.footerImg} src={Set2} alt="settings" />
+              <img className={styles.footerImg} src={Set2} alt="settings" />
             )}
             <p className={styles.footerTag}>세팅</p>
           </div>
         </div>
         <div
-            className={`${styles.backShadow} ${writeHandle ? styles.show : ""}`} onClick={()=>setWriteHandle(false)}
+          className={`${styles.backShadow} ${writeHandle ? styles.show : ""}`}
+          onClick={() => setWriteHandle(false)}
         />
       </div>
     </>

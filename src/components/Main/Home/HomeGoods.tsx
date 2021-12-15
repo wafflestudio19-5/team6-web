@@ -2,14 +2,16 @@ import styles from "./HomeGoods.module.scss";
 import Close from "../../../icons/Home/add-2.png";
 import Write from "../../../icons/Home/write.png";
 import Open from "../../../icons/Home/add-1.png";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomeGoods = (props: {
   writeHandle: boolean;
   setWriteHandle: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const navigate = useNavigate();
   const handleWrite = () => {
-    console.log("글쓰는 창으로 push");
+    navigate("/write");
   };
 
   if (props.writeHandle) {
