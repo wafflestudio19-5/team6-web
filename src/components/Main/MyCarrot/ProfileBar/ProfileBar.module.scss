@@ -1,0 +1,89 @@
+.profile-button {
+  position: absolute;
+  z-index: 0;
+
+  width: 100%;
+  height: 100px;
+  padding: 0;
+  background: white;
+  border: none;
+
+  &:hover {
+    background: lavenderblush;
+    transition: 0.3s;
+  }
+
+  .imageframe {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: 20px;
+    left: 25px;
+
+    border: 1px solid #e5e5e5;
+    box-sizing: border-box;
+    border-radius: 50%;
+    overflow: hidden;
+
+    .image {
+      position: absolute;
+
+      top: -3px;
+      left: -3px;
+    }
+  }
+
+  .nickname {
+    position: absolute;
+    top: 31px;
+    left: 105px;
+    margin: 0;
+  }
+
+  .id-location {
+    position: absolute;
+    top: 39px;
+    left: 105px;
+    font-size: 11px;
+    color: #777777;
+  }
+
+  .rightarrow {
+    position: absolute;
+    height: 24px;
+
+    top: 38px;
+    right: 30px;
+  }
+}
+
+.editbutton {
+  position: absolute;
+  z-index: 10;
+
+  width: 22px;
+  height: 22px;
+
+  top: 62px;
+  left: 68px;
+
+  border: 1px solid #e5e5e5;
+  box-sizing: border-box;
+  border-radius: 50%;
+
+  overflow: hidden;
+  background: white;
+
+  &:hover {
+    background: #e5e5e5;
+    transition: 0.2s;
+  }
+
+  .editicon {
+    position: absolute;
+    width: 15px;
+
+    top: 2px;
+    left: 3px;
+  }
+}

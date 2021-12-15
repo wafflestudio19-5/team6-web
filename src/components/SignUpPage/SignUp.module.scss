@@ -1,0 +1,178 @@
+.signup-page-wrapper {
+  position: fixed;
+  max-width: 450px;
+  width: 100%;
+
+  height: 100%;
+  min-height: 100%;
+  max-height: 900px;
+
+  left: 50%;
+  transform: translate(-50%, 0);
+  background: #ffffff;
+
+  .daangnlogo {
+    position: absolute;
+    width: 160px;
+    top: 60px;
+    left: calc(50% - 85px);
+  }
+
+  .social-login-wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 450px;
+    height: 130px;
+    top: 125px;
+    align-items: center;
+
+    h2 {
+      margin-top: 5px;
+      text-align: center;
+      position: absolute;
+      width: 75%;
+
+      color: rgba(var(--f52, 142, 142, 142), 1);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    button {
+      position: absolute;
+      width: 75%;
+      height: 30px;
+      top: 55px;
+      border: none;
+      background: yellow;
+      border-radius: 3px;
+
+      img {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        left: 32%;
+        top: 2px;
+      }
+
+      span {
+        position: absolute;
+        left: 43%;
+        top: 8px;
+      }
+
+      font-family: sans-serif;
+      font-weight: 500;
+    }
+
+    .hr-sect {
+      position: absolute;
+      top: 93px;
+      width: 78%;
+      display: flex;
+      flex-basis: 100%;
+      align-items: center;
+      color: #61dafb;
+      font-size: 12px;
+      margin: 8px 0px;
+    }
+    .hr-sect::before,
+    .hr-sect::after {
+      content: "";
+      flex-grow: 1;
+      background: #61dafb;
+      height: 1px;
+      font-size: 0px;
+      line-height: 0px;
+      margin: 0px 16px;
+    }
+  }
+
+  form {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    max-width: 450px;
+    height: 276px;
+    top: 250px;
+    flex-direction: column;
+    align-items: center;
+
+    input {
+      width: 70%;
+
+      height: 36px;
+      margin-top: 8px;
+      padding: 0 9px 0 9px;
+
+      border: 1px solid #e5e5e5;
+      background-color: #fff;
+      font-size: 15px;
+      transition: border 0.2s ease-in-out;
+    }
+
+    button {
+      width: 75%;
+
+      height: 30px;
+      margin-top: 15px;
+      padding: 0;
+
+      color: white;
+      background-color: rgba(255, 143, 69, 255);
+      border: none;
+      border-radius: 3px;
+
+      font-family: sans-serif;
+      font-weight: 500;
+    }
+  }
+
+  hr {
+    position: absolute;
+    top: 540px;
+    width: 70%;
+    left: 14%;
+    border-top: 1px dashed #61dafb;
+  }
+
+  .backtologin {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    max-width: 450px;
+    height: 25px;
+    top: 570px;
+
+    .goback {
+      position: absolute;
+      color: blue;
+    }
+
+    p {
+      position: absolute;
+      margin: 0;
+
+      color: rgba(255, 143, 69, 255);
+    }
+
+    @media screen and (max-width: 330px) {
+      p {
+        left: 18%;
+      }
+      .goback {
+        left: 63%;
+      }
+    }
+    @media screen and (min-width: 330px) {
+      p {
+        left: calc(50% - 120px);
+      }
+      .goback {
+        left: calc(50% + 50px);
+      }
+    }
+  }
+}
