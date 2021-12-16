@@ -16,12 +16,12 @@
   .header {
     width: 100%;
     height: 40px;
-    border-bottom: 1px solid #777777;
+    border-bottom: 1px solid #e5e5e5;
     display: flex;
 
     p {
       margin: 0;
-      padding-top: 10px;
+      padding-top: 5px;
       padding-left: 15px;
       font-size: 20px;
       font-weight: bold;
@@ -41,12 +41,12 @@
 
     display: flex;
 
-    border-top: 1px solid #777777;
+    border-top: 1px solid #e5e5e5;
 
     .footerBox {
-      width: 18%;
-      margin-left: 7.7%;
-      margin-right: 7.7%;
+      width: 30%;
+      margin-left: 3.3%;
+      margin-right: 3.3%;
       height: 100%;
 
       .footerImg {

@@ -1,0 +1,71 @@
+.box{
+  position: absolute;
+  width: 70%;
+  min-height: 15%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+
+  z-index: 2;
+
+  display: block;
+
+  .title{
+    position: relative;
+    left: 5%;
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+  .contents{
+    position: relative;
+    left: 5%;
+    font-size: 11px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+  }
+  .confirmButton{
+    position: relative;
+    width: 90%;
+    height: 35px;
+    left: 5%;
+
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #e5e5e5;
+    border-style: solid;
+    margin-bottom: 10px;
+
+    background: #ff8a3D;
+  }
+  .confirmButton:active{
+    border-style: solid;
+    transform: scale(0.95, 0.95);
+  }
+  .cancelButton{
+    position: relative;
+    width: 90%;
+    left: 5%;
+    height: 35px;
+
+    font-size: 14px;
+    font-weight: bold;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #e5e5e5;
+    border-style: solid;
+    margin-bottom: 10px;
+
+    background: white;
+  }
+  .cancelButton:active{
+    border-style: solid;
+    transform: scale(0.95, 0.95);
+  }
+}
