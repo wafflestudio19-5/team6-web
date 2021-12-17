@@ -1,5 +1,5 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./Article.module.scss";
 import dummyData from "./DummyData";
 import leftArrowIcon from "../../icons/leftArrow.png";
@@ -11,7 +11,9 @@ import blackHeartIcon from "../../icons/blackHeart.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import * as React from "react";
+import { createEditor, Descendant } from "slate";
+import { Slate, Editable, withReact, ReactEditor } from "slate-react";
+import { withHistory } from "slate-history";
 
 type userData = {
   id: number;
@@ -20,7 +22,7 @@ type userData = {
   region: string;
   title: string;
   product_img: string[];
-  article: string;
+  article: Descendant[];
   price: number;
   time: string;
   temperature: number;
@@ -42,16 +44,23 @@ const settings = {
 
 const Article = () => {
   const { id } = useParams() as { id: string };
+  const currentUser = dummyData.filter((data) => data.id === parseInt(id))[0];
   const [user, setUser] = useState<userData | null>(null);
   const [isHeartClicked, setIsHeartClicked] = useState<boolean>(false);
+  const [value, setValue] = useState<Descendant[]>(
+    currentUser?.article || [{ type: "paragraph", children: [{ text: "" }] }]
+  );
+  const editor = useMemo(
+    () => withHistory(withReact(createEditor() as ReactEditor)),
+    []
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
-    const currentUser = dummyData.filter((data) => data.id === parseInt(id))[0];
     if (!currentUser) navigate("/main");
     else setUser(currentUser);
   }, [id]);
-
+  console.log(value);
   const carouselImg = user?.product_img.map((image) => {
     return (
       <div>
@@ -87,6 +96,7 @@ const Article = () => {
     console.log("profile image");
     // navigate("/profile/{id}");
   };
+
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -155,7 +165,13 @@ const Article = () => {
               {user?.category}
               {user?.time}
             </p>
-            {user?.article}
+            <Slate
+              editor={editor}
+              value={value}
+              onChange={(value) => setValue(value)}
+            >
+              <Editable readOnly />
+            </Slate>
             <p>
               관심{user?.interest}
               조회{user?.hit}

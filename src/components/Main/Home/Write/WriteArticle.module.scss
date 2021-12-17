@@ -19,6 +19,7 @@
       margin: 15px;
       left: 10px;
       width: 20px;
+      cursor: pointer;
     }
     .headerTitle {
       position: absolute;
@@ -34,6 +35,7 @@
       top: 0;
       right: 0;
       margin: 15px;
+      cursor: pointer;
     }
   }
   .footer {
@@ -46,6 +48,7 @@
       position: relative;
       width: 25px;
       margin: 10px;
+      cursor: pointer;
     }
     .usually {
       position: absolute;
@@ -53,6 +56,7 @@
       left: 40px;
       margin: 10px;
       font-size: 16px;
+      cursor: pointer;
     }
     .neighborhood {
       position: absolute;
@@ -60,6 +64,7 @@
       margin: 10px;
       top: 0;
       left: 160px;
+      cursor: pointer;
     }
     .show {
       position: absolute;
@@ -67,13 +72,19 @@
       left: 200px;
       margin: 10px;
       font-size: 16px;
+      cursor: pointer;
     }
   }
   .contentWrapper {
     position: relative;
     width: 100%;
     top: 55px;
-    height: calc(100% - 54px);
+    height: calc(100% - 105px);
+    overflow-y: scroll;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
     .imageUploadWrapper {
       width: calc(100% - 20px);
       margin: 0 10px 0 10px;
@@ -81,6 +92,7 @@
       .imageUpload {
         width: 70px;
         margin: 15px;
+        cursor: pointer;
       }
     }
     .titleWrapper {
@@ -105,6 +117,7 @@
       border-bottom: 1px solid #dcdcdc;
       display: flex;
       justify-content: space-between;
+      cursor: pointer;
       .category {
         margin: 20px 15px 20px 15px;
       }
@@ -148,6 +161,7 @@
         position: relative;
         top: -1px;
         margin: 0 10px;
+        cursor: default;
       }
     }
     .disabledPriceWrapper {
@@ -186,7 +200,13 @@
         position: relative;
         top: -1px;
         margin: 0 10px;
+        cursor: default;
       }
+    }
+    .articleWrapper {
+      width: calc(100% - 40px);
+      margin: 20px 10px 20px 10px;
+      padding: 0 10px 0 10px;
     }
   }
 }
@@ -220,11 +240,11 @@
       margin: 10px;
     }
   }
-  .contentWrapper {
+  .categoryContentWrapper {
     position: relative;
     top: 55px;
     width: 100%;
-    height: calc(100% - 55px);
+    height: calc(100% - 54px);
     overflow-y: scroll;
     scrollbar-width: none;
     &::-webkit-scrollbar {

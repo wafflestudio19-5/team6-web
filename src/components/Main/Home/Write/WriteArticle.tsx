@@ -4,19 +4,36 @@ import imageUploadButton from "../../../../icons/imageUpload.png";
 import sentence from "../../../../icons/addProperty.png";
 import setting from "../../../../icons/settingSlider.png";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import backButton from "../../../../icons/leftArrow.png";
 import orangeCheck from "../../../../icons/orangecheck.png";
 import rightButton from "../../../../icons/right.png";
+import { BaseEditor, createEditor, Descendant } from "slate";
+import { Editable, ReactEditor, Slate, withReact } from "slate-react";
+import { HistoryEditor, withHistory } from "slate-history";
+import dummyData from "../../../Article/DummyData";
 
 const WriteArticle = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
   const [pChecked, setPChecked] = useState<boolean>(false);
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<string>("");
   const [price, setPrice] = useState<string>("");
+  const [value, setValue] = useState<Descendant[]>([
+    { type: "paragraph", children: [{ text: "" }] },
+  ]);
+
+  const editor = useMemo(
+    () => withHistory(withReact(createEditor() as ReactEditor)),
+    []
+  );
+
   const navigate = useNavigate();
   const onClickBack = () => {
     setIsModalOpen(false);
+  };
+  const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
   const onClickCategory = (e: string) => {
     setCategory(e);
@@ -26,6 +43,24 @@ const WriteArticle = () => {
   };
   const onClickClose = () => {
     navigate(-1);
+  };
+  const onClickDone = () => {
+    dummyData.push({
+      id: Math.random(),
+      name: "현재유저",
+      region: "현재지역",
+      profile_img: "현재프사",
+      title: title,
+      product_img: [], //
+      article: value,
+      price: parseInt(price),
+      time: "현재시간",
+      temperature: 36.5,
+      category: category,
+      chat: 0,
+      hit: 0,
+      interest: 0,
+    });
   };
   const handleCheck = () => {
     if (!!price) setPChecked(!pChecked);
@@ -51,7 +86,9 @@ const WriteArticle = () => {
               onClick={onClickClose}
             />
             <h1 className={styles.headerTitle}>중고거래 글쓰기</h1>
-            <p className={styles.finish}>완료</p>
+            <p className={styles.finish} onClick={onClickDone}>
+              완료
+            </p>
           </div>
           <div className={styles.footer}>
             <img
@@ -76,7 +113,12 @@ const WriteArticle = () => {
               />
             </div>
             <div className={styles.titleWrapper}>
-              <input className={styles.title} placeholder="글 제목" />
+              <input
+                className={styles.title}
+                placeholder="글 제목"
+                value={title}
+                onChange={onChangeTitle}
+              />
             </div>
             <div className={styles.categoryWrapper} onClick={handleCategory}>
               <p className={styles.category}>
@@ -107,6 +149,16 @@ const WriteArticle = () => {
               <label htmlFor={styles.pCheckBox} onClick={handleCheck} />
               <p className={styles.priceP}>가격 제안받기</p>
             </div>
+            <div className={styles.articleWrapper}>
+              <Slate
+                editor={editor}
+                value={value}
+                onChange={(value) => setValue(value)}
+              >
+                <Editable placeholder="301동에 올릴 게시글 내용을 작성해주세요.(가품 및 판매금지품목은 게시가 제한될 수 있어요.)" />{" "}
+                {/* 현재 위치는 나중에 유저 데이터에서 받아와서 입력*/}
+              </Slate>
+            </div>
           </div>
         </div>
       )}
@@ -121,7 +173,7 @@ const WriteArticle = () => {
             />
             <h1 className={styles.headerTitle}>카테고리 선택</h1>
           </div>
-          <div className={styles.contentWrapper}>
+          <div className={styles.categoryContentWrapper}>
             <div
               className={
                 category === "디지털기기"
