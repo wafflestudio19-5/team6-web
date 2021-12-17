@@ -60,7 +60,7 @@ const Article = () => {
     if (!currentUser) navigate("/main");
     else setUser(currentUser);
   }, [id]);
-  console.log(value);
+
   const carouselImg = user?.product_img.map((image) => {
     return (
       <div>

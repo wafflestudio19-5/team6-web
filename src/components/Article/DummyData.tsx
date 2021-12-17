@@ -1,4 +1,4 @@
-import {BaseEditor, Descendant} from "slate";
+import { BaseEditor, Descendant } from "slate";
 import { ReactEditor } from "slate-react";
 import { HistoryEditor } from "slate-history";
 
@@ -29,7 +29,7 @@ type userData = {
   hit: number;
 };
 
-const dummyData : userData[] = [
+const dummyData: userData[] = [
   {
     id: 1,
     name: "김와플",
@@ -41,7 +41,9 @@ const dummyData : userData[] = [
       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-pro-12-select-wifi-spacegray-202104_FMT_WHH?wid=1945&hei=2000&fmt=jpeg&qlt=95&.v=1617126635000",
       "https://fdn.gsmarena.com/imgroot/news/20/09/new-ipads-announced/-1200/gsmarena_008.jpg",
     ],
-    article: [{ type: "paragraph", children: [{ text: "1억원에 쿨거합니다." }] }],
+    article: [
+      { type: "paragraph", children: [{ text: "1억원에 쿨거합니다." }] },
+    ],
     price: 100000000,
     time: "11분 전",
     temperature: 36.5,

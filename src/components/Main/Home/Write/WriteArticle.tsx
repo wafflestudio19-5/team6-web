@@ -1,16 +1,18 @@
 import styles from "./WriteArticle.module.scss";
+
 import closeButton from "../../../../icons/closebutton.png";
 import imageUploadButton from "../../../../icons/imageUpload.png";
 import sentence from "../../../../icons/addProperty.png";
 import setting from "../../../../icons/settingSlider.png";
-import { useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
 import backButton from "../../../../icons/leftArrow.png";
 import orangeCheck from "../../../../icons/orangecheck.png";
 import rightButton from "../../../../icons/right.png";
-import { BaseEditor, createEditor, Descendant } from "slate";
+
+import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { createEditor, Descendant } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
-import { HistoryEditor, withHistory } from "slate-history";
+import { withHistory } from "slate-history";
 import dummyData from "../../../Article/DummyData";
 
 const WriteArticle = () => {
@@ -27,8 +29,8 @@ const WriteArticle = () => {
     () => withHistory(withReact(createEditor() as ReactEditor)),
     []
   );
-
   const navigate = useNavigate();
+
   const onClickBack = () => {
     setIsModalOpen(false);
   };
@@ -37,6 +39,7 @@ const WriteArticle = () => {
   };
   const onClickCategory = (e: string) => {
     setCategory(e);
+    setIsModalOpen(false);
   };
   const handleCategory = () => {
     setIsModalOpen(true);
@@ -46,25 +49,27 @@ const WriteArticle = () => {
   };
   const onClickDone = () => {
     dummyData.push({
-      id: Math.random(),
+      id: Math.floor(Math.random() * Math.pow(10, 10)),
       name: "현재유저",
       region: "현재지역",
       profile_img: "현재프사",
       title: title,
       product_img: [], //
       article: value,
-      price: parseInt(price),
+      price: parseInt(price.replace(/[^0-9]/g, "")),
       time: "현재시간",
       temperature: 36.5,
       category: category,
       chat: 0,
       hit: 0,
       interest: 0,
-    });
+    }); // axios.patch
+    navigate("/main");
   };
   const handleCheck = () => {
     if (!!price) setPChecked(!pChecked);
   };
+
   const priceFormat = (e: React.ChangeEvent<HTMLInputElement>) => {
     const numberFormat = e.target.value.replace(/[^0-9]/g, "");
     if (!!numberFormat) {
@@ -74,6 +79,7 @@ const WriteArticle = () => {
       setPrice("");
     }
   };
+
   return (
     <>
       {!isModalOpen && (
