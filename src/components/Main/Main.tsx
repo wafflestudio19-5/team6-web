@@ -11,10 +11,12 @@ import HomeHeader from "./Home/HomeHeader";
 import { Navigate } from "react-router-dom";
 import * as React from "react";
 import MyCarrot from "./MyCarrot/MyCarrot";
+import Settings from "./Settings/Settings";
 
 const Main = () => {
   const [location, setLocation] = useState("301동");
-  const [writeHandle, setWriteHandle] = useState(false);
+  const [write, setWrite] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState("home");
 
   const changeToHome = () => {
@@ -45,20 +47,17 @@ const Main = () => {
             <HomeHeader location={location} setLocation={setLocation} />
           )}
           {page === "user" && <p>나의 당근</p>}
-          {page === "settings" && <></>}
-        </div>
-        <div>
-          {page === "user" && <MyCarrot />}
+          {page === "settings" && <p>앱 설정</p>}
         </div>
         <div className={styles.contents}>
           {page === "home" && (
             <HomeGoods
-              writeHandle={writeHandle}
-              setWriteHandle={setWriteHandle}
+              writeHandle={write}
+              setWriteHandle={setWrite}
             />
           )}
-          {page === "user" && <></>}
-          {page === "settings" && <></>}
+          {page === "user" &&  <MyCarrot />}
+          {page === "settings" && <Settings confirm={confirm} setConfirm={setConfirm}/>}
         </div>
         <div className={styles.footer}>
           <div className={styles.footerBox} onClick={changeToHome}>
@@ -83,11 +82,14 @@ const Main = () => {
             ) : (
                 <img className={styles.footerImg} src={Set2} alt="settings" />
             )}
-            <p className={styles.footerTag}>세팅</p>
+            <p className={styles.footerTag}>앱 설정</p>
           </div>
         </div>
         <div
-            className={`${styles.backShadow} ${writeHandle ? styles.show : ""}`} onClick={()=>setWriteHandle(false)}
+            className={`${styles.backShadow} ${write ? styles.show : ""}`} onClick={()=>setWrite(false)}
+        />
+        <div
+            className={`${styles.backShadow} ${confirm ? styles.show : ""}`} onClick={()=>setConfirm(false)}
         />
       </div>
     </>
