@@ -48,8 +48,8 @@ const dummyData: userData[] = [
     time: "11분 전",
     temperature: 36.5,
     category: "디지털기기",
-    chat: 8, // 채팅 수
-    interest: 17, // 관심 수
+    chat: 0, // 채팅 수
+    interest: 1, // 관심 수
     hit: 323, // 조회 수
   },
   {
@@ -88,8 +88,8 @@ const dummyData: userData[] = [
     time: "11분 전",
     temperature: 36.5,
     category: "디지털기기",
-    chat: 8, // 채팅 수
-    interest: 17, // 관심 수
+    chat: 2, // 채팅 수
+    interest: 5, // 관심 수
     hit: 323, // 조회 수
   },
 ];

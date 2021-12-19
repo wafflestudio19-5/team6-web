@@ -9,7 +9,7 @@ import orangeCheck from "../../../../icons/orangecheck.png";
 import rightButton from "../../../../icons/right.png";
 
 import { useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { createEditor, Descendant } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
@@ -24,6 +24,7 @@ const WriteArticle = () => {
   const [value, setValue] = useState<Descendant[]>([
     { type: "paragraph", children: [{ text: "" }] },
   ]);
+  const imgInput = useRef();
 
   const editor = useMemo(
     () => withHistory(withReact(createEditor() as ReactEditor)),
@@ -52,9 +53,9 @@ const WriteArticle = () => {
       id: Math.floor(Math.random() * Math.pow(10, 10)),
       name: "현재유저",
       region: "현재지역",
-      profile_img: "현재프사",
+      profile_img: "https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75",
       title: title,
-      product_img: [], //
+      product_img: ["https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75"], //
       article: value,
       price: parseInt(price.replace(/[^0-9]/g, "")),
       time: "현재시간",
