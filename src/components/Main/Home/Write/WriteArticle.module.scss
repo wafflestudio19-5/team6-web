@@ -226,6 +226,25 @@
     opacity: 0.4;
     z-index: 1;
   }
+
+  .toastWrapper {
+    position: absolute;
+    width: calc(100% - 16px);
+    height: 40px;
+    border-radius: 4px;
+    margin: 0 8px 0 8px;
+    bottom: 15px;
+    background-color: black;
+    display: flex;
+    align-items: center;
+
+    .toastMessage {
+      position: relative;
+      font-size: 14px;
+      left: 10px;
+      color: white;
+    }
+  }
 }
 .writePageWrapper {
   position: fixed;

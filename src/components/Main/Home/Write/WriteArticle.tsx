@@ -10,7 +10,7 @@ import orangeCheck from "../../../../icons/orangecheck.png";
 import rightButton from "../../../../icons/right.png";
 
 import { useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { createEditor, Descendant, Node } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
@@ -20,6 +20,7 @@ import * as React from "react";
 const WriteArticle = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+  const [toastState, setToastState] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [pChecked, setPChecked] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("");
@@ -27,6 +28,12 @@ const WriteArticle = () => {
   const [value, setValue] = useState<Descendant[]>([
     { type: "paragraph", children: [{ text: "" }] },
   ]);
+
+  useEffect(() => {
+    if (toastState) {
+      setTimeout(() => setToastState(false), 40000);
+    }
+  }, [toastState]);
 
   const editor = useMemo(
     () => withHistory(withReact(createEditor() as ReactEditor)),
@@ -63,7 +70,9 @@ const WriteArticle = () => {
   };
 
   const onClickDone = () => {
+    console.log(serialize(value).length);
     if (!title || !category || !serialize(value)) setIsConfirmOpen(true);
+    else if (serialize(value).length <= 5) setToastState(true);
     else {
       dummyData.push({
         id: Math.floor(Math.random() * Math.pow(10, 10)),
@@ -101,6 +110,10 @@ const WriteArticle = () => {
     }
   };
 
+  const handleToast = () => {
+    setToastState(true);
+  };
+
   return (
     <>
       {!isModalOpen && (
@@ -108,7 +121,13 @@ const WriteArticle = () => {
           {isConfirmOpen && (
             <div className={confirmStyles.box}>
               <p className={confirmStyles.contents}>
-                제목, 카테고리, 내용은 필수 입력 항목이에요.
+                {!title && "제목"}
+                {!title && (!category || !serialize(value)) && ", "}
+                {!category && "카테고리"}
+                {!category && !serialize(value) && ", "}
+                {!serialize(value) && "내용"}
+                {!!serialize(value) && !category ? "는 " : "은 "}
+                필수 입력 항목이에요.
               </p>
               <button
                 className={confirmStyles.confirmButton}
@@ -206,6 +225,16 @@ const WriteArticle = () => {
               </Slate>
             </div>
           </div>
+          {toastState && (
+            <div
+              className={styles.toastWrapper}
+              onClick={() => setToastState(false)}
+            >
+              <p className={styles.toastMessage}>
+                글이 너무 짧아요. 조금 더 길게 작성해주세요.
+              </p>
+            </div>
+          )}
         </div>
       )}
       {isModalOpen && (
