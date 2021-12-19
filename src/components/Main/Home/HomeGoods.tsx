@@ -39,9 +39,17 @@ const HomeGoods = (props: {
             <p className={styles.region}>{article.region} ·</p>
             <p className={styles.time}>{article.time}</p>
           </div>
-          <p className={styles.price}>
-            {article.price.toLocaleString("ko-KR")}원
-          </p>
+          <div className={styles.thirdLine}>
+            {article.sale_state === "예약중" && (
+              <div className={styles.reservation}>예약중</div>
+            )}
+            {article.sale_state === "거래완료" && (
+              <div className={styles.saleClosed}>거래완료</div>
+            )}
+            <p className={styles.price}>
+              {article.price.toLocaleString("ko-KR")}원
+            </p>
+          </div>
           <div className={styles.lastLine}>
             {article.chat !== 0 && (
               <div className={styles.chatContainer}>

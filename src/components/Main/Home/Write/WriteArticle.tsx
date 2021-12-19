@@ -31,7 +31,7 @@ const WriteArticle = () => {
 
   useEffect(() => {
     if (toastState) {
-      setTimeout(() => setToastState(false), 40000);
+      setTimeout(() => setToastState(false), 4000);
     }
   }, [toastState]);
 
@@ -92,6 +92,7 @@ const WriteArticle = () => {
         chat: 0,
         hit: 0,
         interest: 0,
+        sale_state: "판매중",
       }); // axios.patch
       navigate("/main");
     }
