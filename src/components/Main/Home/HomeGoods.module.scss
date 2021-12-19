@@ -70,10 +70,16 @@
   .articleWrapper {
     width: calc(100% - 20px);
     height: 20%;
-    margin: 10px 10px 0 10px;
+    padding: 10px 10px 0 10px;
     border-bottom: 1px solid #dcdcdc;
     display: flex;
     justify-content: normal;
+
+    &:hover {
+      background: #dcdcdc;
+      transition: 0.3s;
+    }
+
     .thumbnail {
       position: relative;
       height: calc(100% - 20px);
