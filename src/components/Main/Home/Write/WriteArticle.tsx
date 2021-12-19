@@ -1,4 +1,5 @@
 import styles from "./WriteArticle.module.scss";
+import confirmStyles from "./confirm.module.scss";
 
 import closeButton from "../../../../icons/closebutton.png";
 import imageUploadButton from "../../../../icons/imageUpload.png";
@@ -9,14 +10,16 @@ import orangeCheck from "../../../../icons/orangecheck.png";
 import rightButton from "../../../../icons/right.png";
 
 import { useNavigate } from "react-router-dom";
-import { useMemo, useRef, useState } from "react";
-import { createEditor, Descendant } from "slate";
+import { useMemo, useState } from "react";
+import { createEditor, Descendant, Node } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
 import dummyData from "../../../Article/DummyData";
+import * as React from "react";
 
 const WriteArticle = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [pChecked, setPChecked] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("");
@@ -24,12 +27,22 @@ const WriteArticle = () => {
   const [value, setValue] = useState<Descendant[]>([
     { type: "paragraph", children: [{ text: "" }] },
   ]);
-  const imgInput = useRef();
 
   const editor = useMemo(
     () => withHistory(withReact(createEditor() as ReactEditor)),
     []
   );
+  const serialize = (value: Descendant[]) => {
+    // value를 받고 plain text를 string 형식으로 리턴하는 함수입니다.
+    return (
+      value
+        // Return the string content of each paragraph in the value's children.
+        .map((n) => Node.string(n))
+        // Join them all with line breaks denoting paragraphs.
+        .join("\n")
+    );
+  };
+
   const navigate = useNavigate();
 
   const onClickBack = () => {
@@ -48,24 +61,31 @@ const WriteArticle = () => {
   const onClickClose = () => {
     navigate(-1);
   };
+
   const onClickDone = () => {
-    dummyData.push({
-      id: Math.floor(Math.random() * Math.pow(10, 10)),
-      name: "현재유저",
-      region: "현재지역",
-      profile_img: "https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75",
-      title: title,
-      product_img: ["https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75"], //
-      article: value,
-      price: parseInt(price.replace(/[^0-9]/g, "")),
-      time: "현재시간",
-      temperature: 36.5,
-      category: category,
-      chat: 0,
-      hit: 0,
-      interest: 0,
-    }); // axios.patch
-    navigate("/main");
+    if (!title || !category || !serialize(value)) setIsConfirmOpen(true);
+    else {
+      dummyData.push({
+        id: Math.floor(Math.random() * Math.pow(10, 10)),
+        name: "현재유저",
+        region: "현재지역",
+        profile_img:
+          "https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75",
+        title: title,
+        product_img: [
+          "https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75",
+        ], //
+        article: value,
+        price: parseInt(price.replace(/[^0-9]/g, "")),
+        time: "현재시간",
+        temperature: 36.5,
+        category: category,
+        chat: 0,
+        hit: 0,
+        interest: 0,
+      }); // axios.patch
+      navigate("/main");
+    }
   };
   const handleCheck = () => {
     if (!!price) setPChecked(!pChecked);
@@ -85,6 +105,25 @@ const WriteArticle = () => {
     <>
       {!isModalOpen && (
         <div className={styles.writePageWrapper}>
+          {isConfirmOpen && (
+            <div className={confirmStyles.box}>
+              <p className={confirmStyles.contents}>
+                제목, 카테고리, 내용은 필수 입력 항목이에요.
+              </p>
+              <button
+                className={confirmStyles.confirmButton}
+                onClick={() => setIsConfirmOpen(false)}
+              >
+                확인
+              </button>
+            </div>
+          )}
+          <div
+            className={`${styles.backShadow} ${
+              isConfirmOpen ? styles.show : ""
+            }`}
+            onClick={() => setIsConfirmOpen(false)}
+          />
           <div className={styles.header}>
             <img
               className={styles.closeButton}
