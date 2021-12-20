@@ -42,9 +42,9 @@
 
   .id-location {
     position: absolute;
-    top: 39px;
+    top: 40px;
     left: 105px;
-    font-size: 11px;
+    font-size: 13px;
     color: #777777;
   }
 
@@ -70,6 +70,7 @@
   border: 1px solid #e5e5e5;
   box-sizing: border-box;
   border-radius: 50%;
+  cursor: pointer;
 
   overflow: hidden;
   background: white;
