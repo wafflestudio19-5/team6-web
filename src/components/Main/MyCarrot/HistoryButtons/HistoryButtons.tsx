@@ -2,14 +2,17 @@ import styles from "./HistoryButtons.module.scss";
 import saleIcon from "../../../../icons/MyCarrot/receipt.png";
 import purchaseIcon from "../../../../icons/MyCarrot/shopping.png";
 import watchlistIcon from "../../../../icons/MyCarrot/heart.png";
+import {useNavigate} from "react-router-dom";
 
 const HistoryButtons = () => {
+    const navigate = useNavigate();
+
   return (
     <div className={styles["history-wrapper"]}>
       <button
         className={styles.sale}
         onClick={() => {
-          console.log("판매내역");
+          navigate("/sales-history");
         }}
       >
         <div className={styles.background}>
@@ -20,7 +23,7 @@ const HistoryButtons = () => {
       <button
         className={styles.purchase}
         onClick={() => {
-          console.log("구매내역");
+            navigate("/sales-history");
         }}
       >
         <div className={styles.background}>
