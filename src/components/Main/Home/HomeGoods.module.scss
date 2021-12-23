@@ -2,37 +2,44 @@
   position: relative;
   width: 100%;
   height: 100%;
-
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   .closeButton {
-    position: absolute;
-    top: calc(100% - 80px);
+    position: fixed;
+    top: calc(100% - 140px);
     left: calc(100% - 80px);
     width: 60px;
     z-index: 2;
+    cursor: pointer;
 
     transform: rotate(-45deg);
     transition: all 0.3s;
-    filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.3));
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3));
   }
 
   .openButton {
-    position: absolute;
-    top: calc(100% - 80px);
+    position: fixed;
+    top: calc(100% - 140px);
     left: calc(100% - 80px);
     width: 60px;
     z-index: 2;
+    cursor: pointer;
 
     transition: all 0.3s;
-    filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.3));
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3));
   }
 
   .writeBox {
-    position: relative;
+    position: fixed;
     width: 120px;
     height: 30px;
-    top: calc(100% - 100px);
+    top: calc(100% - 160px);
     left: calc(100% - 160px);
-
+    cursor: pointer;
     padding: 5px;
     display: flex;
     transform: scale(1, 0.8);
@@ -59,5 +66,126 @@
     transform: translate(0px, -40px);
     transition: all 0.15s;
   }
-}
 
+  .articleWrapper {
+    width: calc(100% - 20px);
+    height: 20%;
+    padding: 10px 10px 0 10px;
+    border-bottom: 1px solid #dcdcdc;
+    display: flex;
+    justify-content: normal;
+
+    &:hover {
+      background: #dcdcdc;
+      transition: 0.3s;
+    }
+
+    .thumbnail {
+      position: relative;
+      height: calc(100% - 20px);
+      width: calc((100vh - 205px) / 5);
+      background-position: center;
+      margin-right: 10px;
+      border-radius: 8px;
+    }
+    .dataContainer {
+      width: calc(100% - 20px);
+      margin-left: 10px;
+      .title {
+        position: relative;
+        font-weight: bold;
+        margin-top: 10px;
+        margin-bottom: 0;
+      }
+      .secondLine {
+        display: flex;
+        color: #777777;
+        font-size: 12px;
+        .region {
+          position: relative;
+          margin-top: 5px;
+          margin-bottom: 0;
+        }
+        .time {
+          position: relative;
+          margin-top: 5px;
+          margin-bottom: 0;
+          margin-left: 5px;
+        }
+      }
+      .thirdLine {
+        position: relative;
+        display: flex;
+        align-items: center;
+        top: -4px;
+        .price {
+          position: relative;
+          font-weight: bolder;
+          margin-top: 10px;
+          margin-bottom: 0;
+        }
+        .reservation {
+          position: relative;
+          background-color: #41b675;
+          color: #ffffff;
+          font-size: 12px;
+          font-weight: bold;
+          width: 45px;
+          height: 17px;
+          bottom: -8px;
+          margin-right: 6px;
+          padding: 3px;
+          border-radius: 4px;
+          text-align: center;
+        }
+        .saleClosed {
+          position: relative;
+          background-color: #3a3a3a;
+          color: #ffffff;
+          font-size: 12px;
+          font-weight: bold;
+          width: 55px;
+          height: 17px;
+          bottom: -8px;
+          padding: 3px;
+          margin-right: 6px;
+          border-radius: 4px;
+          text-align: center;
+        }
+      }
+      .lastLine {
+        display: flex;
+        justify-content: flex-end;
+        position: relative;
+        width: 68px;
+        left: calc(100% - 70px);
+        top: calc(100% - 114px);
+        .chatContainer {
+          display: flex;
+          .chatImg {
+            width: 15px;
+            height: 15px;
+            margin-right: 2px;
+          }
+          .chat {
+            font-size: 15px;
+            color: #3a3a3a;
+            margin: 0 2px 0 0;
+          }
+        }
+        .heartContainer {
+          display: flex;
+          .heartImg {
+            width: 15px;
+            margin-right: 2px;
+          }
+          .heart {
+            font-size: 15px;
+            color: #3a3a3a;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
