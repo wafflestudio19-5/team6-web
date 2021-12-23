@@ -1,9 +1,5 @@
 import styles from "./CheckIcon.module.scss";
-import {
-  ClickAwayListener,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
+import { ClickAwayListener, IconButton, Tooltip } from "@mui/material";
 import Check from "../../../icons/Signup/check.png";
 import Cross from "../../../icons/Signup/cross.png";
 import { useState } from "react";
