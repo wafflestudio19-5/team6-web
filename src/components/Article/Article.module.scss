@@ -1,16 +1,16 @@
 .articlePageWrapper {
   position: fixed;
   width: 100%;
-  min-width: 320px;
+  min-width: 250px;
   max-width: 450px;
   height: 100%;
   min-height: 568px;
   max-height: 900px;
   background-color: #ffffff;
-
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+
   .header {
     position: fixed;
     z-index: 2;
@@ -64,7 +64,7 @@
     .priceProposal {
       position: relative;
       font-size: 14px;
-      color: #e97341; // 당근색
+      color: #e97341;
       top: -74px;
       left: 72px;
     }
