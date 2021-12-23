@@ -120,6 +120,7 @@ const SignUp = () => {
               className={styles.uniquecheck}
               variant="contained"
               color="primary"
+              disabled={!regId.test(inputs.username)}
             >
               중복체크
             </Button>
