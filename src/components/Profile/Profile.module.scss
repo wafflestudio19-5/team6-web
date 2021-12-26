@@ -51,6 +51,10 @@
     overflow-y: scroll;
     -ms-overflow-style: none;
 
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
     .imageframe {
       position: absolute;
       width: 60px;
