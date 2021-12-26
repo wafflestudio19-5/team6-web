@@ -5,6 +5,7 @@ import { ChangeEventHandler, useState } from "react";
 import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+import {requester} from "../../apis/requester";
 
 type TLoginForm = {
   username: string;
@@ -32,23 +33,17 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    localStorage.setItem("token", "000");
-    navigate("/main");
-  };
-
   const loginTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post<RequestData>(
-        "https://carrotserver.shop/api/v1/users/signin/",
+      const res = await requester.post(
+          "/users/signin/",
           {
             name: inputs.username,
             password: inputs.password
           }
       );
-      localStorage.setItem("token", "000");
+      localStorage.setItem("token", res.data.access_token);
       navigate("/main");
     } catch (error) {
       window.alert("로그인 정보 틀림");
@@ -60,7 +55,7 @@ const Login = () => {
       {token && <Navigate replace to="/main" />}
       <div className="login-wrapper">
         <img src={carrotLogo} className="daangn-logo" alt="logo" />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={loginTest}>
           <input
             className="login-input-username"
             name="username"
