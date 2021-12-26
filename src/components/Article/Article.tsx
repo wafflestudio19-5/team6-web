@@ -17,19 +17,20 @@ import { withHistory } from "slate-history";
 
 type userData = {
   id: number;
-  name: string;
-  profile_img: string;
-  region: string;
+  name: string; //
+  profile_img: string; //
+  region: string; //
   title: string;
   product_img: string[];
   article: Descendant[];
   price: number;
   time: string;
-  temperature: number;
+  temperature: number; //
   category: string;
   chat: number;
   interest: number;
   hit: number;
+  sale_state: string
 };
 // 판매글 API랑 메인 페이지가 완성되지 않아서 더미데이터로 구현했습니다.
 
@@ -160,7 +161,15 @@ const Article = () => {
             <h1 className={styles.mannerTemp}>{user?.temperature}°C</h1>
           </div>
           <div className={styles.article}>
-            <h1 className={styles.title}>{user?.title}</h1>
+            <h1 className={styles.title}>
+              {user?.sale_state === "예약중" && (
+                  <div className={styles.reservation}>예약중</div>
+              )}
+              {user?.sale_state === "거래완료" && (
+                  <div className={styles.saleClosed}>거래완료</div>
+              )}
+              {user?.title}
+            </h1>
             <p>
               {user?.category}
               {user?.time}

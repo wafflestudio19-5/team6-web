@@ -2,20 +2,34 @@ import styles from "./WriteArticle.module.scss";
 import confirmStyles from "./confirm.module.scss";
 
 import closeButton from "../../../../icons/closebutton.png";
-import imageUploadButton from "../../../../icons/imageUpload.png";
+import camera from "../../../../icons/camera.png";
 import sentence from "../../../../icons/addProperty.png";
 import setting from "../../../../icons/settingSlider.png";
 import backButton from "../../../../icons/leftArrow.png";
 import orangeCheck from "../../../../icons/orangecheck.png";
 import rightButton from "../../../../icons/right.png";
+import deleteButton from "../../../../icons/crossClose.png";
 
 import { useNavigate } from "react-router-dom";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { createEditor, Descendant, Node } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
 import dummyData from "../../../Article/DummyData";
 import * as React from "react";
+
+import "./slick.scss";
+import "slick-carousel/slick/slick-theme.css";
+
+import Slider from "react-slick";
+const settings = {
+  className: "left",
+  infinite: false,
+  centerPadding: "60px",
+  slidesToShow: 5,
+  swipeToSlide: true,
+  draggable: true,
+};
 
 const WriteArticle = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -28,6 +42,9 @@ const WriteArticle = () => {
   const [value, setValue] = useState<Descendant[]>([
     { type: "paragraph", children: [{ text: "" }] },
   ]);
+  const [imgPreview, setImgPreview] = useState<string[]>([camera]);
+
+  const imgRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (toastState) {
@@ -70,10 +87,9 @@ const WriteArticle = () => {
   };
 
   const onClickDone = () => {
-    console.log(serialize(value).length);
     if (!title || !category || !serialize(value)) setIsConfirmOpen(true);
     else if (serialize(value).length <= 5) setToastState(true);
-    else {
+    else if (imgPreview.length === 1) {
       dummyData.push({
         id: Math.floor(Math.random() * Math.pow(10, 10)),
         name: "현재유저",
@@ -114,6 +130,66 @@ const WriteArticle = () => {
   const handleToast = () => {
     setToastState(true);
   };
+
+  const onClickImg = (e: React.MouseEvent) => {
+    imgRef.current?.click();
+  };
+
+  const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nowImgList = e.target.files;
+    const nowImgUrlList = [...imgPreview];
+    if (!!nowImgList) {
+      for (let i = 0; i < nowImgList.length; i++) {
+        const nowImgUrl = URL.createObjectURL(nowImgList[i]);
+        nowImgUrlList.push(nowImgUrl);
+      }
+    }
+    if (nowImgUrlList.length <= 11) setImgPreview(nowImgUrlList);
+    else console.log("이미지는 최대 10개까지 첨부할 수 있어요.");
+  };
+
+  const deleteImg = (image: string) => {
+    const newImgPreview = imgPreview.filter((e) => e !== image);
+    setImgPreview(newImgPreview);
+  };
+
+  const carouselImg = imgPreview.map((image) => {
+    if (image === camera && imgPreview.length === 1)
+      return (
+        <div className={styles.imageUploadContainer}>
+          <img
+            className={styles.imageUpload}
+            src={camera}
+            alt="이미지 업로드"
+            onClick={onClickImg}
+          />
+          <p className={styles.imgCount}>{imgPreview.length - 1}/10</p>
+        </div>
+      );
+    else if (image === camera && imgPreview.length !== 1)
+      return (
+        <div className={styles.imageUploadContainer}>
+          <img
+            className={styles.imageUpload}
+            src={camera}
+            alt="이미지 업로드"
+            onClick={onClickImg}
+          />
+          <p className={styles.imgCount}>{imgPreview.length - 1}/10</p>
+        </div>
+      );
+    return (
+      <div className={styles.carouselImgContainer}>
+        <img className={styles.carouselImg} src={image} alt={"상품 이미지"} />
+        <img
+          className={styles.deleteButton}
+          src={deleteButton}
+          alt={"이미지 제거"}
+          onClick={() => deleteImg(image)}
+        />
+      </div>
+    );
+  });
 
   return (
     <>
@@ -172,11 +248,15 @@ const WriteArticle = () => {
           </div>
           <div className={styles.contentWrapper}>
             <div className={styles.imageUploadWrapper}>
-              <img
-                className={styles.imageUpload}
-                src={imageUploadButton}
-                alt="이미지 업로드"
+              <input
+                className={styles.imgInput}
+                type="file"
+                accept="image/*"
+                multiple
+                ref={imgRef}
+                onChange={onChangeImg}
               />
+              <Slider {...settings}>{carouselImg}</Slider>
             </div>
             <div className={styles.titleWrapper}>
               <input
