@@ -58,5 +58,6 @@
     "@types/react-modal": "^3.13.1",
     "@types/react-slick": "^0.23.7",
     "prettier": "^2.5.0"
-  }
+  },
+  "proxy": "https://carrotserver.shop"
 }
