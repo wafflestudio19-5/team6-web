@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.2.5",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -10,6 +13,7 @@
     "@types/node": "^12.20.37",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
+    "axios": "^0.24.0",
     "dart-sass": "^1.25.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -17,7 +21,7 @@
     "react-scripts": "4.0.3",
     "react-slick": "^0.28.1",
     "sass": "^1.43.5",
-    "slate": "^0.72.0",
+    "slate": "^0.72.3",
     "slate-history": "^0.66.0",
     "slate-react": "^0.72.1",
     "slick-carousel": "^1.8.1",
@@ -29,8 +33,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "aws s3 sync ./build s3://daangn-market-clone-service --profile=s-yeoyul",
-    "invalidate": "aws cloudfront create-invalidation --profile=JiyeonP  --distribution-id E1LYE1UK1H0HT7 --paths / /index.html /error.html /service-worker.js /manifest.json /favicon.ico"
+    "deploy": "aws s3 sync ./build s3://daangn-market-clone-service --profile=Hyeongtaek",
+    "invalidate": "aws cloudfront create-invalidation --profile=Hyeongtaek  --distribution-id E1LYE1UK1H0HT7 --paths / /index.html /error.html /service-worker.js /manifest.json /favicon.ico"
   },
   "eslintConfig": {
     "extends": [
@@ -54,5 +58,6 @@
     "@types/react-modal": "^3.13.1",
     "@types/react-slick": "^0.23.7",
     "prettier": "^2.5.0"
-  }
+  },
+  "proxy": "https://carrotserver.shop"
 }

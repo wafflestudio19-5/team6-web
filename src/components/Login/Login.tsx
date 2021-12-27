@@ -4,11 +4,18 @@ import kakaoLogo from "../../icons/kakao-logo.png";
 import { ChangeEventHandler, useState } from "react";
 import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
+import {requester} from "../../apis/requester";
 
 type TLoginForm = {
   username: string;
   password: string;
 };
+
+type RequestData = {
+  name: string;
+  password: string;
+}
 
 const Login = () => {
   const [inputs, setInputs] = useState<TLoginForm>({
@@ -26,18 +33,29 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const loginTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    localStorage.setItem("token", "000");
-    navigate("/main");
-  };
+    try {
+      const res = await axios.post(
+          "https://carrotserver.shop/api/users/signin/",
+          {
+            name: inputs.username,
+            password: inputs.password
+          }
+      );
+      localStorage.setItem("token", res.data.access_token);
+      navigate("/main");
+    } catch (error) {
+      window.alert("로그인 정보 틀림");
+    }
+  }
 
   return (
     <div>
       {token && <Navigate replace to="/main" />}
       <div className="login-wrapper">
         <img src={carrotLogo} className="daangn-logo" alt="logo" />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={loginTest}>
           <input
             className="login-input-username"
             name="username"

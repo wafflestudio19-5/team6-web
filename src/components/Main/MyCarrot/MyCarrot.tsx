@@ -41,12 +41,12 @@ const MyCarrot = () => {
           <p>알림 키워드 등록</p>
         </button>
         <button
-          onClick={() => {
-            console.log("당근 가계부");
-          }}
+            onClick={() => {
+              console.log("관심 카테고리 설정");
+            }}
         >
-          <img src={icon4} alt="moneybook" />
-          <p>당근 가계부</p>
+          <img src={icon6} alt="toggle switch" />
+          <p>관심 카테고리 설정</p>
         </button>
         <button
           onClick={() => {
@@ -57,12 +57,12 @@ const MyCarrot = () => {
           <p>모아보기</p>
         </button>
         <button
-          onClick={() => {
-            console.log("관심 카테고리 설정");
-          }}
+            onClick={() => {
+              console.log("당근 가계부");
+            }}
         >
-          <img src={icon6} alt="toggle switch" />
-          <p>관심 카테고리 설정</p>
+          <img src={icon4} alt="moneybook" />
+          <p>당근 가계부</p>
         </button>
       </div>
     </div>

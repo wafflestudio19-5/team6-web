@@ -7,6 +7,7 @@
   padding: 0;
   background: white;
   border: none;
+  color: black;
 
   &:hover {
     background: lavenderblush;
@@ -42,9 +43,9 @@
 
   .id-location {
     position: absolute;
-    top: 39px;
+    top: 40px;
     left: 105px;
-    font-size: 11px;
+    font-size: 13px;
     color: #777777;
   }
 
@@ -59,7 +60,6 @@
 
 .editbutton {
   position: absolute;
-  z-index: 10;
 
   width: 22px;
   height: 22px;
@@ -70,6 +70,7 @@
   border: 1px solid #e5e5e5;
   box-sizing: border-box;
   border-radius: 50%;
+  cursor: pointer;
 
   overflow: hidden;
   background: white;
