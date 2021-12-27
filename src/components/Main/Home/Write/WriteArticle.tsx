@@ -32,7 +32,9 @@ const settings = {
 };
 
 const WriteArticle = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] =
+    useState<boolean>(false);
+  const [isImgModalOpen, setIsImgModalOpen] = useState<boolean>(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
   const [toastState, setToastState] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
@@ -70,17 +72,17 @@ const WriteArticle = () => {
   const navigate = useNavigate();
 
   const onClickBack = () => {
-    setIsModalOpen(false);
+    setIsCategoryModalOpen(false);
   };
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
   const onClickCategory = (e: string) => {
     setCategory(e);
-    setIsModalOpen(false);
+    setIsCategoryModalOpen(false);
   };
   const handleCategory = () => {
-    setIsModalOpen(true);
+    setIsCategoryModalOpen(true);
   };
   const onClickClose = () => {
     navigate(-1);
@@ -99,7 +101,27 @@ const WriteArticle = () => {
         title: title,
         product_img: [
           "https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75",
-        ], //
+        ],
+        article: value,
+        price: parseInt(price.replace(/[^0-9]/g, "")),
+        time: "현재시간",
+        temperature: 36.5,
+        category: category,
+        chat: 0,
+        hit: 0,
+        interest: 0,
+        sale_state: "판매중",
+      }); // axios.patch
+      navigate("/main");
+    } else {
+      dummyData.push({
+        id: Math.floor(Math.random() * Math.pow(10, 10)),
+        name: "현재유저",
+        region: "현재지역",
+        profile_img:
+          "https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75",
+        title: title,
+        product_img: imgPreview.slice(1),
         article: value,
         price: parseInt(price.replace(/[^0-9]/g, "")),
         time: "현재시간",
@@ -193,7 +215,7 @@ const WriteArticle = () => {
 
   return (
     <>
-      {!isModalOpen && (
+      {!isCategoryModalOpen && !isImgModalOpen && (
         <div className={styles.writePageWrapper}>
           {isConfirmOpen && (
             <div className={confirmStyles.box}>
@@ -318,7 +340,7 @@ const WriteArticle = () => {
           )}
         </div>
       )}
-      {isModalOpen && (
+      {isCategoryModalOpen && (
         <div className={styles.writePageWrapper}>
           <div className={styles.header}>
             <img
