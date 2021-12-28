@@ -1,7 +1,7 @@
 import { BaseEditor, Descendant } from "slate";
 import { ReactEditor } from "slate-react";
 import { HistoryEditor } from "slate-history";
-import {setAppElement} from "react-modal";
+import { setAppElement } from "react-modal";
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };
 type CustomText = { text: string; bold?: true };
@@ -53,7 +53,7 @@ const dummyData: userData[] = [
     chat: 0, // 채팅 수
     interest: 1, // 관심 수
     hit: 323, // 조회 수
-    sale_state: "판매중"
+    sale_state: "판매중",
   },
   {
     id: 2,
@@ -75,7 +75,7 @@ const dummyData: userData[] = [
     chat: 8, // 채팅 수
     interest: 17, // 관심 수
     hit: 323, // 조회 수
-    sale_state: "예약중"
+    sale_state: "예약중",
   },
   {
     id: 3,
@@ -95,7 +95,7 @@ const dummyData: userData[] = [
     chat: 2, // 채팅 수
     interest: 5, // 관심 수
     hit: 323, // 조회 수
-    sale_state: "거래완료"
+    sale_state: "거래완료",
   },
 ];
 

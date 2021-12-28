@@ -22,10 +22,8 @@ const Profile = () => {
         <p className={styles["id-location"]}>#id</p>
         <button className={styles.edit}>프로필 수정</button>
         <MannerTemperature />
-          <section>
-              인증 내역
-          </section>
-          <ProfileButtons />
+        <section>인증 내역</section>
+        <ProfileButtons />
       </div>
     </div>
   );

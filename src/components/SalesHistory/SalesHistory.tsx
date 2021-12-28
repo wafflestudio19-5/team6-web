@@ -49,11 +49,11 @@ const SalesHistory = () => {
       >
         숨김
       </button>
-        <section className={styles["body-wrapper"]}>
-            {mode === 1 && <Onsale />}
-            {mode === 2 && <CompletedSales />}
-            {mode === 3 && <HiddenSales />}
-        </section>
+      <section className={styles["body-wrapper"]}>
+        {mode === 1 && <Onsale />}
+        {mode === 2 && <CompletedSales />}
+        {mode === 3 && <HiddenSales />}
+      </section>
     </div>
   );
 };
