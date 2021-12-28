@@ -1,6 +1,7 @@
 import { BaseEditor, Descendant } from "slate";
 import { ReactEditor } from "slate-react";
 import { HistoryEditor } from "slate-history";
+import { setAppElement } from "react-modal";
 
 type userData = {
   id: number;

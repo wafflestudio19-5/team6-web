@@ -6,69 +6,77 @@
   max-width: 450px;
   height: 100%;
 
-  overflow-y: scroll;
-  -ms-overflow-style: none;
-
-  .fakeHeader {
-    position: relative;
-    height: 41px;
-    width: 100%;
-  }
-
   .subHeader {
-    position: fixed;
+    position: relative;
     height: 40px;
     width: 100%;
-    top: 41px;
 
     display: flex;
     border-bottom: 1px solid #e5e5e5;
 
     background-color: white;
     z-index: 1;
-
-    .backArrow {
+    .backArrow-wrapper {
       position: relative;
-      width: 24px;
-      height: 24px;
-      top: 8px;
-      left: 10px;
+      width: 48px;
+      .backArrow {
+        position: relative;
+        width: 24px;
+        height: 24px;
+        top: 8px;
+        left: 10px;
+      }
     }
     .pageName {
       position: relative;
-      width: 100%;
+      width: calc(100% - 96px);
       top: 9px;
-      left: -5px;
       font-size: 15px;
       text-align: center;
       margin-top: 0;
     }
   }
-  .section {
-    position: relative;
-    border-bottom: 1px solid #e5e5e5;
 
-    .title {
+  .section-wrapper {
+    position: relative;
+    height: 100%;
+
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+
+    .section {
       position: relative;
-      font-weight: bold;
-      font-size: 11px;
-      left: 10px;
-    }
-    .button {
-      position: relative;
-      font-size: 16px;
-      margin-top: 20px;
-      margin-bottom: 20px;
-      left: 10px;
-    }
-    .contents {
-      position: relative;
-      top: -10px;
-      font-size: 11px;
-      left: 10px;
+      border-bottom: 1px solid #e5e5e5;
+      padding-top: 10px;
+      cursor: pointer;
+
+      .title {
+        position: relative;
+        font-weight: bold;
+        font-size: 11px;
+        left: 10px;
+      }
+
+      .button {
+        position: relative;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+
+        .contents {
+          position: relative;
+          font-size: 11px;
+        }
+      }
+
+      .button:hover {
+        background: lavenderblush;
+      }
     }
   }
-}
-.wrapper::-webkit-scrollbar {
-  display: none;
+
+  .section-wrapper::-webkit-scrollbar {
+    display: none;
+  }
 }

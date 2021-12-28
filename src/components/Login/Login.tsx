@@ -36,7 +36,7 @@ const Login = () => {
   const loginTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
+	const res = await axios.post(
         "https://carrotserver.shop/api/v1/users/signin/",
         {
           name: inputs.username,

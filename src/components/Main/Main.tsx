@@ -47,25 +47,23 @@ const Main = () => {
       {localStorage.getItem("token") === null && (
         <Navigate replace to="/login" />
       )}
-      <div className={styles.test}></div>
       <div className={styles.wrapper}>
         <div className={styles.header}>
           {page === "home" && (
             <HomeHeader location={location} setLocation={setLocation} />
           )}
           {page === "user" && <p>나의 당근</p>}
-          {page === "settings" && <></>}
+          {page === "settings" && <p>앱 설정</p>}
         </div>
         <div>{page === "user" && <MyCarrot />}</div>
         <div className={styles.contents}>
           {page === "home" && (
-            <HomeGoods
-              writeHandle={write}
-              setWriteHandle={setWrite}
-            />
+            <HomeGoods writeHandle={write} setWriteHandle={setWrite} />
           )}
-          {page === "user" &&  <MyCarrot />}
-          {page === "settings" && <Settings confirm={confirm} setConfirm={setConfirm}/>}
+          {page === "user" && <MyCarrot />}
+          {page === "settings" && (
+            <Settings confirm={confirm} setConfirm={setConfirm} />
+          )}
         </div>
         <div className={styles.footer}>
           <div className={styles.footerBox} onClick={changeToHome}>
@@ -94,10 +92,12 @@ const Main = () => {
           </div>
         </div>
         <div
-            className={`${styles.backShadow} ${write ? styles.show : ""}`} onClick={()=>setWrite(false)}
+          className={`${styles.backShadow} ${write ? styles.show : ""}`}
+          onClick={() => setWrite(false)}
         />
         <div
-            className={`${styles.backShadow} ${confirm ? styles.show : ""}`} onClick={()=>setConfirm(false)}
+          className={`${styles.backShadow} ${confirm ? styles.show : ""}`}
+          onClick={() => setConfirm(false)}
         />
       </div>
     </>

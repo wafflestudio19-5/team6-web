@@ -1,5 +1,5 @@
 body {
-  background: rgba(241,241,241,255);
+  background: rgba(241, 241, 241, 255);
 }
 
 .login-wrapper {
@@ -47,20 +47,17 @@ body {
       border: 1px solid #e5e5e5;
       background-color: #fff;
       font-size: 15px;
-      transition: border .2s ease-in-out;
+      transition: border 0.2s ease-in-out;
     }
 
     .login-input-username {
-
-
     }
     .login-input-password {
-
     }
     .login-button {
       width: 75%;
       height: 30px;
-      background: rgba(255,143,69,255);
+      background: rgba(255, 143, 69, 255);
       border: none;
       border-radius: 3px;
 
@@ -98,11 +95,10 @@ body {
     }
   }
   .kakao {
-
   }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap");
 
 .sign-up-wrapper {
   position: absolute;
@@ -118,8 +114,8 @@ body {
     left: 5%;
 
     font-size: 18px;
-    font-family: 'Nanum Pen Script', cursive;
-    color: rgba(255,143,69,255);
+    font-family: "Nanum Pen Script", cursive;
+    color: rgba(255, 143, 69, 255);
   }
 
   .sign-up-button {
