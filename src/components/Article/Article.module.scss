@@ -130,6 +130,15 @@
       margin: 15px;
       .title {
         font-size: 24px;
+        display: flex;
+        .reservation {
+          color: #41b675;
+          margin-right: 4px;
+        }
+        .saleClosed {
+          color: #aaaaaa;
+          margin-right: 4px;
+        }
       }
     }
   }
