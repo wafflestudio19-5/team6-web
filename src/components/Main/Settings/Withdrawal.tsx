@@ -130,7 +130,7 @@ const Withdrawal = (props: {
           options={options}
           onChange={(option) => handleSelect(option)}
         />
-        {(selected as OptionType).value === "6" && (
+	{(selected as OptionType).value === "6" && (
           <input
             className={styles2.input}
             value={reason}
