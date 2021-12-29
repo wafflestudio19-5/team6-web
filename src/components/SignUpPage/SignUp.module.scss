@@ -13,6 +13,10 @@
 
   overflow-y: scroll;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   .daangnlogo {
     position: absolute;
     width: 160px;

@@ -6,10 +6,12 @@ import MannerTemperature from "./MannerTemperature/MannerTemperature";
 import ProfileButtons from "./ProfileButtons/ProfileButtons";
 
 const Profile = () => {
+  // @ts-ignore
+  // @ts-ignore
   return (
     <div className={styles.wrapper}>
       <header>
-        <Link to="/main" className={styles.back}>
+        <Link to="/main" state={{ page: "user" }} className={styles.back}>
           <img src={BackArrow} alt="뒤로" />
         </Link>
         <p>프로필</p>
@@ -22,10 +24,8 @@ const Profile = () => {
         <p className={styles["id-location"]}>#id</p>
         <button className={styles.edit}>프로필 수정</button>
         <MannerTemperature />
-          <section>
-              인증 내역
-          </section>
-          <ProfileButtons />
+        <section>인증 내역</section>
+        <ProfileButtons />
       </div>
     </div>
   );
