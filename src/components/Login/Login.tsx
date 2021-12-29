@@ -5,7 +5,7 @@ import { ChangeEventHandler, useState } from "react";
 import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
-import {requester} from "../../apis/requester";
+import { requester } from "../../apis/requester";
 
 type TLoginForm = {
   username: string;
@@ -15,7 +15,7 @@ type TLoginForm = {
 type RequestData = {
   name: string;
   password: string;
-}
+};
 
 const Login = () => {
   const [inputs, setInputs] = useState<TLoginForm>({
@@ -36,19 +36,16 @@ const Login = () => {
   const loginTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-          "https://carrotserver.shop/api/users/signin/",
-          {
-            name: inputs.username,
-            password: inputs.password
-          }
-      );
+      const res = await requester.post("/users/signin/", {
+        name: inputs.username,
+        password: inputs.password,
+      });
       localStorage.setItem("token", res.data.access_token);
       navigate("/main");
     } catch (error) {
       window.alert("로그인 정보 틀림");
     }
-  }
+  };
 
   return (
     <div>
