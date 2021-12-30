@@ -12,7 +12,7 @@ const SalesHistory = () => {
   return (
     <div className={styles["sales-history-wrapper"]}>
       <header>
-        <Link to="/main" className={styles.back}>
+        <Link to="/main" state={{ page: "user" }} className={styles.back}>
           <img src={BackArrow} alt="뒤로" />
         </Link>
         <p>판매내역</p>

@@ -1,7 +1,7 @@
 import styles from "./SignUp.module.scss";
 import carrotLogo from "../../icons/daangn-logo.svg";
 import kakaologo from "../../icons/kakao-logo.png";
-import { Link, Navigate } from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 import * as React from "react";
 import { ChangeEventHandler, useState } from "react";
 import CheckIcon from "./CheckIcon/CheckIcon";
@@ -27,6 +27,7 @@ const SignUp = () => {
     email: "",
     location: "",
   });
+  const navigate = useNavigate();
 
   /* 회원가입 format
      username: 6-14자의 영문+숫자 조합
@@ -194,6 +195,9 @@ const SignUp = () => {
               !regPhone.test(inputs.phone) ||
               !regEmail.test(inputs.email)
             }
+            onClick={() => {
+              navigate("/setlocation");
+            }}
           >
             내 동네 설정하기
           </button>
