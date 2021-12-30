@@ -228,19 +228,19 @@ const Article = () => {
               )}
               {currentArticle?.title}
             </h1>
-            <p>
-              {currentArticle?.category}
-              {currentArticle?.created_at}
-            </p>
+            <div className={styles.secondLine}>
+              <p className={styles.category}>{currentArticle?.category} ·</p>
+              <p className={styles.time}>{currentArticle?.created_at}</p>
+            </div>
             <TextareaAutosize
               readOnly
               className={styles.content}
               value={currentArticle?.content}
             />
-            <p>
-              관심{currentArticle?.likes}
-              조회{currentArticle?.hit}
-            </p>
+            <div className={styles.lastLine}>
+              <p className={styles.likes}>관심 {currentArticle?.likes} ·</p>
+              <p className={styles.hit}>조회 {currentArticle?.hit}</p>
+            </div>
           </div>
         </div>
       </div>

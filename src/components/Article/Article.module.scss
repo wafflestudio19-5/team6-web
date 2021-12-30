@@ -140,8 +140,21 @@
           margin-right: 4px;
         }
       }
+      .secondLine {
+        display: flex;
+        color: #aaaaaa;
+        font-size: 14px;
+        margin-bottom: 10px;
+        .category {
+          margin: 0 5px 0 0;
+        }
+        .time {
+          margin: 0;
+        }
+      }
       .content {
         width: 100%;
+        padding: 0;
         height: auto;
         resize: none;
         border: none;
@@ -149,9 +162,21 @@
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
           "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
           "Helvetica Neue", sans-serif;
-        font-size: 14px;
+        font-size: 20px;
         &:focus {
           outline: none;
+        }
+      }
+      .lastLine {
+        display: flex;
+        color: #aaaaaa;
+        font-size: 12px;
+        margin-top: 10px;
+        .likes {
+          margin: 0 5px 0 0;
+        }
+        .hit{
+          margin: 0;
         }
       }
     }
