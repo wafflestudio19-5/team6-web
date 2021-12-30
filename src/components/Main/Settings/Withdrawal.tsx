@@ -87,7 +87,7 @@ const Withdrawal = (props: {
   setWithdrawal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [selected, setSelected] = useState(options[0]);
-  const [reason, setReason] = useState<string | null>(null);
+  const [reason, setReason] = useState("");
 
   const handleSelect = (
     option: SingleValue<OptionType | GroupBase<OptionType>>
@@ -130,19 +130,21 @@ const Withdrawal = (props: {
           options={options}
           onChange={(option) => handleSelect(option)}
         />
-        {(selected as OptionType).value === "6" ? (
+        {(selected as OptionType).value === "6" && (
           <input
             className={styles2.input}
+            value={reason}
+            onChange={handleChange}
             placeholder="계정을 삭제하려는 이유를 알려주세요."
           />
-        ) : null}
-        {(selected as OptionType).text === "" ? null : (
+        )}
+        {(selected as OptionType).text !== "" && (
           <p className={styles2.contents}>{(selected as OptionType).text}</p>
         )}
-        {(selected as OptionType).link === "" ? null : (
+        {(selected as OptionType).link !== "" && (
           <p className={styles2.link}>{(selected as OptionType).linkTitle}</p>
         )}
-        {(selected as OptionType).value === "0" ? null : (
+        {(selected as OptionType).value !== "0" && (
           <div className={styles2.buttons}>
             <div
               className={styles2.cancel}
@@ -150,9 +152,13 @@ const Withdrawal = (props: {
             >
               취소
             </div>
-            <div className={styles2.submit} onClick={handleWithdraw}>
-              제출
-            </div>
+            {(selected as OptionType).value === "6" && !reason ? (
+              <div className={`${styles2.submit} ${styles2.blocked}`}>제출</div>
+            ) : (
+              <div className={styles2.submit} onClick={handleWithdraw}>
+                제출
+              </div>
+            )}
           </div>
         )}
       </div>
