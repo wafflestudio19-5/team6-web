@@ -3,7 +3,7 @@ import BackArrow from "../../icons/leftArrow.png";
 import Loading from "../../icons/Signup/icons8-spinner.gif";
 import currentLocationIcon from "../../icons/Signup/current.png";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import axios from "axios";
 
@@ -13,14 +13,31 @@ declare global {
   }
 }
 
+type TSignupForm = {
+  username: string;
+  nickname: string;
+  password: string;
+  passwordConfirm: string;
+  phone: string;
+  email: string;
+  location: string;
+};
+
 const LocationPage = () => {
   const [lat, setLat] = useState<number>(37.460103);
   const [lon, setLon] = useState<number>(126.951873);
+  const [inputs, setInputs] = useState<TSignupForm>();
   const [loading, setLoading] = useState<boolean>(false);
   const [localPosition, setLocalPosition] = useState<string>("");
   const [specificPosition, setSpecificPosition] = useState<string>("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    getLocation();
+    location.state && setInputs(location.state.inputs);
+  }, []);
 
   const getLocation = async () => {
     setLoading(true);
@@ -67,19 +84,16 @@ const LocationPage = () => {
     }
   };
 
-  useEffect(() => {
-    getLocation();
-  }, []);
+  const handleToGoBack = () => {
+    navigate("/signup", {
+      state: { inputs: inputs },
+    });
+  };
 
   return (
     <div className={styles.wrapper}>
       <header>
-        <button
-          className={styles.back}
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
+        <button className={styles.back} onClick={handleToGoBack}>
           <img src={BackArrow} alt="뒤로" />
         </button>
         <p>동네 설정하기</p>
@@ -124,6 +138,14 @@ const LocationPage = () => {
           회원가입
         </button>
       </div>
+      <button
+        className={styles.bbbb}
+        onClick={() => {
+          console.log(inputs);
+        }}
+      >
+        테스트
+      </button>
     </div>
   );
 };

@@ -1,14 +1,15 @@
 import styles from "./SignUp.module.scss";
 import carrotLogo from "../../icons/daangn-logo.svg";
 import kakaologo from "../../icons/kakao-logo.png";
-import {Link, Navigate, useNavigate} from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import * as React from "react";
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 import CheckIcon from "./CheckIcon/CheckIcon";
 import Button from "@mui/material/Button";
 
 type TSignupForm = {
   username: string;
+  nickname: string;
   password: string;
   passwordConfirm: string;
   phone: string;
@@ -21,6 +22,7 @@ const SignUp = () => {
 
   const [inputs, setInputs] = useState<TSignupForm>({
     username: "",
+    nickname: "",
     password: "",
     passwordConfirm: "",
     phone: "",
@@ -28,6 +30,11 @@ const SignUp = () => {
     location: "",
   });
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    location.state && setInputs(location.state.inputs);
+  });
 
   /* 회원가입 format
      username: 6-14자의 영문+숫자 조합
@@ -36,6 +43,7 @@ const SignUp = () => {
      email: 일반적인 email 양식
    */
   const regId = /^[A-Za-z0-9]{6,14}$/;
+  const regNickname = /^[가-힣A-Za-z0-9]{3,14}$/;
   const regPassword =
     /^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
   const regPhone = /^\d{3}-\d{4}-\d{4}$/;
@@ -78,6 +86,13 @@ const SignUp = () => {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navigate("/setlocation", {
+      state: { inputs: inputs },
+    });
+  };
+
   return (
     <div>
       {token && <Navigate replace to="/main" />}
@@ -95,11 +110,7 @@ const SignUp = () => {
           </button>
           <div className={styles["hr-sect"]}>또는</div>
         </section>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <div className={styles.inputbox}>
             <input
               className={styles.username}
@@ -128,6 +139,22 @@ const SignUp = () => {
           </div>
           <div className={styles.inputbox}>
             <input
+              name="nickname"
+              value={inputs.nickname}
+              onChange={handleChange}
+              placeholder="닉네임"
+            />
+            {inputs.nickname.length !== 0 ? (
+              <CheckIcon
+                config={regNickname.test(inputs.nickname)}
+                configMessage={
+                  "닉네임은 띄어쓰기 없이 3~14자의 한글,영문,숫자만 가능합니다."
+                }
+              />
+            ) : null}
+          </div>
+          <div className={styles.inputbox}>
+            <input
               type="password"
               name="password"
               value={inputs.password}
@@ -138,7 +165,7 @@ const SignUp = () => {
               <CheckIcon
                 config={regPassword.test(inputs.password)}
                 configMessage={
-                  "비밀번호는 8~16자의 영문+숫자+특수문자 조합이여야 합니다."
+                  "비밀번호는 8~16자의 영문+숫자+특수문자만 가능합니다."
                 }
               />
             ) : null}
@@ -195,9 +222,6 @@ const SignUp = () => {
               !regPhone.test(inputs.phone) ||
               !regEmail.test(inputs.email)
             }
-            onClick={() => {
-              navigate("/setlocation");
-            }}
           >
             내 동네 설정하기
           </button>
