@@ -89,11 +89,43 @@
       width: calc(100% - 20px);
       margin: 0 10px 0 10px;
       border-bottom: 1px solid #dcdcdc;
-      .imageUpload {
-        width: 70px;
-        margin: 15px;
-        cursor: pointer;
+      .imageUploadContainer {
+        position: relative;
+        height: 80px;
+        margin: 15px 0 15px 0;
+        border: 1px solid #aaaaaa;
+        border-radius: 4px;
+        .imageUpload {
+          margin: 3px 15px 15px 19px;
+          cursor: pointer;
+        }
+        .imgCount {
+          position: relative;
+          top: -10px;
+          left: 27px;
+          color: #e97341;
+        }
       }
+
+      .imgInput {
+        display: none;
+      }
+      .carouselImgContainer {
+        .carouselImg {
+          width: 70px;
+          height: 70px;
+          margin: 15px 15px 0 15px;
+          object-fit: cover;
+        }
+        .deleteButton {
+          position: relative;
+          width: 20px;
+          top: -80px;
+          left: 75px;
+          cursor: pointer;
+        }
+      }
+
     }
     .titleWrapper {
       width: calc(100% - 20px);

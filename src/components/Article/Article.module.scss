@@ -16,6 +16,7 @@
     z-index: 2;
     background-color: transparent;
     width: 100%;
+    height: 60px;
     .backButton {
       position: relative;
       width: 24px;
@@ -79,7 +80,6 @@
   }
   .contentWrapper {
     position: relative;
-    top: 0;
     height: calc(100% - 64px);
     overflow: scroll;
     -ms-overflow-style: none;
@@ -127,9 +127,57 @@
     .article {
       position: relative;
       top: 120px;
-      margin: 15px;
+      padding: 15px;
       .title {
         font-size: 24px;
+        display: flex;
+        .reservation {
+          color: #41b675;
+          margin-right: 4px;
+        }
+        .saleClosed {
+          color: #aaaaaa;
+          margin-right: 4px;
+        }
+      }
+      .secondLine {
+        display: flex;
+        color: #aaaaaa;
+        font-size: 14px;
+        margin-bottom: 10px;
+        .category {
+          margin: 0 5px 0 0;
+        }
+        .time {
+          margin: 0;
+        }
+      }
+      .content {
+        width: 100%;
+        padding: 0;
+        height: auto;
+        resize: none;
+        border: none;
+        white-space: pre-wrap;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+        font-size: 20px;
+        &:focus {
+          outline: none;
+        }
+      }
+      .lastLine {
+        display: flex;
+        color: #aaaaaa;
+        font-size: 12px;
+        margin-top: 10px;
+        .likes {
+          margin: 0 5px 0 0;
+        }
+        .hit{
+          margin: 0;
+        }
       }
     }
   }
