@@ -30,7 +30,7 @@ type userData = {
   chat: number;
   interest: number;
   hit: number;
-  sale_state: string
+  sale_state: string;
 };
 // 판매글 API랑 메인 페이지가 완성되지 않아서 더미데이터로 구현했습니다.
 
@@ -163,10 +163,10 @@ const Article = () => {
           <div className={styles.article}>
             <h1 className={styles.title}>
               {user?.sale_state === "예약중" && (
-                  <div className={styles.reservation}>예약중</div>
+                <div className={styles.reservation}>예약중</div>
               )}
               {user?.sale_state === "거래완료" && (
-                  <div className={styles.saleClosed}>거래완료</div>
+                <div className={styles.saleClosed}>거래완료</div>
               )}
               {user?.title}
             </h1>
