@@ -26,7 +26,8 @@ type TSignupForm = {
 const LocationPage = () => {
   const [lat, setLat] = useState<number>(37.460103);
   const [lon, setLon] = useState<number>(126.951873);
-  const [inputs, setInputs] = useState<TSignupForm>();
+  const [prev, setPrev] = useState<string>("");
+  const [signupForm, setSignupForm] = useState<TSignupForm>();
   const [loading, setLoading] = useState<boolean>(false);
   const [localPosition, setLocalPosition] = useState<string>("");
   const [specificPosition, setSpecificPosition] = useState<string>("");
@@ -35,17 +36,26 @@ const LocationPage = () => {
   const location = useLocation();
 
   useEffect(() => {
+    if (location.state) {
+      setPrev(location.state.prev);
+      location.state.prev === "signup" &&
+        setSignupForm(location.state.signupForm);
+      location.state.prev === "edit" &&
+        !!localStorage.getItem("token") &&
+        navigate("/login");
+      location.state = null;
+    } else {
+      navigate("/login");
+    }
     getLocation();
-    location.state && setInputs(location.state.inputs);
   }, []);
 
-  const getLocation = async () => {
+  const getLocation = () => {
     setLoading(true);
     setLocalPosition("");
     setSpecificPosition("");
     if (navigator.geolocation) {
-      // GPS를 지원하면
-      await navigator.geolocation.getCurrentPosition(
+      navigator.geolocation.getCurrentPosition(
         function (position) {
           setLoading(false);
           setLat(position.coords.latitude);
@@ -86,7 +96,7 @@ const LocationPage = () => {
 
   const handleToGoBack = () => {
     navigate("/signup", {
-      state: { inputs: inputs },
+      state: { inputs: signupForm },
     });
   };
 
@@ -109,12 +119,7 @@ const LocationPage = () => {
             height: "300px",
           }}
         >
-          <MapMarker
-            position={{
-              lat: lat,
-              lng: lon,
-            }}
-          />
+          <MapMarker position={{ lat: lat, lng: lon }} />
         </Map>
         {loading && (
           <div className={styles.loading}>
@@ -135,13 +140,15 @@ const LocationPage = () => {
         )}
         <button className={styles.signup} disabled={!localPosition}>
           <b>{!!specificPosition ? specificPosition : "이 동네"}</b>에서
-          회원가입
+          {prev === "signup" ? " 회원가입" : " 거래하기"}
         </button>
       </div>
       <button
         className={styles.bbbb}
         onClick={() => {
-          console.log(inputs);
+          console.log(signupForm);
+          console.log(prev);
+          console.log(location.state);
         }}
       >
         테스트

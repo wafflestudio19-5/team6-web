@@ -34,6 +34,7 @@ const SignUp = () => {
 
   useEffect(() => {
     location.state && setInputs(location.state.inputs);
+    location.state = null;
   });
 
   /* 회원가입 format
@@ -89,7 +90,7 @@ const SignUp = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     navigate("/setlocation", {
-      state: { inputs: inputs },
+      state: { prev: "signup", signupForm: inputs },
     });
   };
 
