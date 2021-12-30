@@ -62,5 +62,4 @@
     "prettier": "^2.5.0"
   },
   "proxy": "https://carrotserver.shop"
-  }
 }
