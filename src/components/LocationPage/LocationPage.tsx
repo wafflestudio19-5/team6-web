@@ -26,6 +26,7 @@ type TSignupForm = {
 const LocationPage = () => {
   const [lat, setLat] = useState<number>(37.460103);
   const [lon, setLon] = useState<number>(126.951873);
+  const [localCode, setLocalCode] = useState<number>();
   const [prev, setPrev] = useState<string>("");
   const [signupForm, setSignupForm] = useState<TSignupForm>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -87,6 +88,7 @@ const LocationPage = () => {
           },
         }
       );
+      setLocalCode(res.data.documents[1].code);
       setLocalPosition(res.data.documents[1].address_name);
       setSpecificPosition(res.data.documents[1].region_3depth_name);
     } catch (error) {
@@ -143,16 +145,6 @@ const LocationPage = () => {
           {prev === "signup" ? " 회원가입" : " 거래하기"}
         </button>
       </div>
-      <button
-        className={styles.bbbb}
-        onClick={() => {
-          console.log(signupForm);
-          console.log(prev);
-          console.log(location.state);
-        }}
-      >
-        테스트
-      </button>
     </div>
   );
 };
