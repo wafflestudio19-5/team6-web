@@ -13,7 +13,7 @@ declare module "slate" {
     Text: CustomText;
   }
 }
-type userData = {
+export type userData = {
   id: number;
   name: string;
   profile_img: string;
