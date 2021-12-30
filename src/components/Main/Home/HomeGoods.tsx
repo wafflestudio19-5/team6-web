@@ -51,6 +51,7 @@ const HomeGoods = (props: {
           return (
             <div
               className={styles.articleWrapper}
+              key={article.id}
               onClick={() => onClickArticle(article.id)}
             >
               <img
@@ -105,56 +106,6 @@ const HomeGoods = (props: {
       );
     });
   }, [navigate]);
-  /*
-
-  const articleData = data?.results?.map((article) => {
-    console.log(article);
-    return (
-      <div
-        className={styles.articleWrapper}
-        onClick={() => onClickArticle(article.id)}
-      >
-        <img
-          className={styles.thumbnail}
-          src={article.image[0]}
-          alt="대표 이미지"
-        />
-
-        <div className={styles.dataContainer}>
-          <p className={styles.title}>{article.title}</p>
-          <div className={styles.secondLine}>
-            <p className={styles.region}>{article.location} ·</p>
-            <p className={styles.time}>{article.created_at}</p>
-          </div>
-          <div className={styles.thirdLine}>
-            {article.status === "예약중" && (
-              <div className={styles.reservation}>예약중</div>
-            )}
-            {article.status === "거래완료" && (
-              <div className={styles.saleClosed}>거래완료</div>
-            )}
-            <p className={styles.price}>
-              {article.price.toLocaleString("ko-KR")}원
-            </p>
-          </div>
-          <div className={styles.lastLine}>
-            {article.chats !== 0 && (
-              <div className={styles.chatContainer}>
-                <img className={styles.chatImg} src={chatIcon} alt="채팅" />
-                <p className={styles.chat}>{article.chats}</p>
-              </div>
-            )}
-            {article.likes !== 0 && (
-              <div className={styles.heartContainer}>
-                <img className={styles.heartImg} src={heartIcon} alt="좋아요" />
-                <p className={styles.heart}>{article.likes}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }); */
 
   if (props.writeHandle) {
     return (

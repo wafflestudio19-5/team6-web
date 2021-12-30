@@ -192,7 +192,7 @@ const WriteArticle = () => {
   const carouselImg = imgPreview.map((image) => {
     if (image === camera && imgPreview.length === 1)
       return (
-        <div className={styles.imageUploadContainer}>
+        <div className={styles.imageUploadContainer} key={Math.random()}>
           <img
             className={styles.imageUpload}
             src={camera}
