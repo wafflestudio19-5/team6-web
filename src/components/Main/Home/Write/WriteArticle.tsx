@@ -13,14 +13,13 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { createEditor, Descendant, Node } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
+import { requester } from "../../../../apis/requester";
 import dummyData from "../../../Article/DummyData";
-import * as React from "react";
-
-import "./slick.scss";
-import "slick-carousel/slick/slick-theme.css";
-
 import Slider from "react-slick";
 import SelectCategory from "./Category/SelectCategory";
+import "./slick.scss";
+import "./slickTheme.scss";
+
 const settings = {
   className: "left",
   infinite: false,
@@ -37,7 +36,7 @@ const WriteArticle = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
   const [toastState, setToastState] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
-  const [pChecked, setPChecked] = useState<boolean>(false);
+  const [negotiable, setNegotiable] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("");
   const [price, setPrice] = useState<string>("");
   const [value, setValue] = useState<Descendant[]>([
@@ -105,6 +104,17 @@ const WriteArticle = () => {
         interest: 0,
         sale_state: "판매중",
       }); // axios.patch
+      requester
+        .post("/products/", {
+          images: [1, 2],
+          title: title,
+          content: serialize(value),
+          price: parseInt(price.replace(/[^0-9]/g, "")),
+          negotiable: negotiable,
+          category: category,
+          location: "301",
+        })
+        .then((res) => console.log(res.data));
       navigate("/main");
     } else {
       dummyData.push({
@@ -125,11 +135,22 @@ const WriteArticle = () => {
         interest: 0,
         sale_state: "판매중",
       }); // axios.patch
+      requester
+        .post("/products/", {
+          images: [1, 2],
+          title: title,
+          content: serialize(value),
+          price: parseInt(price.replace(/[^0-9]/g, "")),
+          negotiable: negotiable,
+          category: category,
+          location: "301",
+        })
+        .then((res) => console.log(res.data));
       navigate("/main");
     }
   };
   const handleCheck = () => {
-    if (!!price) setPChecked(!pChecked);
+    if (!!price) setNegotiable(!negotiable);
   };
 
   const priceFormat = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -305,7 +326,7 @@ const WriteArticle = () => {
               <input
                 className={styles.pCheckBox}
                 type={"checkbox"}
-                checked={pChecked}
+                checked={negotiable}
               />
               <label htmlFor={styles.pCheckBox} onClick={handleCheck} />
               <p className={styles.priceP}>가격 제안받기</p>
