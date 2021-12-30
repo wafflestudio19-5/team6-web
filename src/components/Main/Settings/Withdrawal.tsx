@@ -142,7 +142,9 @@ const Withdrawal = (props: {
           <p className={styles2.contents}>{(selected as OptionType).text}</p>
         )}
         {(selected as OptionType).link !== "" && (
-          <p className={styles2.link}>{(selected as OptionType).linkTitle}</p>
+          <a className={styles2.link} href={(selected as OptionType).link}>
+            {(selected as OptionType).linkTitle}
+          </a>
         )}
         {(selected as OptionType).value !== "0" && (
           <div className={styles2.buttons}>
