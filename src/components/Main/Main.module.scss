@@ -42,6 +42,7 @@
     display: flex;
 
     border-top: 1px solid #e5e5e5;
+    background-color: white;
 
     .footerBox {
       width: 30%;
@@ -69,7 +70,7 @@
   }
 }
 
-.backShadow{
+.backShadow {
   position: absolute;
   top: 0;
   width: 100%;
@@ -79,15 +80,13 @@
   transition-duration: 0.3s;
 }
 
-.backShadow.show{
+.backShadow.show {
   visibility: visible;
   background: black;
   opacity: 0.4;
   z-index: 1;
 }
 
-.test{
+.test {
   background: #61dafb;
 }
-
-

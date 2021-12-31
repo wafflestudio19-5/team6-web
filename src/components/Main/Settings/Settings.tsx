@@ -2,6 +2,9 @@ import styles from "./Settings.module.scss";
 import confirmStyles from "../../Utilities/confirm.module.scss";
 import { Dispatch, SetStateAction, useState } from "react";
 import backArrow from "../../../icons/leftArrow.png";
+import Notification from "./Notification";
+import Account from "./Account";
+import Withdrawal from "./Withdrawal";
 
 const Settings = (props: {
   confirm: boolean;
@@ -29,146 +32,59 @@ const Settings = (props: {
   };
 
   if (notification) {
-    return (
-      <div className={styles.wrapper}>
-        <div className={styles.fakeHeader} />
-        <div className={styles.subHeader}>
-          <img
-            className={styles.backArrow}
-            onClick={() => setNotification(false)}
-            src={backArrow}
-            alt="뒤로가기"
-          />
-          <p className={styles.pageName}>알림</p>
-        </div>
-          <div className={styles.section}>
-            <p className={styles.title}>거래 알림</p>
-            <p className={styles.button}>거래 관련 알림</p>
-            <p className={styles.contents}>거래 메시지 알림</p>
-          </div>
-          <div className={styles.section}>
-            <p className={styles.title}>서비스 알림</p>
-            <p className={styles.button}>활동 알림</p>
-            <p className={styles.contents}>관심, 조회수 등 알림</p>
-            <p className={styles.button}>기타 알림</p>
-            <p className={styles.contents}>가계부, 나눔의 날 등 알림</p>
-            <p className={styles.button}>마케팅 알림</p>
-          </div>
-          <div className={styles.section}>
-            <p className={styles.title}>서비스 알림</p>
-            <p className={styles.button}>활동 알림</p>
-            <p className={styles.contents}>관심, 조회수 등 알림</p>
-            <p className={styles.button}>기타 알림</p>
-            <p className={styles.contents}>가계부, 나눔의 날 등 알림</p>
-            <p className={styles.button}>마케팅 알림</p>
-          </div>
-        </div>
-    );
+    return <Notification setNotification={setNotification} />;
   }
 
   if (account) {
-    return (
-      <div className={styles.wrapper}>
-        <div className={styles.fakeHeader} />
-        <div className={styles.subHeader}>
-          <img
-            className={styles.backArrow}
-            onClick={() => setAccount(false)}
-            src={backArrow}
-            alt="뒤로가기"
-          />
-          <p className={styles.pageName}>계정 / 정보 관리</p>
-        </div>
-          <div className={styles.section}>
-            <p className={styles.title}>계정 정보</p>
-            <p className={styles.button}>이메일</p>
-            <p className={styles.button}>휴대폰 번호</p>
-            <p className={styles.contents}>010-XXXX-XXXX</p>
-          </div>
-          <div className={styles.section}>
-            <p className={styles.title}>기타</p>
-            <p className={styles.button}>서비스 이용약관</p>
-          </div>
-        </div>
-    );
+    return <Account setAccount={setAccount} />;
   }
 
   if (withdrawal) {
-    return (
-      <div className={styles.wrapper}>
-        <div className={styles.fakeHeader} />
-        <div className={styles.subHeader}>
-          <img
-            className={styles.backArrow}
-            onClick={() => setWithdrawal(false)}
-            src={backArrow}
-            alt="뒤로가기"
-          />
-          <p className={styles.pageName}>알림</p>
-        </div>
-          <div className={styles.section}>
-            <p className={styles.title}>거래 알림</p>
-            <p className={styles.button}>거래 관련 알림</p>
-            <p className={styles.contents}>거래 메시지 알림</p>
-          </div>
-          <div className={styles.section}>
-            <p className={styles.title}>서비스 알림</p>
-            <p className={styles.button}>활동 알림</p>
-            <p className={styles.contents}>관심, 조회수 등 알림</p>
-            <p className={styles.button}>기타 알림</p>
-            <p className={styles.contents}>가계부, 나눔의 날 등 알림</p>
-            <p className={styles.button}>마케팅 알림</p>
-          </div>
-          <div className={styles.section}>
-            <p className={styles.title}>서비스 알림</p>
-            <p className={styles.button}>활동 알림</p>
-            <p className={styles.contents}>관심, 조회수 등 알림</p>
-            <p className={styles.button}>기타 알림</p>
-            <p className={styles.contents}>가계부, 나눔의 날 등 알림</p>
-            <p className={styles.button}>마케팅 알림</p>
-          </div>
-      </div>
-    );
+    return <Withdrawal setWithdrawal={setWithdrawal} />;
   }
 
   return (
     <div className={styles.wrapper}>
+      <div className={styles["section-wrapper"]}>
         <div className={styles.section}>
-          <p className={styles.title}>알림 설정</p>
-          <p className={styles.button} onClick={changeToNotification}>
+          <div className={styles.title}>알림 설정</div>
+          <div className={styles.button} onClick={changeToNotification}>
             알림
-          </p>
-        </div>
-        <div className={styles.section}>
-          <p className={styles.title}>사용자 설정</p>
-          <p className={styles.button} onClick={changeToAccount}>
-            계정 / 정보 관리
-          </p>
-        </div>
-        <div className={styles.section}>
-          <p className={styles.title}>기타 설정</p>
-          <p className={styles.button} onClick={() => props.setConfirm(true)}>
-            로그아웃
-          </p>
-          <p className={styles.button} onClick={changeToWithdrawal}>
-            탈퇴하기
-          </p>
-        </div>
-        {props.confirm && (
-          <div className={confirmStyles.box}>
-            <p className={confirmStyles.title}>로그아웃</p>
-            <p className={confirmStyles.contents}>정말 로그아웃 하시겠나요?</p>
-            <button className={confirmStyles.confirmButton} onClick={logout}>
-              로그아웃
-            </button>
-            <button
-              className={confirmStyles.cancelButton}
-              onClick={() => props.setConfirm(false)}
-            >
-              닫기
-            </button>
           </div>
-        )}
+        </div>
+        <div className={styles.section}>
+          <div className={styles.title}>사용자 설정</div>
+          <div className={styles.button} onClick={changeToAccount}>
+            계정 / 정보 관리
+          </div>
+        </div>
+        <div className={styles.section}>
+          <div className={styles.title}>기타 설정</div>
+          <div className={styles.button} onClick={() => props.setConfirm(true)}>
+            로그아웃
+          </div>
+          <div className={styles.button} onClick={changeToWithdrawal}>
+            탈퇴하기
+          </div>
+        </div>
+      </div>
+      {props.confirm && (
+        <div className={confirmStyles.box}>
+          <div className={confirmStyles.title}>로그아웃</div>
+          <div className={confirmStyles.contents}>
+            정말 로그아웃 하시겠나요?
+          </div>
+          <div className={confirmStyles.confirmButton} onClick={logout}>
+            로그아웃
+          </div>
+          <div
+            className={confirmStyles.cancelButton}
+            onClick={() => props.setConfirm(false)}
+          >
+            닫기
+          </div>
+        </div>
+      )}
     </div>
   );
 };
