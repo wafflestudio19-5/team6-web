@@ -36,7 +36,7 @@ const Login = () => {
   const loginTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await requester.post("/users/signin/", {
+      const res = await axios.post("/api/v1/users/signin/", {
         name: inputs.username,
         password: inputs.password,
       });

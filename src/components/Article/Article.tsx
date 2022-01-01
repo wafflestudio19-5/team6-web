@@ -1,5 +1,5 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./Article.module.scss";
 import dummyData from "./DummyData";
 import leftArrowIcon from "../../icons/leftArrow.png";
@@ -9,30 +9,53 @@ import moreIcon from "../../icons/more.png";
 import redHeartIcon from "../../icons/redHeart.png";
 import blackHeartIcon from "../../icons/blackHeart.png";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { createEditor, Descendant } from "slate";
+
+import "./slickTheme.scss";
+import "./slick.scss";
+
+import { BaseEditor, createEditor, Descendant } from "slate";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
-import { withHistory } from "slate-history";
+import { HistoryEditor, withHistory } from "slate-history";
+import { requester } from "../../apis/requester";
+import { TextareaAutosize } from "@mui/material";
 
 type userData = {
   id: number;
-  name: string;
-  profile_img: string;
-  region: string;
+  name: string; //
+  profile_img: string; //
+  region: string; //
   title: string;
   product_img: string[];
   article: Descendant[];
   price: number;
   time: string;
-  temperature: number;
+  temperature: number; //
   category: string;
   chat: number;
   interest: number;
   hit: number;
+  sale_state: string;
 };
-// 판매글 API랑 메인 페이지가 완성되지 않아서 더미데이터로 구현했습니다.
-
+type articleData = {
+  id: number;
+  user: {
+    name: string;
+    email: string;
+  };
+  image: any;
+  title: string;
+  content: string;
+  price: number;
+  location: string;
+  category: string;
+  hit: number;
+  likes: number;
+  chats: number;
+  price_suggestions: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+};
 const settings = {
   dots: true,
   infinite: true,
@@ -40,26 +63,63 @@ const settings = {
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: false,
-}; // https://sirong.tistory.com/38
+};
 
+type CustomText = { text: string };
+type CustomElement = { type: "paragraph"; children: CustomText[] };
+
+declare module "slate" {
+  interface CustomTypes {
+    Editor: BaseEditor & ReactEditor & HistoryEditor;
+    Element: CustomElement;
+    Text: CustomText;
+  }
+}
+// Define a deserializing function that takes a string and returns a value.
+const deserialize = (string: string) => {
+  // Return a value array of children derived by splitting the string.
+  return string.split("\n").map((line) => {
+    return {
+      type: "paragraph",
+      children: [{ text: line }],
+    };
+  });
+};
 const Article = () => {
   const { id } = useParams() as { id: string };
-  const currentUser = dummyData.filter((data) => data.id === parseInt(id))[0];
+  // const currentUser = dummyData.filter((data) => data.id === parseInt(id))[0];
+
+  useEffect(() => {
+    requester.get(`/products/${id}/`).then((res) => {
+      if (res.data.id !== parseInt(id)) navigate("/main");
+      else {
+        setCurrentArticle(res.data);
+        console.log(res.data);
+      }
+    });
+  }, [id]);
+
   const [user, setUser] = useState<userData | null>(null);
-  const [isHeartClicked, setIsHeartClicked] = useState<boolean>(false);
-  const [value, setValue] = useState<Descendant[]>(
-    currentUser?.article || [{ type: "paragraph", children: [{ text: "" }] }]
+  const [currentArticle, setCurrentArticle] = useState<articleData | null>(
+    null
   );
+  const [isHeartClicked, setIsHeartClicked] = useState<boolean>(false);
+  const [value, setValue] = useState<Descendant[]>([
+    {
+      type: "paragraph",
+      children: [
+        {
+          text: "hello",
+        },
+      ],
+    },
+  ]);
   const editor = useMemo(
     () => withHistory(withReact(createEditor() as ReactEditor)),
     []
   );
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!currentUser) navigate("/main");
-    else setUser(currentUser);
-  }, [id]);
+  const navigate = useNavigate();
 
   const carouselImg = user?.product_img.map((image) => {
     return (
@@ -96,7 +156,6 @@ const Article = () => {
     console.log("profile image");
     // navigate("/profile/{id}");
   };
-
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -136,7 +195,7 @@ const Article = () => {
             onClick={onClickHeart}
           />
           <h1 className={styles.price}>
-            {user?.price.toLocaleString("ko-KR")}원
+            {currentArticle?.price.toLocaleString("ko-KR")}원
           </h1>
           <p className={styles.priceProposal} onClick={onClickPriceProposal}>
             가격 제안하기
@@ -155,27 +214,33 @@ const Article = () => {
               className={styles.profileImg}
               onClick={onClickProfileImg}
             />
-            <h1 className={styles.userName}>{user?.name}</h1>
-            <p className={styles.userRegion}>{user?.region}</p>
+            <h1 className={styles.userName}>{currentArticle?.user.name}</h1>
+            <p className={styles.userRegion}>{currentArticle?.location}</p>
             <h1 className={styles.mannerTemp}>{user?.temperature}°C</h1>
           </div>
           <div className={styles.article}>
-            <h1 className={styles.title}>{user?.title}</h1>
-            <p>
-              {user?.category}
-              {user?.time}
-            </p>
-            <Slate
-              editor={editor}
-              value={value}
-              onChange={(value) => setValue(value)}
-            >
-              <Editable readOnly />
-            </Slate>
-            <p>
-              관심{user?.interest}
-              조회{user?.hit}
-            </p>
+            <h1 className={styles.title}>
+              {currentArticle?.status === "예약중" && (
+                <div className={styles.reservation}>예약중</div>
+              )}
+              {currentArticle?.status === "거래완료" && (
+                <div className={styles.saleClosed}>거래완료</div>
+              )}
+              {currentArticle?.title}
+            </h1>
+            <div className={styles.secondLine}>
+              <p className={styles.category}>{currentArticle?.category} ·</p>
+              <p className={styles.time}>{currentArticle?.created_at}</p>
+            </div>
+            <TextareaAutosize
+              readOnly
+              className={styles.content}
+              value={currentArticle?.content}
+            />
+            <div className={styles.lastLine}>
+              <p className={styles.likes}>관심 {currentArticle?.likes} ·</p>
+              <p className={styles.hit}>조회 {currentArticle?.hit}</p>
+            </div>
           </div>
         </div>
       </div>
