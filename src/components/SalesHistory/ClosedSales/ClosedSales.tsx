@@ -1,18 +1,18 @@
-import styles from "./HiddenSales.module.scss";
+import styles from "./ClosedSales.module.scss";
 import { userData } from "../../Article/DummyData";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
 
-const HiddenSales = (props: { hiddenList: userData[] }) => {
+const ClosedSales = (props: { closedList: userData[] }) => {
   const changeToVisible = (article: userData) => {
     console.log(article.title + " 숨기기 취소");
     /*
-        requester.post(`/products/{product.id}/hidden/cancel`).then((res) => {}));
-        */
+            requester.post(`/products/{product.id}/hidden/cancel`).then((res) => {}));
+            */
   };
 
-  const hiddenComponents = props.hiddenList.map((article) => {
+  const hiddenComponents = props.closedList.map((article) => {
     return (
       <div className={styles.articleWrapper}>
         <div className={styles.upper}>
@@ -62,6 +62,7 @@ const HiddenSales = (props: { hiddenList: userData[] }) => {
             </div>
           </div>
         </div>
+
         <div className={styles.lower}>
           <div className={styles.line} />
           <div className={styles.buttons}>
@@ -69,7 +70,7 @@ const HiddenSales = (props: { hiddenList: userData[] }) => {
               className={styles.button}
               onClick={() => changeToVisible(article)}
             >
-              숨기기 해제
+              거래 후기 작성하기
             </div>
           </div>
         </div>
@@ -79,7 +80,7 @@ const HiddenSales = (props: { hiddenList: userData[] }) => {
 
   return (
     <div className={styles.wrapper}>
-      {props.hiddenList.length ? (
+      {props.closedList.length ? (
         <>{hiddenComponents}</>
       ) : (
         <p>판매중인 게시물이 없어요.</p>
@@ -88,4 +89,4 @@ const HiddenSales = (props: { hiddenList: userData[] }) => {
   );
 };
 
-export default HiddenSales;
+export default ClosedSales;

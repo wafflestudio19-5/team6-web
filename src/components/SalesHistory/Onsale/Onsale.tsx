@@ -3,22 +3,44 @@ import { userData } from "../../Article/DummyData";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import { requester } from "../../../apis/requester";
+import { Dispatch, SetStateAction } from "react";
+import moreActions from "../../../icons/more.png";
 
-const Onsale = (props: { onsaleList: userData[] }) => {
+const Onsale = (props: {
+  onsaleList: userData[];
+  setOnsaleActions: Dispatch<SetStateAction<boolean>>;
+}) => {
   const changeToReserved = (article: userData) => {
+    console.log(article.title + " 예약중으로");
     /*
-        re
-         */
+    requester.post(`/products/{product.id}/reserve`).then((res) => {}));
+    */
   };
   const changeToOnsale = (article: userData) => {
+    console.log(article.title + " 판매중으로");
     /*
-            re
-             */
+    requester.post(`/products/{product.id}/reserve/cancel`).then((res) => {}));
+    */
+  };
+  const changeToCompleted = (article: userData) => {
+    console.log(article.title + " 거래완료로");
+    /*
+    requester.post(`/products/{product.id}/completed`).then((res) => {}));
+    */
+  };
+  const goToProductPage = (article: userData) => {
+    console.log(article.title + " 페이지로");
+    /*
+    requester.post(`/products/{product.id}/completed`).then((res) => {}));
+    */
   };
 
   const onsaleComponents = props.onsaleList.map((article) => {
     return (
-      <div className={styles.articleWrapper}>
+      <div
+        className={styles.articleWrapper}
+        onClick={() => goToProductPage(article)}
+      >
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
@@ -26,7 +48,14 @@ const Onsale = (props: { onsaleList: userData[] }) => {
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
-            <p className={styles.title}>{article.title}</p>
+            <div className={styles.firstLine}>
+              <p className={styles.title}>{article.title}</p>
+              <img
+                className={styles.moreActions}
+                src={moreActions}
+                onClick={() => props.setOnsaleActions(true)}
+              />
+            </div>
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.region} ·</p>
               <p className={styles.time}>{article.time}</p>
@@ -82,7 +111,12 @@ const Onsale = (props: { onsaleList: userData[] }) => {
               </div>
             )}
             <div className={styles.verticalLine} />
-            <div className={styles.button}>거래완료로 변경</div>
+            <div
+              className={styles.button}
+              onClick={() => changeToCompleted(article)}
+            >
+              거래완료로 변경
+            </div>
           </div>
         </div>
       </div>

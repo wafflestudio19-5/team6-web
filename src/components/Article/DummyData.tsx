@@ -29,6 +29,7 @@ export type userData = {
   interest: number;
   hit: number;
   sale_state: string;
+  hidden: boolean;
 };
 
 const dummyData: userData[] = [
@@ -54,6 +55,7 @@ const dummyData: userData[] = [
     interest: 1, // 관심 수
     hit: 323, // 조회 수
     sale_state: "판매중",
+    hidden: false,
   },
   {
     id: 2,
@@ -75,7 +77,8 @@ const dummyData: userData[] = [
     chat: 8, // 채팅 수
     interest: 17, // 관심 수
     hit: 323, // 조회 수
-    sale_state: "예약중",
+    sale_state: "거래완료",
+    hidden: false,
   },
   {
     id: 3,
@@ -96,6 +99,7 @@ const dummyData: userData[] = [
     interest: 5, // 관심 수
     hit: 323, // 조회 수
     sale_state: "거래완료",
+    hidden: false,
   },
 ];
 

@@ -111,6 +111,7 @@ const WriteArticle = () => {
         hit: 0,
         interest: 0,
         sale_state: "판매중",
+        hidden: false,
       }); // axios.patch
       navigate("/main");
     } else {
@@ -131,6 +132,7 @@ const WriteArticle = () => {
         hit: 0,
         interest: 0,
         sale_state: "판매중",
+        hidden: false,
       }); // axios.patch
       navigate("/main");
     }

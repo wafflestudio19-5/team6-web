@@ -81,4 +81,67 @@
       display: none;
     }
   }
+
+  .background{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 10%;
+    z-index: 2;
+  }
+
+  .onsaleBox{
+    position: absolute;
+    width: 96%;
+    height: 310px;
+    top: calc(100% - 320px);
+    left: 2%;
+
+    z-index: 3;
+
+    .upperBox{
+      position: relative;
+      width: 100%;
+      height: 240px;
+      background-color: #f4f4f4;
+      border-radius: 14px;
+      cursor: pointer;
+
+      .blueText{
+        color: #0075FF;
+        font-size: 24px;
+        text-align: center;
+        line-height: 60px;
+      }
+
+      .redText{
+         color: red;
+         font-size: 24px;
+         text-align: center;
+         line-height: 60px;
+       }
+
+      .line{
+        height: 0;
+        border-bottom: 1px solid #dddddd;
+      }
+    }
+    .lowerBox{
+      position: relative;
+      width: 100%;
+      height: 60px;
+      margin-top: 10px;
+      background-color: white;
+      border-radius: 14px;
+
+      color: #0075FF;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 60px;
+
+      cursor: pointer;
+    }
+  }
 }
