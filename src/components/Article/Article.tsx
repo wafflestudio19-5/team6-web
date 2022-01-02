@@ -47,7 +47,7 @@ type articleData = {
   content: string;
   price: number;
   location: string;
-  category: number;
+  category: string;
   hit: number;
   likes: number;
   chats: number;
@@ -187,41 +187,41 @@ const Article = () => {
         );
     } else return null;
   };
-  const categoryFormat = (categoryNumber: number | undefined) => {
-    switch (categoryNumber) {
-      case 1:
+  const categoryFormat = (category: string | undefined) => {
+    switch (category) {
+      case "DIGITAL_DEVICE":
         return "디지털기기";
-      case 2:
+      case "HOME_APPLIANCE":
         return "생활가전";
-      case 3:
+      case "FURNITURE_AND_INTERIOR":
         return "가구/인테리어";
-      case 4:
+      case "KIDS":
         return "유아동";
-      case 5:
+      case "LIVING_AND_FOOD":
         return "생활/가공식품";
-      case 6:
+      case "KIDS_BOOK":
         return "유아도서";
-      case 7:
+      case "SPORTS_AND_LEISURE":
         return "스포츠/레저";
-      case 8:
+      case "WOMEN_STUFF":
         return "여성잡화";
-      case 9:
+      case "WOMEN_CLOTHES":
         return "여성의류";
-      case 10:
+      case "MEN_STUFF_AND_CLOTHES":
         return "남성패션/잡화";
-      case 11:
+      case "GAME_AND_HOBBIES":
         return "게임/취미";
-      case 12:
+      case "BEAUTY_AND_COSMETICS":
         return "뷰티/미용";
-      case 13:
+      case "PET":
         return "반려동물용품";
-      case 14:
+      case "BOOKS_AND_TICKETS_AND_RECORDS":
         return "도서/티켓/음반";
-      case 15:
+      case "BOTANICAL":
         return "식물";
-      case 16:
+      case "ETC":
         return "기타 중고물품";
-      case 17:
+      case "I_AM_BUYING":
         return "삽니다";
       default:
         break;

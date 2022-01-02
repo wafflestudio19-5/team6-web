@@ -71,9 +71,10 @@ const HomeGoods = (props: {
       );
   };
   useEffect(() => {
-    requester.get("/products/").then((res) => {
+    requester.get(`/products/?pageNumber=0&pageSize=15`).then((res) => {
+      console.log(res.data);
       setData(
-        res.data.results.map((article: homeGoods) => {
+        res.data.content.map((article: homeGoods) => {
           let imgSrc;
           const time = new Date(article.created_at);
           console.log(time.toDateString());
