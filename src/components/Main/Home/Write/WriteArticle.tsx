@@ -43,7 +43,7 @@ const WriteArticle = () => {
     { type: "paragraph", children: [{ text: "" }] },
   ]);
   const [imgPreview, setImgPreview] = useState<string[]>([camera]);
-
+  const [imgFiles, setImgFiles] = useState<FileList | null>(null);
   const imgRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -84,29 +84,9 @@ const WriteArticle = () => {
     if (!title || !category || !serialize(value)) setIsConfirmOpen(true);
     else if (serialize(value).length <= 5) setToastState(true);
     else if (imgPreview.length === 1) {
-      dummyData.push({
-        id: Math.floor(Math.random() * Math.pow(10, 10)),
-        name: "현재유저",
-        region: "현재지역",
-        profile_img:
-          "https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75",
-        title: title,
-        product_img: [
-          "https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75",
-        ],
-        article: value,
-        price: parseInt(price.replace(/[^0-9]/g, "")),
-        time: "현재시간",
-        temperature: 36.5,
-        category: category,
-        chat: 0,
-        hit: 0,
-        interest: 0,
-        sale_state: "판매중",
-      }); // axios.patch
       requester
         .post("/products/", {
-          images: [1, 2],
+          images: [6],
           title: title,
           content: serialize(value),
           price: parseInt(price.replace(/[^0-9]/g, "")),
@@ -117,36 +97,31 @@ const WriteArticle = () => {
         .then((res) => console.log(res.data));
       navigate("/main");
     } else {
-      dummyData.push({
-        id: Math.floor(Math.random() * Math.pow(10, 10)),
-        name: "현재유저",
-        region: "현재지역",
-        profile_img:
-          "https://wafflestudio.com/_next/image?url=%2Fimages%2Ficon_intro.svg&w=256&q=75",
-        title: title,
-        product_img: imgPreview.slice(1),
-        article: value,
-        price: parseInt(price.replace(/[^0-9]/g, "")),
-        time: "현재시간",
-        temperature: 36.5,
-        category: category,
-        chat: 0,
-        hit: 0,
-        interest: 0,
-        sale_state: "판매중",
-      }); // axios.patch
-      requester
-        .post("/products/", {
-          images: [1, 2],
-          title: title,
-          content: serialize(value),
-          price: parseInt(price.replace(/[^0-9]/g, "")),
-          negotiable: negotiable,
-          category: category,
-          location: "301",
-        })
-        .then((res) => console.log(res.data));
-      navigate("/main");
+      const formData = new FormData();
+      // @ts-ignore
+      if (imgFiles) {
+        Object.values(imgFiles).map((e) => {
+          formData.append("file", e);
+        });
+        console.log(Object.values(imgFiles)[0]);
+        requester
+          .post("/images/", formData)
+          .then((res) => {
+            requester
+              .post("/products/", {
+                images: res.data.id,
+                title: title,
+                content: serialize(value),
+                price: parseInt(price.replace(/[^0-9]/g, "")),
+                negotiable: negotiable,
+                category: category,
+                location: "301",
+              })
+              .then((res) => console.log(res.data));
+          })
+          .catch((e) => console.log(e.response));
+        navigate("/main");
+      }
     }
   };
   const handleCheck = () => {
@@ -171,8 +146,9 @@ const WriteArticle = () => {
     imgRef.current?.click();
   };
 
-  const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const nowImgList = e.target.files;
+    setImgFiles(nowImgList);
     const nowImgUrlList = [...imgPreview];
     if (!!nowImgList) {
       for (let i = 0; i < nowImgList.length; i++) {
