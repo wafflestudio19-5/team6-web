@@ -14,11 +14,14 @@ import { createEditor, Descendant, Node } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
 import { requester } from "../../../../apis/requester";
-import dummyData from "../../../Article/DummyData";
+import { toast } from "react-hot-toast";
 import Slider from "react-slick";
 import SelectCategory from "./Category/SelectCategory";
 import "./slick.scss";
 import "./slickTheme.scss";
+import SelectKidAge from "./Kidage/SelectKidage";
+import SelectKidage from "./Kidage/SelectKidage";
+import ConfirmModal from "./Confirm/ConfirmModal";
 
 const settings = {
   className: "left",
@@ -32,25 +35,20 @@ const settings = {
 const WriteArticle = () => {
   const [isCategoryModalOpen, setIsCategoryModalOpen] =
     useState<boolean>(false);
-  const [isImgModalOpen, setIsImgModalOpen] = useState<boolean>(false);
+  const [isKidsModalOpen, setIsKidsModalOpen] = useState<boolean>(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
   const [toastState, setToastState] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [negotiable, setNegotiable] = useState<boolean>(false);
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<number>(0);
   const [price, setPrice] = useState<string>("");
   const [value, setValue] = useState<Descendant[]>([
     { type: "paragraph", children: [{ text: "" }] },
   ]);
   const [imgPreview, setImgPreview] = useState<string[]>([camera]);
   const [imgFiles, setImgFiles] = useState<FileList | null>(null);
+  const [forAge, setForAge] = useState<number>(0);
   const imgRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (toastState) {
-      setTimeout(() => setToastState(false), 4000);
-    }
-  }, [toastState]);
 
   const editor = useMemo(
     () => withHistory(withReact(createEditor() as ReactEditor)),
@@ -82,17 +80,28 @@ const WriteArticle = () => {
 
   const onClickDone = () => {
     if (!title || !category || !serialize(value)) setIsConfirmOpen(true);
-    else if (serialize(value).length <= 5) setToastState(true);
+    else if (serialize(value).length <= 5)
+      toast("글이 너무 짧아요. 조금 더 길게 작성해주세요.", {
+        style: {
+          borderRadius: "4px",
+          background: "black",
+          padding: "6px",
+          color: "#fff",
+          font: "-moz-initial",
+        },
+        position: "bottom-center",
+      });
     else if (imgPreview.length === 1) {
       requester
         .post("/products/", {
-          images: [0],
+          images: [21], // temporary
           title: title,
           content: serialize(value),
           price: parseInt(price.replace(/[^0-9]/g, "")),
           negotiable: negotiable,
           category: category,
-          location: "301",
+          for_age: forAge,
+          range_of_location: 0, // temporary
         })
         .then((res) => console.log(res.data));
       navigate("/main");
@@ -109,13 +118,14 @@ const WriteArticle = () => {
           .then((res) => {
             requester
               .post("/products/", {
-                images: res.data.id,
+                images: [6],
                 title: title,
                 content: serialize(value),
                 price: parseInt(price.replace(/[^0-9]/g, "")),
                 negotiable: negotiable,
                 category: category,
-                location: "301",
+                for_age: forAge,
+                range_of_location: 0,
               })
               .then((res) => console.log(res.data));
           })
@@ -202,35 +212,94 @@ const WriteArticle = () => {
       </div>
     );
   });
-
+  const categoryFormat = (category: number) => {
+    switch (category) {
+      case 1:
+        return "디지털기기";
+      case 2:
+        return "생활가전";
+      case 3:
+        return "가구/인테리어";
+      case 4:
+        return "유아동";
+      case 5:
+        return "생활/가공식품";
+      case 6:
+        return "유아도서";
+      case 7:
+        return "스포츠/레저";
+      case 8:
+        return "여성잡화";
+      case 9:
+        return "여성의류";
+      case 10:
+        return "남성패션/잡화";
+      case 11:
+        return "게임/취미";
+      case 12:
+        return "뷰티/미용";
+      case 13:
+        return "반려동물용품";
+      case 14:
+        return "도서/티켓/음반";
+      case 15:
+        return "식물";
+      case 16:
+        return "기타 중고물품";
+      case 17:
+        return "삽니다";
+      default:
+        break;
+    }
+  };
+  const ageFormat = (forAge: number) => {
+    switch (forAge) {
+      case 1:
+        return "0~6개월";
+      case 2:
+        return "7~12개월";
+      case 3:
+        return "13~24개월";
+      case 4:
+        return "3~5세";
+      case 5:
+        return "6~8세";
+      case 6:
+        return "9세 이상";
+      default:
+        return "나이 선택";
+    }
+  };
   return (
     <>
-      {!isCategoryModalOpen && !isImgModalOpen && (
+      {!isCategoryModalOpen && (
         <div className={styles.writePageWrapper}>
           {isConfirmOpen && (
-            <div className={confirmStyles.box}>
-              <p className={confirmStyles.contents}>
-                {!title && "제목"}
-                {!title && (!category || !serialize(value)) && ", "}
-                {!category && "카테고리"}
-                {!category && !serialize(value) && ", "}
-                {!serialize(value) && "내용"}
-                {!!serialize(value) && !category ? "는 " : "은 "}
-                필수 입력 항목이에요.
-              </p>
-              <button
-                className={confirmStyles.confirmButton}
-                onClick={() => setIsConfirmOpen(false)}
-              >
-                확인
-              </button>
-            </div>
+            <ConfirmModal
+              title={title}
+              category={category}
+              content={serialize(value)}
+              setIsConfirmOpen={setIsConfirmOpen}
+            />
+          )}
+          {isKidsModalOpen && (
+            <SelectKidage
+              forAge={forAge}
+              setForAge={setForAge}
+              setIsKidsModalOpen={setIsKidsModalOpen}
+            />
           )}
           <div
             className={`${styles.backShadow} ${
               isConfirmOpen ? styles.show : ""
             }`}
             onClick={() => setIsConfirmOpen(false)}
+          />
+          <div
+            className={`${styles.backShadow} ${
+              isKidsModalOpen ? styles.show : ""
+            }`}
+            onClick={() => setIsKidsModalOpen(false)}
           />
           <div className={styles.header}>
             <img
@@ -280,7 +349,7 @@ const WriteArticle = () => {
             </div>
             <div className={styles.categoryWrapper} onClick={handleCategory}>
               <p className={styles.category}>
-                {!!category ? category : "카테고리 선택"}
+                {!!category ? categoryFormat(category) : "카테고리 선택"}
               </p>
               <img
                 className={styles.rightButton}
@@ -317,17 +386,25 @@ const WriteArticle = () => {
                 {/* 현재 위치는 나중에 유저 데이터에서 받아와서 입력*/}
               </Slate>
             </div>
+            {category === 4 && (
+              <div
+                className={styles.kidsAgeSelector}
+                onClick={() => setIsKidsModalOpen(true)}
+              >
+                <p className={styles.useAge}>사용 나이</p>
+                <div className={styles.forAge}>
+                  <p className={!!forAge ? styles.age : styles.ageSelect}>
+                    {ageFormat(forAge)}
+                  </p>
+                  <img
+                    className={styles.rightButton}
+                    src={rightButton}
+                    alt="카테고리 선택"
+                  />
+                </div>
+              </div>
+            )}
           </div>
-          {toastState && (
-            <div
-              className={styles.toastWrapper}
-              onClick={() => setToastState(false)}
-            >
-              <p className={styles.toastMessage}>
-                글이 너무 짧아요. 조금 더 길게 작성해주세요.
-              </p>
-            </div>
-          )}
         </div>
       )}
       {isCategoryModalOpen && (

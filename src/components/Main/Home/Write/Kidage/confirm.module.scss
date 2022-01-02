@@ -1,8 +1,8 @@
 .box {
   position: absolute;
-  width: 70%;
+  width: 96%;
   left: 50%;
-  top: 50%;
+  top: calc(100% - 175px);
   transform: translate(-50%, -50%);
 
   background: white;
@@ -15,6 +15,13 @@
     position: relative;
     left: 5%;
     font-size: 20px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+  .contents {
+    position: relative;
+    left: 5%;
+    font-size: 15px;
     margin-top: 5px;
     margin-bottom: 20px;
   }
@@ -31,8 +38,15 @@
     border-radius: 5px;
     border-color: #e5e5e5;
     border-style: solid;
+    margin-top: 10px;
     margin-bottom: 10px;
 
     background: #ff8a3d;
+  }
+  .lineContainer {
+    display: flex;
+    .age {
+      margin: 6px 0 0 0;
+    }
   }
 }

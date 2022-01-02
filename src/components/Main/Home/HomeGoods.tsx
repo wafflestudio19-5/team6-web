@@ -75,13 +75,11 @@ const HomeGoods = (props: {
       console.log(res.data);
       setData(
         res.data.content.map((article: homeGoods) => {
-          let imgSrc;
           const time = new Date(article.created_at);
-          console.log(time.toDateString());
           requester
             .get(`/images/${article.image}/`)
             .then((res) => {
-              imgSrc = res.data;
+              console.log(res);
             })
             .catch((e) => console.log(e.response));
           return (
@@ -90,11 +88,7 @@ const HomeGoods = (props: {
               key={article.id}
               onClick={() => onClickArticle(article.id)}
             >
-              <img
-                className={styles.thumbnail}
-                src={imgSrc}
-                alt="대표 이미지"
-              />
+              <img className={styles.thumbnail} src={""} alt="대표 이미지" />
               <div className={styles.dataContainer}>
                 <p className={styles.title}>{article.title}</p>
                 <div className={styles.secondLine}>
