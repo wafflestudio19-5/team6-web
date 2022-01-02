@@ -54,6 +54,12 @@
       border: none;
       background: yellow;
       border-radius: 3px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #FFEB46;
+        transition: 0.3s;
+      }
 
       img {
         position: absolute;
@@ -101,7 +107,7 @@
     display: flex;
     width: 100%;
     max-width: 450px;
-    height: 360px;
+    height: 320px;
     top: 250px;
     flex-direction: column;
     align-items: center;
@@ -161,6 +167,9 @@
           width: 18%;
         }
       }
+      .uniquecheck:disabled {
+        cursor: not-allowed;
+      }
     }
 
     .set-location {
@@ -186,13 +195,13 @@
     }
     .set-location:disabled {
       opacity: 0.7;
-      cursor: default;
+      cursor: not-allowed;
     }
   }
 
   hr {
     position: absolute;
-    top: 540px;
+    top: 579px;
     width: 70%;
     left: 14%;
     border-top: 1px dashed #61dafb;
@@ -204,7 +213,7 @@
     width: 100%;
     max-width: 450px;
     height: 25px;
-    top: 570px;
+    top: 610px;
 
     .goback {
       position: absolute;
