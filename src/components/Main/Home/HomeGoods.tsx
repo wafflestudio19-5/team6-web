@@ -96,10 +96,10 @@ const HomeGoods = (props: {
                   <p className={styles.time}>{calculateTimeDifference(time)}</p>
                 </div>
                 <div className={styles.thirdLine}>
-                  {article.status === "예약중" && (
+                  {article.status === "RESERVED" && (
                     <div className={styles.reservation}>예약중</div>
                   )}
-                  {article.status === "거래완료" && (
+                  {article.status === "SOLD_OUT" && (
                     <div className={styles.saleClosed}>거래완료</div>
                   )}
                   <p className={styles.price}>
