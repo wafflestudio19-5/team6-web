@@ -47,7 +47,7 @@ type articleData = {
   content: string;
   price: number;
   location: string;
-  category: string;
+  category: number;
   hit: number;
   likes: number;
   chats: number;
@@ -187,6 +187,46 @@ const Article = () => {
         );
     } else return null;
   };
+  const categoryFormat = (categoryNumber: number | undefined) => {
+    switch (categoryNumber) {
+      case 1:
+        return "디지털기기";
+      case 2:
+        return "생활가전";
+      case 3:
+        return "가구/인테리어";
+      case 4:
+        return "유아동";
+      case 5:
+        return "생활/가공식품";
+      case 6:
+        return "유아도서";
+      case 7:
+        return "스포츠/레저";
+      case 8:
+        return "여성잡화";
+      case 9:
+        return "여성의류";
+      case 10:
+        return "남성패션/잡화";
+      case 11:
+        return "게임/취미";
+      case 12:
+        return "뷰티/미용";
+      case 13:
+        return "반려동물용품";
+      case 14:
+        return "도서/티켓/음반";
+      case 15:
+        return "식물";
+      case 16:
+        return "기타 중고물품";
+      case 17:
+        return "삽니다";
+      default:
+        break;
+    }
+  };
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -260,7 +300,9 @@ const Article = () => {
               {currentArticle?.title}
             </h1>
             <div className={styles.secondLine}>
-              <p className={styles.category}>{currentArticle?.category} ·</p>
+              <p className={styles.category}>
+                {categoryFormat(currentArticle?.category)} ·
+              </p>
               <p className={styles.time}>
                 {calculateTimeDifference(currentArticle?.created_at)}
               </p>
