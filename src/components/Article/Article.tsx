@@ -55,6 +55,13 @@ type articleData = {
   status: string;
   created_at: string;
   updated_at: string;
+  for_age:
+    | "ZERO_TO_SIX_MONTH"
+    | "SEVEN_TO_TWELVE_MONTH"
+    | "OVER_ONE_TO_TWO"
+    | "THREE_TO_FIVE"
+    | "SIX_TO_EIGHT"
+    | "OVER_NINE";
 };
 const settings = {
   dots: true,
@@ -227,6 +234,32 @@ const Article = () => {
         break;
     }
   };
+  const kidsAgeFormat = (
+    Age:
+      | "ZERO_TO_SIX_MONTH"
+      | "SEVEN_TO_TWELVE_MONTH"
+      | "OVER_ONE_TO_TWO"
+      | "THREE_TO_FIVE"
+      | "SIX_TO_EIGHT"
+      | "OVER_NINE"
+  ) => {
+    switch (Age) {
+      case "ZERO_TO_SIX_MONTH":
+        return "0~6개월";
+      case "SEVEN_TO_TWELVE_MONTH":
+        return "7~12개월";
+      case "OVER_ONE_TO_TWO":
+        return "13~24개월";
+      case "THREE_TO_FIVE":
+        return "3~5세";
+      case "SIX_TO_EIGHT":
+        return "6~8세";
+      case "OVER_NINE":
+        return "9세 이상";
+      default:
+        return null;
+    }
+  };
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -312,6 +345,14 @@ const Article = () => {
               className={styles.content}
               value={currentArticle?.content}
             />
+            {currentArticle?.category === "KIDS" && (
+              <div className={styles.kidsContainer}>
+                <h1 className={styles.kidsHeader}>사용 나이</h1>
+                <p className={styles.kidsContent}>
+                  {kidsAgeFormat(currentArticle?.for_age)}
+                </p>
+              </div>
+            )}
             <div className={styles.lastLine}>
               <p className={styles.likes}>관심 {currentArticle?.likes} ·</p>
               <p className={styles.hit}>조회 {currentArticle?.hit}</p>

@@ -109,7 +109,9 @@ const HomeGoods = (props: {
                     <div className={styles.saleClosed}>거래완료</div>
                   )}
                   <p className={styles.price}>
-                    {article.price.toLocaleString("ko-KR")}원
+                    {article.price !== 0 &&
+                      article.price.toLocaleString("ko-KR") + "원"}
+                    {article.price === 0 && "나눔🧡"}
                   </p>
                 </div>
                 <div className={styles.lastLine}>

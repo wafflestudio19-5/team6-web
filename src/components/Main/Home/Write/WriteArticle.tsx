@@ -86,7 +86,7 @@ const WriteArticle = () => {
     else if (imgPreview.length === 1) {
       requester
         .post("/products/", {
-          images: [6],
+          images: [0],
           title: title,
           content: serialize(value),
           price: parseInt(price.replace(/[^0-9]/g, "")),

@@ -152,6 +152,17 @@
           margin: 0;
         }
       }
+      .kidsContainer {
+        display: flex;
+        .kidsHeader {
+          margin: 10px 5px 0 0;
+          font-size: 18px;
+        }
+        .kidsContent {
+          margin: 10px 0 0 0;
+          font-size: 18px;
+        }
+      }
       .content {
         width: 100%;
         padding: 0;
