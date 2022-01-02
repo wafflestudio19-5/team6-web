@@ -4,16 +4,10 @@ import kakaoLogo from "../../icons/kakao-logo.png";
 import { ChangeEventHandler, useState } from "react";
 import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { requester } from "../../apis/requester";
 
 type TLoginForm = {
   username: string;
-  password: string;
-};
-
-type RequestData = {
-  name: string;
   password: string;
 };
 
@@ -36,13 +30,10 @@ const Login = () => {
   const loginTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        "https://carrotserver.shop/api/v1/users/signin/",
-        {
-          name: inputs.username,
-          password: inputs.password,
-        }
-      );
+      const res = await requester.post("/users/signin/", {
+        name: inputs.username,
+        password: inputs.password,
+      });
       localStorage.setItem("token", res.data.access_token);
       navigate("/main");
     } catch (error) {

@@ -17,6 +17,7 @@
     "dart-sass": "^1.25.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-kakao-maps-sdk": "^1.0.4",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
     "react-select": "^5.2.1",
@@ -59,7 +60,7 @@
   "devDependencies": {
     "@types/react-modal": "^3.13.1",
     "@types/react-slick": "^0.23.7",
+    "kakao.maps.d.ts": "^0.1.24",
     "prettier": "^2.5.0"
-  },
-  "proxy": "https://carrotserver.shop"
+  }
 }
