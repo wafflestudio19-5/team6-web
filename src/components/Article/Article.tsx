@@ -1,7 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Article.module.scss";
-import dummyData from "./DummyData";
 import leftArrowIcon from "../../icons/leftArrow.png";
 import homeIcon from "../../icons/home.png";
 import shareIcon from "../../icons/share.png";
@@ -13,43 +12,24 @@ import Slider from "react-slick";
 import "./slickTheme.scss";
 import "./slick.scss";
 
-import { BaseEditor, createEditor, Descendant } from "slate";
-import { Slate, Editable, withReact, ReactEditor } from "slate-react";
-import { HistoryEditor, withHistory } from "slate-history";
-import requester from "../../apis/requester";
+import Product from "../../apis/Product/Product";
+import User from "../../apis/User/User";
+
 import {
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
   TextareaAutosize,
 } from "@mui/material";
 
-type userData = {
-  id: number;
-  name: string; //
-  profile_img: string; //
-  region: string; //
-  title: string;
-  product_img: string[];
-  article: Descendant[];
-  price: number;
-  time: string;
-  temperature: number; //
-  category: string;
-  chat: number;
-  interest: number;
-  hit: number;
-  sale_state: string;
-};
 type articleData = {
   id: number;
   user: {
     name: string;
     email: string;
   };
-  image: any;
+  image: number[];
   title: string;
   content: string;
   price: number;
@@ -79,27 +59,16 @@ const settings = {
   arrows: false,
 };
 
-type CustomText = { text: string };
-type CustomElement = { type: "paragraph"; children: CustomText[] };
-
-declare module "slate" {
-  interface CustomTypes {
-    Editor: BaseEditor & ReactEditor & HistoryEditor;
-    Element: CustomElement;
-    Text: CustomText;
-  }
-}
-
 const Article = () => {
   const { id } = useParams() as { id: string };
   const [isSeller, setIsSeller] = useState<boolean>(false);
 
   useEffect(() => {
-    requester({ method: "GET", url: `/products/${id}/` }).then((res) => {
+    Product.getProduct(id).then((res) => {
       if (res.data.id !== parseInt(id)) navigate("/main");
       else {
         setCurrentArticle(res.data);
-        requester("/users/me/").then((r) => {
+        User.getMe().then((r) => {
           if (res.data.user.email === r.data.email) setIsSeller(true);
           else setIsSeller(false);
         });
@@ -108,7 +77,6 @@ const Article = () => {
     });
   }, [id]);
 
-  const [user, setUser] = useState<userData | null>(null);
   const [currentArticle, setCurrentArticle] = useState<articleData | null>(
     null
   );
@@ -117,10 +85,10 @@ const Article = () => {
 
   const navigate = useNavigate();
 
-  const carouselImg = user?.product_img.map((image) => {
+  const carouselImg = currentArticle?.image?.map((image) => {
     return (
       <div>
-        <img className={styles.carouselImg} src={image} alt={"상품 이미지"} />
+        <img className={styles.carouselImg} src={""} alt={"상품 이미지"} />
       </div>
     );
   });
@@ -251,25 +219,13 @@ const Article = () => {
   };
   const handleStatus = (e: SelectChangeEvent) => {
     if (e.target.value === "RESERVED") {
-      requester({
-        method: "PUT",
-        url: `/products/${id}/status/`,
-        data: {
-          action: "reserve",
-        },
-      })
+      Product.putStatus(id, "reserve")
         .then((res) => {
           setStatus(e.target.value);
         })
         .catch((e) => console.log(e));
     } else if (e.target.value === "FOR_SALE" && status === "RESERVED") {
-      requester({
-        method: "PUT",
-        url: `/products/${id}/status/`,
-        data: {
-          action: "cancel reserve",
-        },
-      })
+      Product.putStatus(id, "cancel reserve")
         .then((res) => {
           setStatus(e.target.value);
         })
@@ -332,13 +288,13 @@ const Article = () => {
           </div>
           <div className={styles.profile}>
             <img
-              src={user?.profile_img}
+              src={"currentArticle?.profileImg"}
               className={styles.profileImg}
               onClick={onClickProfileImg}
             />
             <h1 className={styles.userName}>{currentArticle?.user.name}</h1>
             <p className={styles.userRegion}>{currentArticle?.location}</p>
-            <h1 className={styles.mannerTemp}>{user?.temperature}°C</h1>
+            <h1 className={styles.mannerTemp}>{""}°C</h1>
           </div>
           {isSeller && (
             <div className={styles.statusSelect}>

@@ -1,5 +1,4 @@
 import styles from "./WriteArticle.module.scss";
-import confirmStyles from "./confirm.module.scss";
 
 import closeButton from "../../../../icons/closebutton.png";
 import camera from "../../../../icons/camera.png";
@@ -9,17 +8,16 @@ import rightButton from "../../../../icons/right.png";
 import deleteButton from "../../../../icons/crossClose.png";
 
 import { useNavigate } from "react-router-dom";
-import { useMemo, useState, useEffect, useRef } from "react";
-import { createEditor, Descendant, Node } from "slate";
+import { useMemo, useState, useRef } from "react";
+import { BaseEditor, createEditor, Descendant, Node } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
-import { withHistory } from "slate-history";
+import { HistoryEditor, withHistory } from "slate-history";
 import requester from "../../../../apis/requester";
 import { toast } from "react-hot-toast";
 import Slider from "react-slick";
 import SelectCategory from "./Category/SelectCategory";
 import "./slick.scss";
 import "./slickTheme.scss";
-import SelectKidAge from "./Kidage/SelectKidage";
 import SelectKidage from "./Kidage/SelectKidage";
 import ConfirmModal from "./Confirm/ConfirmModal";
 
@@ -31,7 +29,16 @@ const settings = {
   swipeToSlide: true,
   draggable: true,
 };
+type CustomText = { text: string };
+type CustomElement = { type: "paragraph"; children: CustomText[] };
 
+declare module "slate" {
+  interface CustomTypes {
+    Editor: BaseEditor & ReactEditor & HistoryEditor;
+    Element: CustomElement;
+    Text: CustomText;
+  }
+}
 const WriteArticle = () => {
   const [isCategoryModalOpen, setIsCategoryModalOpen] =
     useState<boolean>(false);

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
+import Product from "../../../apis/Product/Product";
 
 type homeGoodsData = {
   count: number;
@@ -70,7 +71,7 @@ const HomeGoods = (props: {
       );
   };
   useEffect(() => {
-    requester.get(`/products/?pageNumber=0&pageSize=15`).then((res) => {
+    Product.getAllProducts().then((res) => {
       setData(
         res.data.content.map((article: homeGoods) => {
           const time = new Date(article.created_at);
