@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const requester = axios.create({
   baseURL: "https://carrotserver.shop/api/v1",

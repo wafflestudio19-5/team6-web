@@ -121,7 +121,7 @@ const WriteArticle = () => {
           formData.append("images", e);
         });
         console.log(Object.values(imgFiles));
-        requester({ method: "POST", url: "/images/", data: { formData } })
+        requester({ method: "POST", url: "/images/", data: formData })
           .then((res) => {
             const imageIdList = res.data.contents.map(
               (e: { created_at: string; id: number; updated_at: string }) => {
@@ -141,9 +141,9 @@ const WriteArticle = () => {
                 for_age: null,
                 range_of_location: 0,
               },
-            }).then();
+            }).then((res) => navigate("/main"));
           })
-          .catch((e) => console.log(e.response));
+          .catch((e) => toast.error(e.response.data.error_message));
       }
     }
   };

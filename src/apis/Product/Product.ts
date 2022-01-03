@@ -20,4 +20,10 @@ export default {
       },
     });
   },
+  deleteProduct(id: string) {
+    return requester({
+      method: "DELETE",
+      url: `/products/${id}/`,
+    });
+  },
 };

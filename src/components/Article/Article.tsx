@@ -1,6 +1,7 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./Article.module.scss";
+import confirmStyles from "./confirm.module.scss";
 import leftArrowIcon from "../../icons/leftArrow.png";
 import homeIcon from "../../icons/home.png";
 import shareIcon from "../../icons/share.png";
@@ -22,6 +23,7 @@ import {
   SelectChangeEvent,
   TextareaAutosize,
 } from "@mui/material";
+import { toast } from "react-hot-toast";
 
 type articleData = {
   id: number;
@@ -61,7 +63,14 @@ const settings = {
 
 const Article = () => {
   const { id } = useParams() as { id: string };
+  const navigate = useNavigate();
   const [isSeller, setIsSeller] = useState<boolean>(false);
+  const [currentArticle, setCurrentArticle] = useState<articleData | null>(
+    null
+  );
+  const [isHeartClicked, setIsHeartClicked] = useState<boolean>(false);
+  const [status, setStatus] = useState<string>("FOR_SALE");
+  const [isSettingModalOpen, setIsSettingModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     Product.getProduct(id).then((res) => {
@@ -76,14 +85,6 @@ const Article = () => {
       setStatus(res.data.status);
     });
   }, [id]);
-
-  const [currentArticle, setCurrentArticle] = useState<articleData | null>(
-    null
-  );
-  const [isHeartClicked, setIsHeartClicked] = useState<boolean>(false);
-  const [status, setStatus] = useState<string>("FOR_SALE");
-
-  const navigate = useNavigate();
 
   const carouselImg = currentArticle?.image?.map((image) => {
     return (
@@ -102,8 +103,8 @@ const Article = () => {
   const onClickShare = () => {
     console.log("share");
   };
-  const onClickReport = () => {
-    console.log("Report this user");
+  const onClickSetting = () => {
+    setIsSettingModalOpen(true);
   };
   const onClickHeart = () => {
     setIsHeartClicked((prevState) => !prevState);
@@ -232,6 +233,32 @@ const Article = () => {
         .catch((e) => console.log(e));
     }
   };
+  const selectSetting = (select: string) => {
+    if (select === "patch") {
+      navigate("/write");
+    } else if (select === "bump") {
+      Product.putStatus(id, select)
+        .then((res) => toast("success"))
+        .catch((e) => toast.error(e.response.data.error_message));
+    } else if (select === "hide") {
+      Product.putStatus(id, select)
+        .then((res) => toast("success"))
+        .catch((e) => toast.error(e.response.data.error_message));
+    } else if (select === "delete") {
+      Product.deleteProduct(id)
+        .then((res) => {
+          toast("success");
+          navigate("/main");
+        })
+        .catch((e) => toast.error(e.response.data.error_message));
+    } else if (select === "report") {
+      toast("신고 완료!");
+      setIsSettingModalOpen(false);
+    } else if (select === "hideUser") {
+      toast("유저 차단 완료!");
+      setIsSettingModalOpen(false);
+    }
+  };
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -261,7 +288,7 @@ const Article = () => {
             className={styles.reportButton}
             src={moreIcon}
             alt={"뒤로 가기"}
-            onClick={onClickReport}
+            onClick={onClickSetting}
           />
         </div>
         <div className={styles.footer}>
@@ -276,10 +303,12 @@ const Article = () => {
             {currentArticle?.price === 0 && "나눔🧡"}
           </h1>
           <p className={styles.priceProposal} onClick={onClickPriceProposal}>
-            가격 제안하기
+            {isSeller
+              ? `가격제안 ${currentArticle?.price_suggestions}명`
+              : "가격 제안하기"}
           </p>
           <button className={styles.chatButton} onClick={onClickChatButton}>
-            채팅으로 거래하기
+            {isSeller ? "요청 목록 보기" : "거래 요청하기"}
           </button>
         </div>
         <div className={styles.contentWrapper}>
@@ -350,6 +379,79 @@ const Article = () => {
             </div>
           </div>
         </div>
+        {isSettingModalOpen && (
+          <div>
+            {isSeller && (
+              <div>
+                <div className={confirmStyles.sellerBox}>
+                  <div className={confirmStyles.contents}>
+                    <p
+                      className={confirmStyles.content}
+                      onClick={() => selectSetting("patch")}
+                    >
+                      게시글 수정
+                    </p>
+                    <p
+                      className={confirmStyles.content}
+                      onClick={() => selectSetting("bump")}
+                    >
+                      끌어올리기
+                    </p>
+                    <p
+                      className={confirmStyles.content}
+                      onClick={() => selectSetting("hide")}
+                    >
+                      숨기기
+                    </p>
+                    <p
+                      className={confirmStyles.contentDelete}
+                      onClick={() => selectSetting("delete")}
+                    >
+                      삭제
+                    </p>
+                  </div>
+                </div>
+                <div className={confirmStyles.buttonBox}>
+                  <div className={confirmStyles.button}>취소</div>
+                </div>
+              </div>
+            )}
+            {!isSeller && (
+              <div>
+                <div className={confirmStyles.customerBox}>
+                  <div className={confirmStyles.contents}>
+                    <p
+                      className={confirmStyles.content}
+                      onClick={() => selectSetting("report")}
+                    >
+                      신고
+                    </p>
+                    <p
+                      className={confirmStyles.contentHide}
+                      onClick={() => selectSetting("hideUser")}
+                    >
+                      이 사용자의 글 보지 않기
+                    </p>
+                  </div>
+                </div>
+                <div className={confirmStyles.buttonBox}>
+                  <div
+                    className={confirmStyles.button}
+                    onClick={() => setIsSettingModalOpen(false)}
+                  >
+                    취소
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        <div
+          className={`${styles.backShadow} ${
+            isSettingModalOpen ? styles.show : ""
+          }`}
+          onClick={() => setIsSettingModalOpen(false)}
+        />
       </div>
     </>
   );

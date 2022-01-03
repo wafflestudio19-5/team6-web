@@ -1,0 +1,76 @@
+.sellerBox {
+  position: relative;
+  width: 90%;
+  left: 50%;
+  bottom: 125px;
+  transform: translate(-50%, -50%);
+  opacity: 80%;
+  background: white;
+  border-radius: 15px;
+  padding: 0 15px 0 15px;
+  z-index: 2;
+
+  .contents {
+    font-size: 20px;
+    color: #e97341;
+    text-align: center;
+    .content {
+      margin: 0;
+      padding: 10px 10px 15px 10px;
+      border-bottom: 1px solid #dcdcdc;
+      cursor: pointer;
+    }
+    .contentDelete {
+      margin: 0;
+      padding: 10px 10px 15px 10px;
+      color: red;
+      cursor: pointer;
+    }
+  }
+}
+.customerBox {
+  position: relative;
+  width: 90%;
+  left: 50%;
+  bottom: 70px;
+  transform: translate(-50%, -50%);
+  opacity: 80%;
+  background: white;
+  border-radius: 15px;
+  padding: 0 15px 0 15px;
+  z-index: 2;
+
+  .contents {
+    font-size: 20px;
+    color: #e97341;
+    text-align: center;
+    .content {
+      margin: 0;
+      padding: 10px 10px 15px 10px;
+      border-bottom: 1px solid #dcdcdc;
+      cursor: pointer;
+    }
+    .contentHide {
+      margin: 0;
+      padding: 10px 10px 15px 10px;
+      cursor: pointer;
+    }
+  }
+}
+.buttonBox {
+  position: absolute;
+  width: 90%;
+  left: 50%;
+  top: calc(100% - 40px);
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  z-index: 2;
+  .button {
+    position: relative;
+    font-size: 20px;
+    color: #e97341;
+    text-align: center;
+  }
+}
