@@ -13,7 +13,7 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { createEditor, Descendant, Node } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
-import { requester } from "../../../../apis/requester";
+import requester from "../../../../apis/requester";
 import { toast } from "react-hot-toast";
 import Slider from "react-slick";
 import SelectCategory from "./Category/SelectCategory";
@@ -47,7 +47,7 @@ const WriteArticle = () => {
   ]);
   const [imgPreview, setImgPreview] = useState<string[]>([camera]);
   const [imgFiles, setImgFiles] = useState<FileList | null>(null);
-  const [forAge, setForAge] = useState<number>(0);
+  const [forAge, setForAge] = useState<number | null>(null);
   const imgRef = useRef<HTMLInputElement>(null);
 
   const editor = useMemo(
@@ -92,9 +92,11 @@ const WriteArticle = () => {
         position: "bottom-center",
       });
     else if (imgPreview.length === 1) {
-      requester
-        .post("/products/", {
-          images: [21], // temporary
+      requester({
+        method: "POST",
+        url: "/products/",
+        data: {
+          images: 0, // temporary
           title: title,
           content: serialize(value),
           price: parseInt(price.replace(/[^0-9]/g, "")),
@@ -102,35 +104,39 @@ const WriteArticle = () => {
           category: category,
           for_age: forAge,
           range_of_location: 0, // temporary
-        })
-        .then((res) => console.log(res.data));
-      navigate("/main");
+        },
+      }).then((res) => navigate("/main"));
     } else {
       const formData = new FormData();
       // @ts-ignore
       if (imgFiles) {
         Object.values(imgFiles).map((e) => {
-          formData.append("file", e);
+          formData.append("images", e);
         });
-        console.log(Object.values(imgFiles)[0]);
-        requester
-          .post("/images/", formData)
+        console.log(Object.values(imgFiles));
+        requester({ method: "POST", url: "/images/", data: { formData } })
           .then((res) => {
-            requester
-              .post("/products/", {
-                images: [6],
+            const imageIdList = res.data.contents.map(
+              (e: { created_at: string; id: number; updated_at: string }) => {
+                return e.id;
+              }
+            );
+            requester({
+              method: "POST",
+              url: "/products/",
+              data: {
+                images: imageIdList,
                 title: title,
                 content: serialize(value),
                 price: parseInt(price.replace(/[^0-9]/g, "")),
                 negotiable: negotiable,
                 category: category,
-                for_age: forAge,
+                for_age: null,
                 range_of_location: 0,
-              })
-              .then((res) => console.log(res.data));
+              },
+            }).then();
           })
           .catch((e) => console.log(e.response));
-        navigate("/main");
       }
     }
   };
@@ -252,7 +258,7 @@ const WriteArticle = () => {
         break;
     }
   };
-  const ageFormat = (forAge: number) => {
+  const ageFormat = (forAge: number | null) => {
     switch (forAge) {
       case 1:
         return "0~6개월";

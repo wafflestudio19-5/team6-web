@@ -93,7 +93,6 @@
       background-color: #ffffff;
       width: 100%;
       height: 72px;
-      top: 130px;
       .profileImg {
         border-radius: 50%;
         width: 48px;
@@ -121,13 +120,18 @@
     }
     .carousel {
       position: relative;
+      margin-bottom: 130px;
       width: 100%;
       height: 50%;
     }
+    .statusSelect {
+      position: relative;
+      height: 35px;
+      margin: 10px 5px 5px 10px;
+    }
     .article {
       position: relative;
-      top: 120px;
-      padding: 15px;
+      padding: 0 15px 15px 15px;
       .title {
         font-size: 24px;
         display: flex;
@@ -186,7 +190,7 @@
         .likes {
           margin: 0 5px 0 0;
         }
-        .hit{
+        .hit {
           margin: 0;
         }
       }

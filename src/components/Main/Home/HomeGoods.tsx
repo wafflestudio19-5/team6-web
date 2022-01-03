@@ -4,10 +4,9 @@ import Write from "../../../icons/Home/write.png";
 import Open from "../../../icons/Home/add-1.png";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import dummyData from "../../Article/DummyData";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
-import { requester } from "../../../apis/requester";
+import requester from "../../../apis/requester";
 
 type homeGoodsData = {
   count: number;
@@ -72,16 +71,13 @@ const HomeGoods = (props: {
   };
   useEffect(() => {
     requester.get(`/products/?pageNumber=0&pageSize=15`).then((res) => {
-      console.log(res.data);
       setData(
         res.data.content.map((article: homeGoods) => {
           const time = new Date(article.created_at);
           requester
             .get(`/images/${article.image}/`)
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((e) => console.log(e.response));
+            .then((res) => {})
+            .catch();
           return (
             <div
               className={styles.articleWrapper}
@@ -136,7 +132,7 @@ const HomeGoods = (props: {
         })
       );
     });
-  }, [navigate]);
+  }, []);
 
   if (props.writeHandle) {
     return (

@@ -16,8 +16,15 @@ import "./slick.scss";
 import { BaseEditor, createEditor, Descendant } from "slate";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import { HistoryEditor, withHistory } from "slate-history";
-import { requester } from "../../apis/requester";
-import { TextareaAutosize } from "@mui/material";
+import requester from "../../apis/requester";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextareaAutosize,
+} from "@mui/material";
 
 type userData = {
   id: number;
@@ -82,27 +89,22 @@ declare module "slate" {
     Text: CustomText;
   }
 }
-// Define a deserializing function that takes a string and returns a value.
-const deserialize = (string: string) => {
-  // Return a value array of children derived by splitting the string.
-  return string.split("\n").map((line) => {
-    return {
-      type: "paragraph",
-      children: [{ text: line }],
-    };
-  });
-};
+
 const Article = () => {
   const { id } = useParams() as { id: string };
-  // const currentUser = dummyData.filter((data) => data.id === parseInt(id))[0];
+  const [isSeller, setIsSeller] = useState<boolean>(false);
 
   useEffect(() => {
-    requester.get(`/products/${id}/`).then((res) => {
+    requester({ method: "GET", url: `/products/${id}/` }).then((res) => {
       if (res.data.id !== parseInt(id)) navigate("/main");
       else {
         setCurrentArticle(res.data);
-        console.log(res.data);
+        requester("/users/me/").then((r) => {
+          if (res.data.user.email === r.data.email) setIsSeller(true);
+          else setIsSeller(false);
+        });
       }
+      setStatus(res.data.status);
     });
   }, [id]);
 
@@ -111,20 +113,7 @@ const Article = () => {
     null
   );
   const [isHeartClicked, setIsHeartClicked] = useState<boolean>(false);
-  const [value, setValue] = useState<Descendant[]>([
-    {
-      type: "paragraph",
-      children: [
-        {
-          text: "hello",
-        },
-      ],
-    },
-  ]);
-  const editor = useMemo(
-    () => withHistory(withReact(createEditor() as ReactEditor)),
-    []
-  );
+  const [status, setStatus] = useState<string>("FOR_SALE");
 
   const navigate = useNavigate();
 
@@ -260,6 +249,33 @@ const Article = () => {
         return null;
     }
   };
+  const handleStatus = (e: SelectChangeEvent) => {
+    if (e.target.value === "RESERVED") {
+      requester({
+        method: "PUT",
+        url: `/products/${id}/status/`,
+        data: {
+          action: "reserve",
+        },
+      })
+        .then((res) => {
+          setStatus(e.target.value);
+        })
+        .catch((e) => console.log(e));
+    } else if (e.target.value === "FOR_SALE" && status === "RESERVED") {
+      requester({
+        method: "PUT",
+        url: `/products/${id}/status/`,
+        data: {
+          action: "cancel reserve",
+        },
+      })
+        .then((res) => {
+          setStatus(e.target.value);
+        })
+        .catch((e) => console.log(e));
+    }
+  };
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -299,7 +315,9 @@ const Article = () => {
             onClick={onClickHeart}
           />
           <h1 className={styles.price}>
-            {currentArticle?.price.toLocaleString("ko-KR")}원
+            {currentArticle?.price !== 0 &&
+              currentArticle?.price.toLocaleString("ko-KR") + "원"}
+            {currentArticle?.price === 0 && "나눔🧡"}
           </h1>
           <p className={styles.priceProposal} onClick={onClickPriceProposal}>
             가격 제안하기
@@ -322,6 +340,23 @@ const Article = () => {
             <p className={styles.userRegion}>{currentArticle?.location}</p>
             <h1 className={styles.mannerTemp}>{user?.temperature}°C</h1>
           </div>
+          {isSeller && (
+            <div className={styles.statusSelect}>
+              <FormControl size={"small"}>
+                <Select
+                  className={styles.select}
+                  id="demo-simple-select"
+                  value={status}
+                  onChange={(e) => handleStatus(e)}
+                  displayEmpty
+                >
+                  <MenuItem value={"FOR_SALE"}>판매중</MenuItem>
+                  <MenuItem value={"RESERVED"}>예약중</MenuItem>
+                  <MenuItem value={"SOLD_OUT"}>판매완료</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          )}
           <div className={styles.article}>
             <h1 className={styles.title}>
               {currentArticle?.status === "예약중" && (

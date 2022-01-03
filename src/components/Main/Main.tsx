@@ -8,7 +8,7 @@ import Set2 from "../../icons/Footer/settings-unselected.png";
 import { useEffect, useState } from "react";
 import HomeGoods from "./Home/HomeGoods";
 import HomeHeader from "./Home/HomeHeader";
-import {Navigate, useLocation} from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import * as React from "react";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
@@ -24,7 +24,7 @@ const Main = () => {
   useEffect(() => {
     loc.state && setPage(loc.state.page);
     loc.state = null;
-  })
+  });
 
   const changeToHome = () => {
     setPage("home");
