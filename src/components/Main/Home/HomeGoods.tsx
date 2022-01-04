@@ -8,6 +8,7 @@ import dummyData from "../../Article/DummyData";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import { requester } from "../../../apis/requester";
+import { calculateTimeDifference } from "../../Utilities/functions";
 
 type homeGoodsData = {
   count: number;
@@ -44,32 +45,7 @@ const HomeGoods = (props: {
   const onClickArticle = (id: number) => {
     navigate(`/article/${id}`);
   };
-  const calculateTimeDifference = (late: Date) => {
-    const now = new Date();
-    if ((now.getTime() - late.getTime()) / 1000 < 60)
-      return (
-        Math.floor((now.getTime() - late.getTime()) / 1000).toString() + "초 전"
-      );
-    // 초 단위
-    else if ((now.getTime() - late.getTime()) / (1000 * 60) < 60)
-      return (
-        Math.floor((now.getTime() - late.getTime()) / (1000 * 60)).toString() +
-        "분 전"
-      );
-    // 분 단위
-    else if ((now.getTime() - late.getTime()) / (1000 * 60 * 60) < 24)
-      return (
-        Math.floor(
-          (now.getTime() - late.getTime()) / (1000 * 60 * 60)
-        ).toString() + "시간 전"
-      );
-    else
-      return (
-        Math.floor(
-          (now.getTime() - late.getTime()) / (1000 * 60 * 60 * 24)
-        ).toString() + "일 전"
-      );
-  };
+
   useEffect(() => {
     requester.get(`/products/?pageNumber=0&pageSize=15`).then((res) => {
       console.log(res.data);
@@ -93,7 +69,9 @@ const HomeGoods = (props: {
                 <p className={styles.title}>{article.title}</p>
                 <div className={styles.secondLine}>
                   <p className={styles.region}>{article.location} ·</p>
-                  <p className={styles.time}>{calculateTimeDifference(time)}</p>
+                  <p className={styles.time}>
+                    {calculateTimeDifference(article.created_at)}
+                  </p>
                 </div>
                 <div className={styles.thirdLine}>
                   {article.status === "RESERVED" && (

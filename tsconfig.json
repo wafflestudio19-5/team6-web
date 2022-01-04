@@ -16,10 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-<<<<<<< HEAD
-  "include": ["src"]
-=======
   "include": ["src"],
   "types": ["kakao.map.d.ts"]
->>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
 }

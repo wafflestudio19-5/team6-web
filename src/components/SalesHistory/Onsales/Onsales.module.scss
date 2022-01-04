@@ -1,0 +1,206 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+  background: #f2f3f7;
+
+  .articleWrapper {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    background-color: white;
+    margin-bottom: 5px;
+
+    .clickArea{
+      position: absolute;
+      width: calc(100% - 110px);
+      height: calc(100% - 40px);
+      left: 110px;
+      z-index: 3;
+    }
+
+    .upper {
+      display: flex;
+
+      .thumbnail {
+        position: relative;
+        height: 100px;
+        width: 100px;
+        background-position: center;
+        margin-top: 10px;
+        margin-left: 10px;
+        border-radius: 8px;
+        border: 1px solid #dddddd;
+      }
+
+      .dataContainer {
+        position: relative;
+        width: calc(100% - 20px);
+        height: 80px;
+        margin-top: 5px;
+        margin-left: 10px;
+        display: inline;
+
+        .firstLine{
+          position: relative;
+          display: flex;
+          top: 12px;
+          
+          .title {
+            position: relative;
+            width: 305px;
+            left: 10px;
+            color: black;
+            font-size: 15px;
+          }
+          .moreActions{
+            position: relative;
+            width: 15px;
+            height: 15px;
+            padding: 5px;
+            cursor: pointer;
+
+            z-index: 4;
+          }
+        }
+        .secondLine {
+          position: relative;
+          left: 10px;
+          top: 10px;
+          display: flex;
+          color: #777777;
+          font-size: 12px;
+
+          .region {
+            position: relative;
+            left: 0;
+            margin-top: 5px;
+            margin-bottom: 0;
+          }
+          .time {
+            position: relative;
+            left: 0;
+            margin-top: 5px;
+            margin-bottom: 0;
+            margin-left: 5px;
+          }
+        }
+        .thirdLine {
+          position: relative;
+          left: 10px;
+          top: 10px;
+          margin-top: 5px;
+          display: flex;
+          align-items: center;
+
+          .reservation {
+            position: relative;
+            width: 45px;
+            height: 17px;
+            padding: 3px;
+            margin-right: 6px;
+
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            background-color: #41b675;
+          }
+
+          .price {
+            position: relative;
+            left: 0;
+            color: black;
+            font-weight: bolder;
+          }
+        }
+
+        .lastLine {
+          position: relative;
+          top: 10px;
+          width: 80px;
+          align-items: center;
+          justify-content: flex-end;
+          display: flex;
+          left: calc(100% - 90px);
+
+          .chatContainer {
+            display: flex;
+
+            .chatImg {
+              position: relative;
+              width: 15px;
+              height: 15px;
+              margin-right: 2px;
+            }
+            .chat {
+              position: relative;
+              top: 0;
+              left: 0;
+              font-size: 15px;
+              color: #3a3a3a;
+              margin: 0 2px 0 0;
+            }
+          }
+          .heartContainer {
+            display: flex;
+            .heartImg {
+              height: 20px;
+              width: 20px;
+              margin-right: 2px;
+            }
+            .heart {
+              position: relative;
+              top: 0;
+              left: 0;
+              font-size: 15px;
+              color: #3a3a3a;
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+    .lower {
+      position: relative;
+      width: 100%;
+      margin-top: 10px;
+
+      .line {
+        position: relative;
+        height: 0;
+        border-bottom: 1px solid #f2f3f7;
+      }
+
+      .buttons {
+        position: relative;
+        height: 36px;
+        display: flex;
+        cursor: pointer;
+
+        .button{
+          width: 50%;
+          text-align: center;
+          line-height: 36px;
+          font-size: 15px;
+          font-weight: bold;
+        }
+
+        .verticalLine{
+          position: relative;
+          height: 36px;
+          width: 0;
+          border: 1px solid #f2f3f7;
+        }
+      }
+    }
+  }
+
+  p {
+    position: absolute;
+    top: calc(50% - 5px);
+    left: calc(50% - 80px);
+    margin: 0;
+    color: silver;
+  }
+}

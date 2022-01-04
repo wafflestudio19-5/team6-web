@@ -3,21 +3,7 @@ import { ReactEditor } from "slate-react";
 import { HistoryEditor } from "slate-history";
 import { setAppElement } from "react-modal";
 
-<<<<<<< HEAD
-type CustomElement = { type: "paragraph"; children: CustomText[] };
-type CustomText = { text: string; bold?: true };
-
-declare module "slate" {
-  interface CustomTypes {
-    Editor: BaseEditor & ReactEditor & HistoryEditor;
-    Element: CustomElement;
-    Text: CustomText;
-  }
-}
-export type userData = {
-=======
 type userData = {
->>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
   id: number;
   name: string;
   profile_img: string;
@@ -33,7 +19,6 @@ type userData = {
   interest: number;
   hit: number;
   sale_state: string;
-  hidden: boolean;
 };
 
 const dummyData: userData[] = [
@@ -59,10 +44,6 @@ const dummyData: userData[] = [
     interest: 1, // 관심 수
     hit: 323, // 조회 수
     sale_state: "판매중",
-<<<<<<< HEAD
-    hidden: false,
-=======
->>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
   },
   {
     id: 2,
@@ -84,12 +65,7 @@ const dummyData: userData[] = [
     chat: 8, // 채팅 수
     interest: 17, // 관심 수
     hit: 323, // 조회 수
-<<<<<<< HEAD
-    sale_state: "거래완료",
-    hidden: false,
-=======
     sale_state: "예약중",
->>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
   },
   {
     id: 3,
@@ -110,10 +86,6 @@ const dummyData: userData[] = [
     interest: 5, // 관심 수
     hit: 323, // 조회 수
     sale_state: "거래완료",
-<<<<<<< HEAD
-    hidden: false,
-=======
->>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
   },
 ];
 

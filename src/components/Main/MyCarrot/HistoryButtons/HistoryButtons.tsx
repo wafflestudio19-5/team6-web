@@ -23,7 +23,7 @@ const HistoryButtons = () => {
       <button
         className={styles.purchase}
         onClick={() => {
-          navigate("/sales-history");
+          navigate("/purchase-history");
         }}
       >
         <div className={styles.background}>

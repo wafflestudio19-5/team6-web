@@ -4,10 +4,20 @@
   background: #f2f3f7;
 
   .articleWrapper {
+    position: relative;
     width: 100%;
     height: 160px;
     background-color: white;
     margin-bottom: 5px;
+
+    .clickArea{
+      position: absolute;
+      width: calc(100% - 110px);
+      height: calc(100% - 40px);
+      left: 110px;
+
+      z-index: 2;
+    }
 
     .upper {
       display: flex;
@@ -48,6 +58,9 @@
             width: 15px;
             height: 15px;
             cursor: pointer;
+            padding: 5px;
+
+            z-index: 3;
           }
         }
         .secondLine {
