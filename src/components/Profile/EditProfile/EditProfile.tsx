@@ -3,12 +3,14 @@ import Button from "@mui/material/Button";
 import DefaultImageIcon from "../../../icons/MyCarrot/default-image.png";
 import BackArrowIcon from "../../../icons/leftArrow.png";
 import CameraIcon from "../../../icons/MyCarrot/camera.png";
+import TrashIcon from "../../../icons/MyCarrot/trash.png";
 import { Link, useLocation } from "react-router-dom";
 import { ChangeEventHandler, useEffect, useState } from "react";
 
 const EditProfile = () => {
   const [prev, setPrev] = useState<string | null>(null);
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState<string>("");
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const EditProfile = () => {
         </div>
         <button
           onClick={() => {
-            console.log("업데이트 버튼");
+            setModalOpen(true);
           }}
         >
           <img src={CameraIcon} alt="update" />
@@ -54,6 +56,20 @@ const EditProfile = () => {
           완료
         </Button>
       </footer>
+      <div
+        className={`${styles["buttons-wrapper"]} ${
+          modalOpen ? styles.show : ""
+        }`}
+      >
+        <button className={styles.select}>앨범에서 선택</button>
+        <button className={styles.remove}>프로필 사진 삭제</button>
+      </div>
+      <div
+        className={`${styles["back-shadow"]} ${modalOpen ? styles.show : ""}`}
+        onClick={() => {
+          setModalOpen(false);
+        }}
+      />
     </div>
   );
 };
