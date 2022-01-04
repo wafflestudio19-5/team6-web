@@ -2,17 +2,41 @@ import styles from "./HomeGoods.module.scss";
 import Close from "../../../icons/Home/add-2.png";
 import Write from "../../../icons/Home/write.png";
 import Open from "../../../icons/Home/add-1.png";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import dummyData from "../../Article/DummyData";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
+import { requester } from "../../../apis/requester";
+
+type homeGoodsData = {
+  count: number;
+  results: homeGoods[];
+};
+
+type homeGoods = {
+  id: number;
+  user: {
+    name: string;
+    email: string;
+  };
+  image: any;
+  title: string;
+  price: number;
+  location: string;
+  likes: number;
+  chats: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+};
 
 const HomeGoods = (props: {
   writeHandle: boolean;
   setWriteHandle: Dispatch<SetStateAction<boolean>>;
 }) => {
   const navigate = useNavigate();
+  const [data, setData] = useState<any>(null);
 
   const handleWrite = () => {
     navigate("/write");
@@ -20,59 +44,104 @@ const HomeGoods = (props: {
   const onClickArticle = (id: number) => {
     navigate(`/article/${id}`);
   };
-
-  const articleData = dummyData.map((article) => {
-    return (
-      <div
-        className={styles.articleWrapper}
-        onClick={() => onClickArticle(article.id)}
-      >
-        <img
-          className={styles.thumbnail}
-          src={article.product_img[0]}
-          alt="대표 이미지"
-        />
-
-        <div className={styles.dataContainer}>
-          <p className={styles.title}>{article.title}</p>
-          <div className={styles.secondLine}>
-            <p className={styles.region}>{article.region} ·</p>
-            <p className={styles.time}>{article.time}</p>
-          </div>
-          <div className={styles.thirdLine}>
-            {article.sale_state === "예약중" && (
-              <div className={styles.reservation}>예약중</div>
-            )}
-            {article.sale_state === "거래완료" && (
-              <div className={styles.saleClosed}>거래완료</div>
-            )}
-            <p className={styles.price}>
-              {article.price.toLocaleString("ko-KR")}원
-            </p>
-          </div>
-          <div className={styles.lastLine}>
-            {article.chat !== 0 && (
-              <div className={styles.chatContainer}>
-                <img className={styles.chatImg} src={chatIcon} alt="채팅" />
-                <p className={styles.chat}>{article.chat}</p>
+  const calculateTimeDifference = (late: Date) => {
+    const now = new Date();
+    if ((now.getTime() - late.getTime()) / 1000 < 60)
+      return (
+        Math.floor((now.getTime() - late.getTime()) / 1000).toString() + "초 전"
+      );
+    // 초 단위
+    else if ((now.getTime() - late.getTime()) / (1000 * 60) < 60)
+      return (
+        Math.floor((now.getTime() - late.getTime()) / (1000 * 60)).toString() +
+        "분 전"
+      );
+    // 분 단위
+    else if ((now.getTime() - late.getTime()) / (1000 * 60 * 60) < 24)
+      return (
+        Math.floor(
+          (now.getTime() - late.getTime()) / (1000 * 60 * 60)
+        ).toString() + "시간 전"
+      );
+    else
+      return (
+        Math.floor(
+          (now.getTime() - late.getTime()) / (1000 * 60 * 60 * 24)
+        ).toString() + "일 전"
+      );
+  };
+  useEffect(() => {
+    requester.get(`/products/?pageNumber=0&pageSize=15`).then((res) => {
+      console.log(res.data);
+      setData(
+        res.data.content.map((article: homeGoods) => {
+          const time = new Date(article.created_at);
+          requester
+            .get(`/images/${article.image}/`)
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((e) => console.log(e.response));
+          return (
+            <div
+              className={styles.articleWrapper}
+              key={article.id}
+              onClick={() => onClickArticle(article.id)}
+            >
+              <img className={styles.thumbnail} src={""} alt="대표 이미지" />
+              <div className={styles.dataContainer}>
+                <p className={styles.title}>{article.title}</p>
+                <div className={styles.secondLine}>
+                  <p className={styles.region}>{article.location} ·</p>
+                  <p className={styles.time}>{calculateTimeDifference(time)}</p>
+                </div>
+                <div className={styles.thirdLine}>
+                  {article.status === "RESERVED" && (
+                    <div className={styles.reservation}>예약중</div>
+                  )}
+                  {article.status === "SOLD_OUT" && (
+                    <div className={styles.saleClosed}>거래완료</div>
+                  )}
+                  <p className={styles.price}>
+                    {article.price !== 0 &&
+                      article.price.toLocaleString("ko-KR") + "원"}
+                    {article.price === 0 && "나눔🧡"}
+                  </p>
+                </div>
+                <div className={styles.lastLine}>
+                  {article.chats !== 0 && (
+                    <div className={styles.chatContainer}>
+                      <img
+                        className={styles.chatImg}
+                        src={chatIcon}
+                        alt="채팅"
+                      />
+                      <p className={styles.chat}>{article.chats}</p>
+                    </div>
+                  )}
+                  {article.likes !== 0 && (
+                    <div className={styles.heartContainer}>
+                      <img
+                        className={styles.heartImg}
+                        src={heartIcon}
+                        alt="좋아요"
+                      />
+                      <p className={styles.heart}>{article.likes}</p>
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-            {article.interest !== 0 && (
-              <div className={styles.heartContainer}>
-                <img className={styles.heartImg} src={heartIcon} alt="좋아요" />
-                <p className={styles.heart}>{article.interest}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  });
+            </div>
+          );
+        })
+      );
+    });
+  }, [navigate]);
 
   if (props.writeHandle) {
     return (
       <div className={styles.wrapper}>
-        {articleData}
+        {data}
         <img
           className={styles.closeButton}
           src={Close}
@@ -92,7 +161,7 @@ const HomeGoods = (props: {
 
   return (
     <div className={styles.wrapper}>
-      {articleData}
+      {data}
       <img
         className={styles.openButton}
         src={Open}

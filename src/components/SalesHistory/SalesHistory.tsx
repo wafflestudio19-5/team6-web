@@ -74,7 +74,7 @@ const SalesHistory = () => {
       {closedActions && <div></div>}
       {hiddenActions && <div></div>}
       <header>
-        <Link to="/main" className={styles.back}>
+        <Link to="/main" state={{ page: "user" }} className={styles.back}>
           <img src={BackArrow} alt="뒤로" />
         </Link>
         <p>판매내역</p>
@@ -112,11 +112,17 @@ const SalesHistory = () => {
         숨김
       </button>
       <section className={styles["body-wrapper"]}>
+<<<<<<< HEAD
         {mode === 1 && (
           <Onsale onsaleList={onsaleList} setOnsaleActions={setOnsaleActions} />
         )}
         {mode === 2 && <ClosedSales closedList={closedList} />}
         {mode === 3 && <HiddenSales hiddenList={hiddenList} />}
+=======
+        {mode === 1 && <Onsale />}
+        {mode === 2 && <CompletedSales />}
+        {mode === 3 && <HiddenSales />}
+>>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
       </section>
     </div>
   );

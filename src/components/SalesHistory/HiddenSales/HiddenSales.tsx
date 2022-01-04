@@ -4,6 +4,7 @@ import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
 
+<<<<<<< HEAD
 const HiddenSales = (props: { hiddenList: userData[] }) => {
   const changeToVisible = (article: userData) => {
     console.log(article.title + " 숨기기 취소");
@@ -88,4 +89,14 @@ const HiddenSales = (props: { hiddenList: userData[] }) => {
   );
 };
 
+=======
+const HiddenSales = () => {
+  return (
+    <div className={styles.empty}>
+      <p>숨기기 한 게시글이 없어요.</p>
+    </div>
+  );
+};
+
+>>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
 export default HiddenSales;

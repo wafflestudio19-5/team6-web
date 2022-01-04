@@ -9,7 +9,7 @@ const Profile = () => {
   return (
     <div className={styles.wrapper}>
       <header>
-        <Link to="/main" className={styles.back}>
+        <Link to="/main" state={{ page: "user" }} className={styles.back}>
           <img src={BackArrow} alt="뒤로" />
         </Link>
         <p>프로필</p>

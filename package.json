@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.5",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
@@ -17,10 +18,13 @@
     "dart-sass": "^1.25.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-hot-toast": "^2.1.1",
+    "react-kakao-maps-sdk": "^1.0.4",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
     "react-select": "^5.2.1",
     "react-slick": "^0.28.1",
+    "react-textarea-autosize": "^8.3.3",
     "sass": "^1.43.5",
     "slate": "^0.72.3",
     "slate-history": "^0.66.0",
@@ -34,8 +38,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "aws s3 sync ./build s3://daangn-market-clone-service --profile=s-yeoyul",
-    "invalidate": "aws cloudfront create-invalidation --profile=JiyeonP  --distribution-id E1LYE1UK1H0HT7 --paths / /index.html /error.html /service-worker.js /manifest.json /favicon.ico"
+    "deploy": "aws s3 sync ./build s3://daangn-market-clone-service --profile=Hyeongtaek",
+    "invalidate": "aws cloudfront create-invalidation --profile=Hyeongtaek  --distribution-id E1LYE1UK1H0HT7 --paths / /index.html /error.html /service-worker.js /manifest.json /favicon.ico"
   },
   "eslintConfig": {
     "extends": [
@@ -58,6 +62,7 @@
   "devDependencies": {
     "@types/react-modal": "^3.13.1",
     "@types/react-slick": "^0.23.7",
+    "kakao.maps.d.ts": "^0.1.24",
     "prettier": "^2.5.0"
   }
 }

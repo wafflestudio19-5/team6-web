@@ -6,6 +6,7 @@ import { requester } from "../../../apis/requester";
 import { Dispatch, SetStateAction } from "react";
 import moreActions from "../../../icons/more.png";
 
+<<<<<<< HEAD
 const Onsale = (props: {
   onsaleList: userData[];
   setOnsaleActions: Dispatch<SetStateAction<boolean>>;
@@ -134,4 +135,14 @@ const Onsale = (props: {
   );
 };
 
+=======
+const Onsale = () => {
+  return (
+    <div className={styles.empty}>
+      <p>판매중인 게시물이 없어요.</p>
+    </div>
+  );
+};
+
+>>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
 export default Onsale;

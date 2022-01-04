@@ -4,17 +4,25 @@ import Search from "../../../icons/Header/search.png";
 import Category from "../../../icons/Header/category.png";
 import Notice from "../../../icons/Header/bell.png";
 import { Dispatch, SetStateAction } from "react";
+<<<<<<< HEAD
+=======
+import { useNavigate } from "react-router-dom";
+>>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
 
 const HomeHeader = (props: {
   location: string;
   setLocation: Dispatch<SetStateAction<string>>;
 }) => {
+<<<<<<< HEAD
+=======
+  const navigate = useNavigate();
+>>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
   const handleLocation = () => {
     console.log("위치 재지정하는 팝업");
   };
 
   const handleSearch = () => {
-    console.log("검색창으로 push");
+    navigate("/search");
   };
 
   const handleCategory = () => {

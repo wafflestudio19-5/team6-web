@@ -5,8 +5,6 @@ import closeButton from "../../../../icons/closebutton.png";
 import camera from "../../../../icons/camera.png";
 import sentence from "../../../../icons/addProperty.png";
 import setting from "../../../../icons/settingSlider.png";
-import backButton from "../../../../icons/leftArrow.png";
-import orangeCheck from "../../../../icons/orangecheck.png";
 import rightButton from "../../../../icons/right.png";
 import deleteButton from "../../../../icons/crossClose.png";
 
@@ -15,13 +13,16 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { createEditor, Descendant, Node } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
-import dummyData from "../../../Article/DummyData";
-import * as React from "react";
-
-import "./slick.scss";
-import "slick-carousel/slick/slick-theme.css";
-
+import { requester } from "../../../../apis/requester";
+import { toast } from "react-hot-toast";
 import Slider from "react-slick";
+import SelectCategory from "./Category/SelectCategory";
+import "./slick.scss";
+import "./slickTheme.scss";
+import SelectKidAge from "./Kidage/SelectKidage";
+import SelectKidage from "./Kidage/SelectKidage";
+import ConfirmModal from "./Confirm/ConfirmModal";
+
 const settings = {
   className: "left",
   infinite: false,
@@ -34,25 +35,20 @@ const settings = {
 const WriteArticle = () => {
   const [isCategoryModalOpen, setIsCategoryModalOpen] =
     useState<boolean>(false);
-  const [isImgModalOpen, setIsImgModalOpen] = useState<boolean>(false);
+  const [isKidsModalOpen, setIsKidsModalOpen] = useState<boolean>(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
   const [toastState, setToastState] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
-  const [pChecked, setPChecked] = useState<boolean>(false);
-  const [category, setCategory] = useState<string>("");
+  const [negotiable, setNegotiable] = useState<boolean>(false);
+  const [category, setCategory] = useState<number>(0);
   const [price, setPrice] = useState<string>("");
   const [value, setValue] = useState<Descendant[]>([
     { type: "paragraph", children: [{ text: "" }] },
   ]);
   const [imgPreview, setImgPreview] = useState<string[]>([camera]);
-
+  const [imgFiles, setImgFiles] = useState<FileList | null>(null);
+  const [forAge, setForAge] = useState<number>(0);
   const imgRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (toastState) {
-      setTimeout(() => setToastState(false), 4000);
-    }
-  }, [toastState]);
 
   const editor = useMemo(
     () => withHistory(withReact(createEditor() as ReactEditor)),
@@ -71,16 +67,10 @@ const WriteArticle = () => {
 
   const navigate = useNavigate();
 
-  const onClickBack = () => {
-    setIsCategoryModalOpen(false);
-  };
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
-  const onClickCategory = (e: string) => {
-    setCategory(e);
-    setIsCategoryModalOpen(false);
-  };
+
   const handleCategory = () => {
     setIsCategoryModalOpen(true);
   };
@@ -90,8 +80,19 @@ const WriteArticle = () => {
 
   const onClickDone = () => {
     if (!title || !category || !serialize(value)) setIsConfirmOpen(true);
-    else if (serialize(value).length <= 5) setToastState(true);
+    else if (serialize(value).length <= 5)
+      toast("글이 너무 짧아요. 조금 더 길게 작성해주세요.", {
+        style: {
+          borderRadius: "4px",
+          background: "black",
+          padding: "6px",
+          color: "#fff",
+          font: "-moz-initial",
+        },
+        position: "bottom-center",
+      });
     else if (imgPreview.length === 1) {
+<<<<<<< HEAD
       dummyData.push({
         id: Math.floor(Math.random() * Math.pow(10, 10)),
         name: "현재유저",
@@ -135,10 +136,52 @@ const WriteArticle = () => {
         hidden: false,
       }); // axios.patch
       navigate("/main");
+=======
+      requester
+        .post("/products/", {
+          images: [21], // temporary
+          title: title,
+          content: serialize(value),
+          price: parseInt(price.replace(/[^0-9]/g, "")),
+          negotiable: negotiable,
+          category: category,
+          for_age: forAge,
+          range_of_location: 0, // temporary
+        })
+        .then((res) => console.log(res.data));
+      navigate("/main");
+    } else {
+      const formData = new FormData();
+      // @ts-ignore
+      if (imgFiles) {
+        Object.values(imgFiles).map((e) => {
+          formData.append("file", e);
+        });
+        console.log(Object.values(imgFiles)[0]);
+        requester
+          .post("/images/", formData)
+          .then((res) => {
+            requester
+              .post("/products/", {
+                images: [6],
+                title: title,
+                content: serialize(value),
+                price: parseInt(price.replace(/[^0-9]/g, "")),
+                negotiable: negotiable,
+                category: category,
+                for_age: forAge,
+                range_of_location: 0,
+              })
+              .then((res) => console.log(res.data));
+          })
+          .catch((e) => console.log(e.response));
+        navigate("/main");
+      }
+>>>>>>> 15ce7d0a2c43bcd70afb1c2d5c06727763b946e7
     }
   };
   const handleCheck = () => {
-    if (!!price) setPChecked(!pChecked);
+    if (!!price) setNegotiable(!negotiable);
   };
 
   const priceFormat = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,8 +202,9 @@ const WriteArticle = () => {
     imgRef.current?.click();
   };
 
-  const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const nowImgList = e.target.files;
+    setImgFiles(nowImgList);
     const nowImgUrlList = [...imgPreview];
     if (!!nowImgList) {
       for (let i = 0; i < nowImgList.length; i++) {
@@ -180,7 +224,7 @@ const WriteArticle = () => {
   const carouselImg = imgPreview.map((image) => {
     if (image === camera && imgPreview.length === 1)
       return (
-        <div className={styles.imageUploadContainer}>
+        <div className={styles.imageUploadContainer} key={Math.random()}>
           <img
             className={styles.imageUpload}
             src={camera}
@@ -214,35 +258,94 @@ const WriteArticle = () => {
       </div>
     );
   });
-
+  const categoryFormat = (category: number) => {
+    switch (category) {
+      case 1:
+        return "디지털기기";
+      case 2:
+        return "생활가전";
+      case 3:
+        return "가구/인테리어";
+      case 4:
+        return "유아동";
+      case 5:
+        return "생활/가공식품";
+      case 6:
+        return "유아도서";
+      case 7:
+        return "스포츠/레저";
+      case 8:
+        return "여성잡화";
+      case 9:
+        return "여성의류";
+      case 10:
+        return "남성패션/잡화";
+      case 11:
+        return "게임/취미";
+      case 12:
+        return "뷰티/미용";
+      case 13:
+        return "반려동물용품";
+      case 14:
+        return "도서/티켓/음반";
+      case 15:
+        return "식물";
+      case 16:
+        return "기타 중고물품";
+      case 17:
+        return "삽니다";
+      default:
+        break;
+    }
+  };
+  const ageFormat = (forAge: number) => {
+    switch (forAge) {
+      case 1:
+        return "0~6개월";
+      case 2:
+        return "7~12개월";
+      case 3:
+        return "13~24개월";
+      case 4:
+        return "3~5세";
+      case 5:
+        return "6~8세";
+      case 6:
+        return "9세 이상";
+      default:
+        return "나이 선택";
+    }
+  };
   return (
     <>
-      {!isCategoryModalOpen && !isImgModalOpen && (
+      {!isCategoryModalOpen && (
         <div className={styles.writePageWrapper}>
           {isConfirmOpen && (
-            <div className={confirmStyles.box}>
-              <p className={confirmStyles.contents}>
-                {!title && "제목"}
-                {!title && (!category || !serialize(value)) && ", "}
-                {!category && "카테고리"}
-                {!category && !serialize(value) && ", "}
-                {!serialize(value) && "내용"}
-                {!!serialize(value) && !category ? "는 " : "은 "}
-                필수 입력 항목이에요.
-              </p>
-              <button
-                className={confirmStyles.confirmButton}
-                onClick={() => setIsConfirmOpen(false)}
-              >
-                확인
-              </button>
-            </div>
+            <ConfirmModal
+              title={title}
+              category={category}
+              content={serialize(value)}
+              setIsConfirmOpen={setIsConfirmOpen}
+            />
+          )}
+          {isKidsModalOpen && (
+            <SelectKidage
+              forAge={forAge}
+              setForAge={setForAge}
+              setIsKidsModalOpen={setIsKidsModalOpen}
+            />
           )}
           <div
             className={`${styles.backShadow} ${
               isConfirmOpen ? styles.show : ""
             }`}
             onClick={() => setIsConfirmOpen(false)}
+          />
+          <div
+            className={`${styles.backShadow} ${
+              isKidsModalOpen ? styles.show : ""
+            }`}
+            onClick={() => setIsKidsModalOpen(false)}
           />
           <div className={styles.header}>
             <img
@@ -292,7 +395,7 @@ const WriteArticle = () => {
             </div>
             <div className={styles.categoryWrapper} onClick={handleCategory}>
               <p className={styles.category}>
-                {!!category ? category : "카테고리 선택"}
+                {!!category ? categoryFormat(category) : "카테고리 선택"}
               </p>
               <img
                 className={styles.rightButton}
@@ -314,7 +417,7 @@ const WriteArticle = () => {
               <input
                 className={styles.pCheckBox}
                 type={"checkbox"}
-                checked={pChecked}
+                checked={negotiable}
               />
               <label htmlFor={styles.pCheckBox} onClick={handleCheck} />
               <p className={styles.priceP}>가격 제안받기</p>
@@ -329,322 +432,33 @@ const WriteArticle = () => {
                 {/* 현재 위치는 나중에 유저 데이터에서 받아와서 입력*/}
               </Slate>
             </div>
+            {category === 4 && (
+              <div
+                className={styles.kidsAgeSelector}
+                onClick={() => setIsKidsModalOpen(true)}
+              >
+                <p className={styles.useAge}>사용 나이</p>
+                <div className={styles.forAge}>
+                  <p className={!!forAge ? styles.age : styles.ageSelect}>
+                    {ageFormat(forAge)}
+                  </p>
+                  <img
+                    className={styles.rightButton}
+                    src={rightButton}
+                    alt="카테고리 선택"
+                  />
+                </div>
+              </div>
+            )}
           </div>
-          {toastState && (
-            <div
-              className={styles.toastWrapper}
-              onClick={() => setToastState(false)}
-            >
-              <p className={styles.toastMessage}>
-                글이 너무 짧아요. 조금 더 길게 작성해주세요.
-              </p>
-            </div>
-          )}
         </div>
       )}
       {isCategoryModalOpen && (
-        <div className={styles.writePageWrapper}>
-          <div className={styles.header}>
-            <img
-              className={styles.backButton}
-              src={backButton}
-              alt="뒤로가기"
-              onClick={onClickBack}
-            />
-            <h1 className={styles.headerTitle}>카테고리 선택</h1>
-          </div>
-          <div className={styles.categoryContentWrapper}>
-            <div
-              className={
-                category === "디지털기기"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("디지털기기")}
-            >
-              <p className={styles.category}>디지털기기</p>
-              {category === "디지털기기" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "생활가전"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("생활가전")}
-            >
-              <p className={styles.category}>생활가전</p>
-              {category === "생활가전" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "가구/인테리어"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("가구/인테리어")}
-            >
-              <p className={styles.category}>가구/인테리어</p>
-              {category === "가구/인테리어" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "유아동"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("유아동")}
-            >
-              <p className={styles.category}>유아동</p>
-              {category === "유아동" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "생활/가공식품"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("생활/가공식품")}
-            >
-              <p className={styles.category}>생활/가공식품</p>
-              {category === "생활/가공식품" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "유아도서"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("유아도서")}
-            >
-              <p className={styles.category}>유아도서</p>
-              {category === "유아도서" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "스포츠/레저"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("스포츠/레저")}
-            >
-              <p className={styles.category}>스포츠/레저</p>
-              {category === "스포츠/레저" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "여성잡화"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("여성잡화")}
-            >
-              <p className={styles.category}>여성잡화</p>
-              {category === "여성잡화" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "여성의류"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("여성의류")}
-            >
-              <p className={styles.category}>여성의류</p>
-              {category === "여성의류" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "남성패션/잡화"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("남성패션/잡화")}
-            >
-              <p className={styles.category}>남성패션/잡화</p>
-              {category === "남성패션/잡화" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "게임/취미"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("게임/취미")}
-            >
-              <p className={styles.category}>게임/취미</p>
-              {category === "게임/취미" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "뷰티/미용"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("뷰티/미용")}
-            >
-              <p className={styles.category}>뷰티/미용</p>
-              {category === "뷰티/미용" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "반려동물용품"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("반려동물용품")}
-            >
-              <p className={styles.category}>반려동물용품</p>
-              {category === "반려동물용품" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "도서/티켓/음반"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("도서/티켓/음반")}
-            >
-              <p className={styles.category}>도서/티켓/음반</p>
-              {category === "도서/티켓/음반" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "식물"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("식물")}
-            >
-              <p className={styles.category}>식물</p>
-              {category === "식물" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "기타 중고물품"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("기타 중고물품")}
-            >
-              <p className={styles.category}>기타 중고물품</p>
-              {category === "기타 중고물품" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-            <div
-              className={
-                category === "삽니다"
-                  ? styles.clickedCategoryWrapper
-                  : styles.defaultCategoryWrapper
-              }
-              onClick={() => onClickCategory("삽니다")}
-            >
-              <p className={styles.category}>삽니다</p>
-              {category === "삽니다" && (
-                <img
-                  className={styles.checked}
-                  src={orangeCheck}
-                  alt="선택됨"
-                />
-              )}
-            </div>
-          </div>
-        </div>
+        <SelectCategory
+          category={category}
+          setCategory={setCategory}
+          setIsCategoryModalOpen={setIsCategoryModalOpen}
+        />
       )}
     </>
   );
