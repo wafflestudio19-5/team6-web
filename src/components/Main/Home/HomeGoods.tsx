@@ -77,7 +77,9 @@ const HomeGoods = (props: {
           const time = new Date(article.created_at);
           requester
             .get(`/images/${article.image}/`)
-            .then((res) => {})
+            .then((res) => {
+              console.log(res.data);
+            })
             .catch();
           return (
             <div
@@ -85,7 +87,11 @@ const HomeGoods = (props: {
               key={article.id}
               onClick={() => onClickArticle(article.id)}
             >
-              <img className={styles.thumbnail} src={""} alt="대표 이미지" />
+              <img
+                className={styles.thumbnail}
+                src={`data:image/png;base64, ${res.data}`}
+                alt="대표 이미지"
+              />
               <div className={styles.dataContainer}>
                 <p className={styles.title}>{article.title}</p>
                 <div className={styles.secondLine}>
