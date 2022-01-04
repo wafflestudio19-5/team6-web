@@ -8,6 +8,7 @@ import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
 import Product from "../../../apis/Product/Product";
+import * as fs from "fs";
 
 type homeGoodsData = {
   count: number;
@@ -75,11 +76,10 @@ const HomeGoods = (props: {
       setData(
         res.data.content.map((article: homeGoods) => {
           const time = new Date(article.created_at);
+          let url;
           requester
             .get(`/images/${article.image}/`)
-            .then((res) => {
-              console.log(res.data);
-            })
+            .then((res) => {})
             .catch();
           return (
             <div
@@ -87,11 +87,7 @@ const HomeGoods = (props: {
               key={article.id}
               onClick={() => onClickArticle(article.id)}
             >
-              <img
-                className={styles.thumbnail}
-                src={`data:image/png;base64, ${res.data}`}
-                alt="대표 이미지"
-              />
+              <img className={styles.thumbnail} src={url} alt="대표 이미지" />
               <div className={styles.dataContainer}>
                 <p className={styles.title}>{article.title}</p>
                 <div className={styles.secondLine}>

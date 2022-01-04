@@ -11,6 +11,41 @@ export default {
       url: `/products/${id}/`,
     });
   },
+  postProduct(data: {
+    images: number[];
+    title: string;
+    content: string;
+    price: number;
+    negotiable: boolean;
+    category: number;
+    for_age: number | null;
+    range_of_location: number;
+  }) {
+    return requester({
+      method: "POST",
+      url: "/products/",
+      data: data,
+    });
+  },
+  patchProduct(
+    id: string,
+    data: {
+      images: number[];
+      title: string;
+      content: string;
+      price: number;
+      negotiable: boolean;
+      category: number;
+      for_age: number | null;
+      range_of_location: number;
+    }
+  ) {
+    return requester({
+      method: "PATCH",
+      url: `/products/${id}/`,
+      data: data,
+    });
+  },
   putStatus(id: string, action: string) {
     return requester({
       method: "PUT",

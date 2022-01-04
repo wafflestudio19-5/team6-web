@@ -35,6 +35,7 @@ type articleData = {
   title: string;
   content: string;
   price: number;
+  negotiable: boolean;
   location: string;
   category: string;
   hit: number;
@@ -233,9 +234,20 @@ const Article = () => {
         .catch((e) => console.log(e));
     }
   };
+
   const selectSetting = (select: string) => {
     if (select === "patch") {
-      navigate("/write");
+      navigate("/write", {
+        state: {
+          title: currentArticle?.title,
+          category: categoryFormat(currentArticle?.category),
+          price: currentArticle?.price,
+          negotiable: currentArticle?.negotiable,
+          for_age: currentArticle?.for_age,
+          content: currentArticle?.content,
+          id: id,
+        },
+      });
     } else if (select === "bump") {
       Product.putStatus(id, select)
         .then((res) => toast("success"))
