@@ -6,8 +6,6 @@ import MannerTemperature from "./MannerTemperature/MannerTemperature";
 import ProfileButtons from "./ProfileButtons/ProfileButtons";
 
 const Profile = () => {
-  // @ts-ignore
-  // @ts-ignore
   return (
     <div className={styles.wrapper}>
       <header>

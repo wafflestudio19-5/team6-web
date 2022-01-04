@@ -13,6 +13,7 @@ type homeGoodsData = {
   count: number;
   results: homeGoods[];
 };
+
 type homeGoods = {
   id: number;
   user: {
@@ -43,38 +44,68 @@ const HomeGoods = (props: {
   const onClickArticle = (id: number) => {
     navigate(`/article/${id}`);
   };
-
+  const calculateTimeDifference = (late: Date) => {
+    const now = new Date();
+    if ((now.getTime() - late.getTime()) / 1000 < 60)
+      return (
+        Math.floor((now.getTime() - late.getTime()) / 1000).toString() + "초 전"
+      );
+    // 초 단위
+    else if ((now.getTime() - late.getTime()) / (1000 * 60) < 60)
+      return (
+        Math.floor((now.getTime() - late.getTime()) / (1000 * 60)).toString() +
+        "분 전"
+      );
+    // 분 단위
+    else if ((now.getTime() - late.getTime()) / (1000 * 60 * 60) < 24)
+      return (
+        Math.floor(
+          (now.getTime() - late.getTime()) / (1000 * 60 * 60)
+        ).toString() + "시간 전"
+      );
+    else
+      return (
+        Math.floor(
+          (now.getTime() - late.getTime()) / (1000 * 60 * 60 * 24)
+        ).toString() + "일 전"
+      );
+  };
   useEffect(() => {
-    requester.get("/products/").then((res) => {
+    requester.get(`/products/?pageNumber=0&pageSize=15`).then((res) => {
+      console.log(res.data);
       setData(
-        res.data.results.map((article: homeGoods) => {
+        res.data.content.map((article: homeGoods) => {
+          const time = new Date(article.created_at);
+          requester
+            .get(`/images/${article.image}/`)
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((e) => console.log(e.response));
           return (
             <div
               className={styles.articleWrapper}
               key={article.id}
               onClick={() => onClickArticle(article.id)}
             >
-              <img
-                className={styles.thumbnail}
-                src={article.image[0]}
-                alt="대표 이미지"
-              />
-
+              <img className={styles.thumbnail} src={""} alt="대표 이미지" />
               <div className={styles.dataContainer}>
                 <p className={styles.title}>{article.title}</p>
                 <div className={styles.secondLine}>
                   <p className={styles.region}>{article.location} ·</p>
-                  <p className={styles.time}>{article.created_at}</p>
+                  <p className={styles.time}>{calculateTimeDifference(time)}</p>
                 </div>
                 <div className={styles.thirdLine}>
-                  {article.status === "예약중" && (
+                  {article.status === "RESERVED" && (
                     <div className={styles.reservation}>예약중</div>
                   )}
-                  {article.status === "거래완료" && (
+                  {article.status === "SOLD_OUT" && (
                     <div className={styles.saleClosed}>거래완료</div>
                   )}
                   <p className={styles.price}>
-                    {article.price.toLocaleString("ko-KR")}원
+                    {article.price !== 0 &&
+                      article.price.toLocaleString("ko-KR") + "원"}
+                    {article.price === 0 && "나눔🧡"}
                   </p>
                 </div>
                 <div className={styles.lastLine}>
