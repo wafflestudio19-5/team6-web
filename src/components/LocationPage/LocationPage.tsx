@@ -42,7 +42,7 @@ const LocationPage = () => {
       location.state.prev === "signup" &&
         setSignupForm(location.state.signupForm);
       location.state.prev === "edit" &&
-        !!localStorage.getItem("token") &&
+        !localStorage.getItem("token") &&
         navigate("/login");
       location.state = null;
     } else {
@@ -97,9 +97,13 @@ const LocationPage = () => {
   };
 
   const handleToGoBack = () => {
-    navigate("/signup", {
-      state: { inputs: signupForm },
-    });
+    prev === " signup"
+      ? navigate("/signup", {
+          state: { inputs: signupForm },
+        })
+      : navigate("/main", {
+          state: { page: "user" },
+        });
   };
 
   return (
