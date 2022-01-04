@@ -7,7 +7,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ChangeEventHandler, useEffect, useState } from "react";
 
 const EditProfile = () => {
-  const [prev, setPrev] = useState();
+  const [prev, setPrev] = useState<string | null>(null);
   const [nickname, setNickname] = useState("");
   const location = useLocation();
 

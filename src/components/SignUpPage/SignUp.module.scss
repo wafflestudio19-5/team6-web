@@ -107,7 +107,7 @@
     display: flex;
     width: 100%;
     max-width: 450px;
-    height: 320px;
+    height: 330px;
     top: 250px;
     flex-direction: column;
     align-items: center;
@@ -172,11 +172,24 @@
       }
     }
 
+    .text-wrapper {
+      height: 20px;
+
+      p {
+        position: relative;
+        top: 12px;
+        margin: 0;
+        font-size: 10px;
+        color: #777777;
+      }
+    }
+
+
     .set-location {
       width: 75%;
 
-      height: 30px;
-      margin-top: 15px;
+      height: 32px;
+      margin-top: 13px;
       padding: 0;
 
       color: white;
@@ -201,7 +214,7 @@
 
   hr {
     position: absolute;
-    top: 579px;
+    top: 589px;
     width: 70%;
     left: 14%;
     border-top: 1px dashed #61dafb;
@@ -213,7 +226,7 @@
     width: 100%;
     max-width: 450px;
     height: 25px;
-    top: 610px;
+    top: 620px;
 
     .goback {
       position: absolute;
