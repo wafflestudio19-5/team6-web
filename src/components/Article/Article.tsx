@@ -416,7 +416,7 @@ const Article = () => {
               className={styles.content}
               value={currentArticle?.content}
             />
-            {currentArticle?.category === "KIDS" && (
+            {currentArticle?.category === "KIDS" && !!currentArticle?.for_age && (
               <div className={styles.kidsContainer}>
                 <h1 className={styles.kidsHeader}>사용 나이</h1>
                 <p className={styles.kidsContent}>
