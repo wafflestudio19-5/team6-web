@@ -7,8 +7,16 @@ import icon5 from "../../../icons/MyCarrot/four_square.png";
 import icon6 from "../../../icons/MyCarrot/category.png";
 import ProfileBar from "./ProfileBar/ProfileBar";
 import HistoryButtons from "./HistoryButtons/HistoryButtons";
+import { useNavigate } from "react-router-dom";
 
 const MyCarrot = () => {
+  const navigate = useNavigate();
+
+  const LinkToEditLocation = () => {
+    navigate("/setlocation", {
+      state: { prev: "edit" },
+    });
+  };
   return (
     <div className={styles["mycarrot-wrapper"]}>
       <div className={styles["profile-wrapper"]}>
@@ -24,11 +32,7 @@ const MyCarrot = () => {
           <img src={icon1} alt="location" />
           <p>내 동네 설정</p>
         </button>
-        <button
-          onClick={() => {
-            console.log("동네 인증하기");
-          }}
-        >
+        <button onClick={LinkToEditLocation}>
           <img src={icon2} alt="current location" />
           <p>동네 인증하기</p>
         </button>

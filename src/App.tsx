@@ -15,6 +15,7 @@ import Profile from "./components/Profile/Profile";
 import SalesHistory from "./components/SalesHistory/SalesHistory";
 import WriteArticle from "./components/Main/Home/Write/WriteArticle";
 import LocationPage from "./components/LocationPage/LocationPage";
+import EditProfile from "./components/Profile/EditProfile/EditProfile";
 import SearchPage from "./components/SearchPage/SearchPage";
 import { Toaster } from "react-hot-toast";
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/main" element={<Main />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/sales-history" element={<SalesHistory />} />
           <Route path="/article/:id" element={<Article />} />
           <Route path="/write" element={<WriteArticle />} />
