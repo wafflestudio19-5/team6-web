@@ -7,6 +7,7 @@ import Hiddens from "./Hiddens/Hiddens";
 import Soldouts from "./Soldouts/Soldouts";
 import { requester } from "../../apis/requester";
 import { myProductsData } from "../../type/product";
+import { toast } from "react-hot-toast";
 
 export type srcPair = {
   id: number;
@@ -26,7 +27,7 @@ const SalesHistory = () => {
 
   useEffect(() => {
     requester
-      .get(`/users/me/products/?pageNumber=0&pageSize=15`)
+      .get(`/users/me/products/?pageNumber=0&pageSize=30`)
       .then((res) => {
         setOnsaleList(
           res.data.content.filter(
@@ -74,6 +75,23 @@ const SalesHistory = () => {
     setHiddenActions(false);
   };
 
+  const handleBump = () => {
+    requester
+      .put(`/products/${actionTarget}/status/`, { action: "bump" })
+      .then((res) => {
+        setUpdate((update) => !update);
+        setOnsaleActions(false);
+        setSoldoutActions(false);
+        setHiddenActions(false);
+      })
+      .catch((e) => {
+        if (e.response.data.error_code === 203) {
+          toast.error("너무 자주 끌어올릴 수 없습니다.");
+        } else if (e.response.data.error_code === 201) {
+          toast.error("판매 완료된 게시글입니다.");
+        }
+      });
+  };
   const changeToOnsale = () => {
     //api 없음
     /*
@@ -103,14 +121,15 @@ const SalesHistory = () => {
             className={`${styles["fourBox"]} ${
               onsaleActions ? styles.show : ""
             }`}
-            onClick={() => setOnsaleActions(false)}
           >
             <div className={styles.upperBox}>
               <div className={styles.blueText} onClick={changeToModification}>
                 게시글 수정
               </div>
               <div className={styles.line} />
-              <div className={styles.blueText}>끌어올리기</div>
+              <div className={styles.blueText} onClick={handleBump}>
+                끌어올리기
+              </div>
               <div className={styles.line} />
               <div className={styles.blueText} onClick={handleHiding}>
                 숨기기
@@ -141,7 +160,6 @@ const SalesHistory = () => {
             className={`${styles["fourBox"]} ${
               soldoutActions ? styles.show : ""
             }`}
-            onClick={() => setSoldoutActions(false)}
           >
             <div className={styles.upperBox}>
               <div className={styles.blueText} onClick={changeToOnsale}>
@@ -179,7 +197,6 @@ const SalesHistory = () => {
             className={`${styles["twoBox"]} ${
               hiddenActions ? styles.show : ""
             }`}
-            onClick={() => setHiddenActions(false)}
           >
             <div className={styles.upperBox}>
               <div className={styles.blueText}>게시글 수정</div>
