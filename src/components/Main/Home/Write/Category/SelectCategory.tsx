@@ -256,7 +256,6 @@ const SelectCategory = ({
           </div>
         </div>
       </div>
-      )
     </>
   );
 };

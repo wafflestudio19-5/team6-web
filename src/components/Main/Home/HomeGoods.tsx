@@ -118,7 +118,9 @@ const HomeGoods = (props: {
           let url;
           requester
             .get(`/images/${article.image}/`)
-            .then((res) => {})
+            .then((res) => {
+              url = res.data.url;
+            })
             .catch();
           return (
             <div
