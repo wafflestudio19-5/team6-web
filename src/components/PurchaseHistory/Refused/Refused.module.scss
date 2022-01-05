@@ -185,11 +185,15 @@
           line-height: 36px;
           font-size: 15px;
           font-weight: bold;
+          &:hover {
+            background-color: lavenderblush;
+            transition: 0.3s;
+          }
         }
 
-        .button.enable{
+        .button.unable{
           background-color: #dddddd;
-          cursor: auto;
+          cursor: default;
         }
       }
     }

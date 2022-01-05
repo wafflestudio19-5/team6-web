@@ -112,6 +112,10 @@
         font-size: 24px;
         text-align: center;
         line-height: 60px;
+        &:hover {
+          background-color: lavenderblush;
+          transition: 0.3s;
+        }
       }
 
       .redText{
@@ -119,6 +123,10 @@
          font-size: 24px;
          text-align: center;
          line-height: 60px;
+        &:hover {
+          background-color: lavenderblush;
+          transition: 0.3s;
+        }
        }
 
       .line{
@@ -141,6 +149,10 @@
       line-height: 60px;
 
       cursor: pointer;
+      &:hover {
+        background-color: lavenderblush;
+        transition: 0.3s;
+      }
     }
   }
 
@@ -166,6 +178,10 @@
         font-size: 24px;
         text-align: center;
         line-height: 60px;
+        &:hover {
+          background-color: lavenderblush;
+          transition: 0.3s;
+        }
       }
 
       .redText{
@@ -173,6 +189,10 @@
         font-size: 24px;
         text-align: center;
         line-height: 60px;
+        &:hover {
+          background-color: lavenderblush;
+          transition: 0.3s;
+        }
       }
 
       .line{
@@ -195,6 +215,10 @@
       line-height: 60px;
 
       cursor: pointer;
+      &:hover {
+        background-color: lavenderblush;
+        transition: 0.3s;
+      }
     }
   }
 }

@@ -105,7 +105,7 @@ const Refused = (props: { refusedList: myRequestData[] }) => {
           <div className={styles.line} />
           <div className={styles.buttons}>
             {article.product.status === "SOLD_OUT" ? (
-              <div className={`${styles.button} ${styles.enable}`}>
+              <div className={`${styles.button} ${styles.unable}`}>
                 거래 완료된 게시물입니다.
               </div>
             ) : (
