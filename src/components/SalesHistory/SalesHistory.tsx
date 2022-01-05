@@ -91,10 +91,20 @@ const SalesHistory = () => {
 
   return (
     <div className={styles["sales-history-wrapper"]}>
-      {mode === 1 && onsaleActions && (
+      {mode === 1 && (
         <>
-          <div className={styles.background} />
-          <div className={styles.fourBox}>
+          <div
+            className={`${styles["back-shadow"]} ${
+              onsaleActions ? styles.show : ""
+            }`}
+            onClick={() => setOnsaleActions(false)}
+          />
+          <div
+            className={`${styles["fourBox"]} ${
+              onsaleActions ? styles.show : ""
+            }`}
+            onClick={() => setOnsaleActions(false)}
+          >
             <div className={styles.upperBox}>
               <div className={styles.blueText} onClick={changeToModification}>
                 게시글 수정
@@ -119,10 +129,20 @@ const SalesHistory = () => {
           </div>
         </>
       )}
-      {mode === 2 && soldoutActions && (
+      {mode === 2 && (
         <>
-          <div className={styles.background} />
-          <div className={styles.fourBox}>
+          <div
+            className={`${styles["back-shadow"]} ${
+              soldoutActions ? styles.show : ""
+            }`}
+            onClick={() => setSoldoutActions(false)}
+          />
+          <div
+            className={`${styles["fourBox"]} ${
+              soldoutActions ? styles.show : ""
+            }`}
+            onClick={() => setSoldoutActions(false)}
+          >
             <div className={styles.upperBox}>
               <div className={styles.blueText} onClick={changeToOnsale}>
                 판매중으로 변경
@@ -147,10 +167,20 @@ const SalesHistory = () => {
           </div>
         </>
       )}
-      {mode === 3 && hiddenActions && (
+      {mode === 3 && (
         <>
-          <div className={styles.background} />
-          <div className={styles.twoBox}>
+          <div
+            className={`${styles["back-shadow"]} ${
+              hiddenActions ? styles.show : ""
+            }`}
+            onClick={() => setHiddenActions(false)}
+          />
+          <div
+            className={`${styles["twoBox"]} ${
+              hiddenActions ? styles.show : ""
+            }`}
+            onClick={() => setHiddenActions(false)}
+          >
             <div className={styles.upperBox}>
               <div className={styles.blueText}>게시글 수정</div>
               <div className={styles.line} />

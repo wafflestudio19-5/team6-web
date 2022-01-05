@@ -54,10 +54,12 @@ const PurchaseHistory = () => {
 
   return (
     <div className={styles["sales-history-wrapper"]}>
-      {mode === 1 && requestActions && (
+      {mode === 1 && (
         <>
           <div
-            className={styles.background}
+            className={`${styles["back-shadow"]} ${
+              requestActions ? styles.show : ""
+            }`}
             onClick={() => setRequestActions(false)}
           />
         </>
