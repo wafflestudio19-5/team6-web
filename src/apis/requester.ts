@@ -6,3 +6,7 @@ export const requester = axios.create({
     Authentication: `${localStorage.getItem("token")}`,
   },
 });
+
+export const user = axios.create({
+  baseURL: "https://carrotserver.shop/api/v1",
+});

@@ -11,7 +11,7 @@ const Profile = () => {
   const handleToEditProfilePage = () => {
     navigate("./edit", { state: { prev: "profile" } });
   };
-  
+
   return (
     <div className={styles.wrapper}>
       <header>
@@ -30,7 +30,6 @@ const Profile = () => {
           프로필 수정
         </button>
         <MannerTemperature />
-        <section>인증 내역</section>
         <ProfileButtons />
       </div>
     </div>
