@@ -286,7 +286,10 @@ const Article = () => {
       });
     } else if (select === "bump") {
       Product.putStatus(id, select)
-        .then((res) => toast("success"))
+        .then((res) => {
+          toast("success");
+          navigate("/main");
+        })
         .catch((e) => toast.error(e.response.data.error_message));
     } else if (select === "hide") {
       Product.putStatus(id, select)
