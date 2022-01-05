@@ -22,9 +22,7 @@ const Refused = (props: { refusedList: myRequestData[] }) => {
             ...srcList,
             {
               id: article.product.id,
-              src:
-                `data:${res.headers["content-type"]};base64,` +
-                Base64.encode(res.data),
+              src: res.data.url,
             },
           ]);
         })

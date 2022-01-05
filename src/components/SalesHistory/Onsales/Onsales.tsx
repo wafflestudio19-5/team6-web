@@ -28,9 +28,7 @@ const Onsales = (props: {
             ...srcList,
             {
               id: article.id,
-              src:
-                `data:${res.headers["content-type"]};base64,` +
-                Base64.encode(res.data),
+              src: res.data.url,
             },
           ]);
         })
