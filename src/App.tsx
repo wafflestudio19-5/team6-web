@@ -19,6 +19,7 @@ import EditProfile from "./components/Profile/EditProfile/EditProfile";
 import SearchPage from "./components/SearchPage/SearchPage";
 import { Toaster } from "react-hot-toast";
 import PurchaseHistory from "./components/PurchaseHistory/PurchaseHistory";
+import Sales from "./components/Profile/Sales/Sales";
 
 function App() {
   const token: string | null = localStorage.getItem("token");
@@ -33,6 +34,7 @@ function App() {
           <Route path="/main" element={<Main />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="/profile/sales" element={<Sales />} />
           <Route path="/sales-history" element={<SalesHistory />} />
           <Route path="/purchase-history" element={<PurchaseHistory />} />
           <Route path="/article/:id" element={<Article />} />

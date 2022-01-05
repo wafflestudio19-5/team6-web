@@ -4,8 +4,7 @@ import kakaoLogo from "../../icons/kakao-logo.png";
 import { ChangeEventHandler, useState } from "react";
 import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-
-import { requester } from "../../apis/requester";
+import { user } from "../../apis/requester";
 
 type TLoginForm = {
   username: string;
@@ -31,7 +30,7 @@ const Login = () => {
   const loginTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await requester.post("/users/signin/", {
+      const res = await user.post("/users/signin/", {
         name: inputs.username,
         password: inputs.password,
       });
