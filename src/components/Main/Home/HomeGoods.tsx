@@ -30,6 +30,7 @@ type homeGoods = {
   status: string;
   created_at: string;
   updated_at: string;
+  last_bring_up_my_post: string;
 };
 
 const HomeGoods = (props: {
@@ -45,37 +46,75 @@ const HomeGoods = (props: {
   const onClickArticle = (id: number) => {
     navigate(`/article/${id}`);
   };
-  const calculateTimeDifference = (late: Date) => {
+  const calculateTimeDifference = (init: Date, bump: Date) => {
     const now = new Date();
-    if ((now.getTime() - late.getTime()) / 1000 < 60)
-      return (
-        Math.floor((now.getTime() - late.getTime()) / 1000).toString() + "초 전"
-      );
-    // 초 단위
-    else if ((now.getTime() - late.getTime()) / (1000 * 60) < 60)
-      return (
-        Math.floor((now.getTime() - late.getTime()) / (1000 * 60)).toString() +
-        "분 전"
-      );
-    // 분 단위
-    else if ((now.getTime() - late.getTime()) / (1000 * 60 * 60) < 24)
-      return (
-        Math.floor(
-          (now.getTime() - late.getTime()) / (1000 * 60 * 60)
-        ).toString() + "시간 전"
-      );
-    else
-      return (
-        Math.floor(
-          (now.getTime() - late.getTime()) / (1000 * 60 * 60 * 24)
-        ).toString() + "일 전"
-      );
+    if (init.getTime() - bump.getTime() === 0) {
+      if ((now.getTime() - init.getTime()) / 1000 < 60)
+        return (
+          Math.floor((now.getTime() - init.getTime()) / 1000).toString() +
+          "초 전"
+        );
+      // 초 단위
+      else if ((now.getTime() - init.getTime()) / (1000 * 60) < 60)
+        return (
+          Math.floor(
+            (now.getTime() - init.getTime()) / (1000 * 60)
+          ).toString() + "분 전"
+        );
+      // 분 단위
+      else if ((now.getTime() - init.getTime()) / (1000 * 60 * 60) < 24)
+        return (
+          Math.floor(
+            (now.getTime() - init.getTime()) / (1000 * 60 * 60)
+          ).toString() + "시간 전"
+        );
+      else
+        return (
+          Math.floor(
+            (now.getTime() - init.getTime()) / (1000 * 60 * 60 * 24)
+          ).toString() + "일 전"
+        );
+    } else {
+      if ((now.getTime() - bump.getTime()) / 1000 < 60)
+        return (
+          "끌올 " +
+          Math.floor((now.getTime() - bump.getTime()) / 1000).toString() +
+          "초 전"
+        );
+      // 초 단위
+      else if ((now.getTime() - bump.getTime()) / (1000 * 60) < 60)
+        return (
+          "끌올 " +
+          Math.floor(
+            (now.getTime() - bump.getTime()) / (1000 * 60)
+          ).toString() +
+          "분 전"
+        );
+      // 분 단위
+      else if ((now.getTime() - bump.getTime()) / (1000 * 60 * 60) < 24)
+        return (
+          "끌올 " +
+          Math.floor(
+            (now.getTime() - bump.getTime()) / (1000 * 60 * 60)
+          ).toString() +
+          "시간 전"
+        );
+      else
+        return (
+          "끌올 " +
+          Math.floor(
+            (now.getTime() - bump.getTime()) / (1000 * 60 * 60 * 24)
+          ).toString() +
+          "일 전"
+        );
+    }
   };
   useEffect(() => {
     Product.getAllProducts().then((res) => {
       setData(
         res.data.content.map((article: homeGoods) => {
           const time = new Date(article.created_at);
+          const bringUpTime = new Date(article.last_bring_up_my_post);
           let url;
           requester
             .get(`/images/${article.image}/`)
@@ -92,7 +131,9 @@ const HomeGoods = (props: {
                 <p className={styles.title}>{article.title}</p>
                 <div className={styles.secondLine}>
                   <p className={styles.region}>{article.location} ·</p>
-                  <p className={styles.time}>{calculateTimeDifference(time)}</p>
+                  <p className={styles.time}>
+                    {calculateTimeDifference(time, bringUpTime)}
+                  </p>
                 </div>
                 <div className={styles.thirdLine}>
                   {article.status === "RESERVED" && (

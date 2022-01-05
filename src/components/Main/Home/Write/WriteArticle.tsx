@@ -206,7 +206,7 @@ const WriteArticle = () => {
                 price: parseInt(price.replace(/[^0-9]/g, "")),
                 negotiable: negotiable,
                 category: category,
-                for_age: null,
+                for_age: forAge,
                 range_of_location: 0,
               }).then((res) => navigate("/main"));
             else
