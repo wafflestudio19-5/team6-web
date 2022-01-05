@@ -38,7 +38,7 @@ const Onsales = (props: {
 
   const changeToReserved = (data: myProductsData) => {
     requester
-      .put(`/products/${data.id}/status/`, { action: "reserve" })
+      .put(`/products/${data.id}/status/`, { action: "reserved" })
       .then((res) => {
         props.setUpdate((update) => !update);
       })
@@ -46,7 +46,7 @@ const Onsales = (props: {
   };
   const changeToOnsale = (data: myProductsData) => {
     requester
-      .put(`/products/${data.id}/status/`, { action: "cancel reserve" })
+      .put(`/products/${data.id}/status/`, { action: "for sale" })
       .then((res) => {
         props.setUpdate((update) => !update);
       })
