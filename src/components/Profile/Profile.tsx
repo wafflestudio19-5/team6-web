@@ -11,8 +11,7 @@ const Profile = () => {
   const handleToEditProfilePage = () => {
     navigate("./edit", { state: { prev: "profile" } });
   };
-  // @ts-ignore
-  // @ts-ignore
+  
   return (
     <div className={styles.wrapper}>
       <header>

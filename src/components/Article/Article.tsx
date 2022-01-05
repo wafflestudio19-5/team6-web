@@ -55,6 +55,13 @@ type articleData = {
   status: string;
   created_at: string;
   updated_at: string;
+  for_age:
+    | "ZERO_TO_SIX_MONTH"
+    | "SEVEN_TO_TWELVE_MONTH"
+    | "OVER_ONE_TO_TWO"
+    | "THREE_TO_FIVE"
+    | "SIX_TO_EIGHT"
+    | "OVER_NINE";
 };
 const settings = {
   dots: true,
@@ -156,6 +163,103 @@ const Article = () => {
     console.log("profile image");
     // navigate("/profile/{id}");
   };
+  const calculateTimeDifference = (current: string | undefined) => {
+    if (!!current) {
+      const now = new Date();
+      const late = new Date(current);
+      if ((now.getTime() - late.getTime()) / 1000 < 60)
+        return (
+          Math.floor((now.getTime() - late.getTime()) / 1000).toString() +
+          "초 전"
+        );
+      // 초 단위
+      else if ((now.getTime() - late.getTime()) / (1000 * 60) < 60)
+        return (
+          Math.floor(
+            (now.getTime() - late.getTime()) / (1000 * 60)
+          ).toString() + "분 전"
+        );
+      // 분 단위
+      else if ((now.getTime() - late.getTime()) / (1000 * 60 * 60) < 24)
+        return (
+          Math.floor(
+            (now.getTime() - late.getTime()) / (1000 * 60 * 60)
+          ).toString() + "시간 전"
+        );
+      else
+        return (
+          Math.floor(
+            (now.getTime() - late.getTime()) / (1000 * 60 * 60 * 24)
+          ).toString() + "일 전"
+        );
+    } else return null;
+  };
+  const categoryFormat = (category: string | undefined) => {
+    switch (category) {
+      case "DIGITAL_DEVICE":
+        return "디지털기기";
+      case "HOME_APPLIANCE":
+        return "생활가전";
+      case "FURNITURE_AND_INTERIOR":
+        return "가구/인테리어";
+      case "KIDS":
+        return "유아동";
+      case "LIVING_AND_FOOD":
+        return "생활/가공식품";
+      case "KIDS_BOOK":
+        return "유아도서";
+      case "SPORTS_AND_LEISURE":
+        return "스포츠/레저";
+      case "WOMEN_STUFF":
+        return "여성잡화";
+      case "WOMEN_CLOTHES":
+        return "여성의류";
+      case "MEN_STUFF_AND_CLOTHES":
+        return "남성패션/잡화";
+      case "GAME_AND_HOBBIES":
+        return "게임/취미";
+      case "BEAUTY_AND_COSMETICS":
+        return "뷰티/미용";
+      case "PET":
+        return "반려동물용품";
+      case "BOOKS_AND_TICKETS_AND_RECORDS":
+        return "도서/티켓/음반";
+      case "BOTANICAL":
+        return "식물";
+      case "ETC":
+        return "기타 중고물품";
+      case "I_AM_BUYING":
+        return "삽니다";
+      default:
+        break;
+    }
+  };
+  const kidsAgeFormat = (
+    Age:
+      | "ZERO_TO_SIX_MONTH"
+      | "SEVEN_TO_TWELVE_MONTH"
+      | "OVER_ONE_TO_TWO"
+      | "THREE_TO_FIVE"
+      | "SIX_TO_EIGHT"
+      | "OVER_NINE"
+  ) => {
+    switch (Age) {
+      case "ZERO_TO_SIX_MONTH":
+        return "0~6개월";
+      case "SEVEN_TO_TWELVE_MONTH":
+        return "7~12개월";
+      case "OVER_ONE_TO_TWO":
+        return "13~24개월";
+      case "THREE_TO_FIVE":
+        return "3~5세";
+      case "SIX_TO_EIGHT":
+        return "6~8세";
+      case "OVER_NINE":
+        return "9세 이상";
+      default:
+        return null;
+    }
+  };
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -229,14 +333,26 @@ const Article = () => {
               {currentArticle?.title}
             </h1>
             <div className={styles.secondLine}>
-              <p className={styles.category}>{currentArticle?.category} ·</p>
-              <p className={styles.time}>{currentArticle?.created_at}</p>
+              <p className={styles.category}>
+                {categoryFormat(currentArticle?.category)} ·
+              </p>
+              <p className={styles.time}>
+                {calculateTimeDifference(currentArticle?.created_at)}
+              </p>
             </div>
             <TextareaAutosize
               readOnly
               className={styles.content}
               value={currentArticle?.content}
             />
+            {currentArticle?.category === "KIDS" && (
+              <div className={styles.kidsContainer}>
+                <h1 className={styles.kidsHeader}>사용 나이</h1>
+                <p className={styles.kidsContent}>
+                  {kidsAgeFormat(currentArticle?.for_age)}
+                </p>
+              </div>
+            )}
             <div className={styles.lastLine}>
               <p className={styles.likes}>관심 {currentArticle?.likes} ·</p>
               <p className={styles.hit}>조회 {currentArticle?.hit}</p>

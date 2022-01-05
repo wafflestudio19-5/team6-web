@@ -9,14 +9,14 @@ const SelectCategory = ({
   setCategory,
   setIsCategoryModalOpen,
 }: {
-  category: string;
-  setCategory: Dispatch<React.SetStateAction<string>>;
+  category: number;
+  setCategory: Dispatch<React.SetStateAction<number>>;
   setIsCategoryModalOpen: Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const onClickBack = () => {
     setIsCategoryModalOpen(false);
   };
-  const onClickCategory = (e: string) => {
+  const onClickCategory = (e: number) => {
     setCategory(e);
     setIsCategoryModalOpen(false);
   };
@@ -35,222 +35,222 @@ const SelectCategory = ({
         <div className={styles.categoryContentWrapper}>
           <div
             className={
-              category === "디지털기기"
+              category === 1
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("디지털기기")}
+            onClick={() => onClickCategory(1)}
           >
             <p className={styles.category}>디지털기기</p>
-            {category === "디지털기기" && (
+            {category === 1 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "생활가전"
+              category === 2
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("생활가전")}
+            onClick={() => onClickCategory(2)}
           >
             <p className={styles.category}>생활가전</p>
-            {category === "생활가전" && (
+            {category === 2 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "가구/인테리어"
+              category === 3
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("가구/인테리어")}
+            onClick={() => onClickCategory(3)}
           >
             <p className={styles.category}>가구/인테리어</p>
-            {category === "가구/인테리어" && (
+            {category === 3 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "유아동"
+              category === 4
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("유아동")}
+            onClick={() => onClickCategory(4)}
           >
             <p className={styles.category}>유아동</p>
-            {category === "유아동" && (
+            {category === 4 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "생활/가공식품"
+              category === 5
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("생활/가공식품")}
+            onClick={() => onClickCategory(5)}
           >
             <p className={styles.category}>생활/가공식품</p>
-            {category === "생활/가공식품" && (
+            {category === 5 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "유아도서"
+              category === 6
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("유아도서")}
+            onClick={() => onClickCategory(6)}
           >
             <p className={styles.category}>유아도서</p>
-            {category === "유아도서" && (
+            {category === 6 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "스포츠/레저"
+              category === 7
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("스포츠/레저")}
+            onClick={() => onClickCategory(7)}
           >
             <p className={styles.category}>스포츠/레저</p>
-            {category === "스포츠/레저" && (
+            {category === 7 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "여성잡화"
+              category === 8
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("여성잡화")}
+            onClick={() => onClickCategory(8)}
           >
             <p className={styles.category}>여성잡화</p>
-            {category === "여성잡화" && (
+            {category === 8 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "여성의류"
+              category === 9
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("여성의류")}
+            onClick={() => onClickCategory(9)}
           >
             <p className={styles.category}>여성의류</p>
-            {category === "여성의류" && (
+            {category === 9 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "남성패션/잡화"
+              category === 10
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("남성패션/잡화")}
+            onClick={() => onClickCategory(10)}
           >
             <p className={styles.category}>남성패션/잡화</p>
-            {category === "남성패션/잡화" && (
+            {category === 10 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "게임/취미"
+              category === 11
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("게임/취미")}
+            onClick={() => onClickCategory(11)}
           >
             <p className={styles.category}>게임/취미</p>
-            {category === "게임/취미" && (
+            {category === 11 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "뷰티/미용"
+              category === 12
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("뷰티/미용")}
+            onClick={() => onClickCategory(12)}
           >
             <p className={styles.category}>뷰티/미용</p>
-            {category === "뷰티/미용" && (
+            {category === 12 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "반려동물용품"
+              category === 13
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("반려동물용품")}
+            onClick={() => onClickCategory(13)}
           >
             <p className={styles.category}>반려동물용품</p>
-            {category === "반려동물용품" && (
+            {category === 13 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "도서/티켓/음반"
+              category === 14
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("도서/티켓/음반")}
+            onClick={() => onClickCategory(14)}
           >
             <p className={styles.category}>도서/티켓/음반</p>
-            {category === "도서/티켓/음반" && (
+            {category === 14 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "식물"
+              category === 15
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("식물")}
+            onClick={() => onClickCategory(15)}
           >
             <p className={styles.category}>식물</p>
-            {category === "식물" && (
+            {category === 15 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "기타 중고물품"
+              category === 16
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("기타 중고물품")}
+            onClick={() => onClickCategory(16)}
           >
             <p className={styles.category}>기타 중고물품</p>
-            {category === "기타 중고물품" && (
+            {category === 16 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
           <div
             className={
-              category === "삽니다"
+              category === 17
                 ? styles.clickedCategoryWrapper
                 : styles.defaultCategoryWrapper
             }
-            onClick={() => onClickCategory("삽니다")}
+            onClick={() => onClickCategory(17)}
           >
             <p className={styles.category}>삽니다</p>
-            {category === "삽니다" && (
+            {category === 17 && (
               <img className={styles.checked} src={orangeCheck} alt="선택됨" />
             )}
           </div>
