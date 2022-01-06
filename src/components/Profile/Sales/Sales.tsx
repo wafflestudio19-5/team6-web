@@ -54,7 +54,7 @@ const Sales = () => {
         </Button>
         <div className={`${styles.underline} ${styles[mode]}`} />
       </div>
-      <div className={styles["body-wrapper"]} />
+      <div className={styles["body-wrapper"]}></div>
     </div>
   );
 };
