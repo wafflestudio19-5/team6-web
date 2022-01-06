@@ -2,10 +2,43 @@ import styles from "./Sales.module.scss";
 import { Link } from "react-router-dom";
 import BackArrowIcon from "../../../icons/leftArrow.png";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import SalesArticle from "./SalesArticle/SalesArticle";
+import { myProductsData } from "../../../type/product";
+import { requester } from "../../../apis/requester";
 
 const Sales = () => {
   const [mode, setMode] = useState<string>("one");
+  const [salesList, setSalesList] = useState<myProductsData[] | null>(null);
+  const [onSaleList, setOnSaleList] = useState<myProductsData[] | null>(null);
+  const [soldList, setSoldList] = useState<myProductsData[] | null>(null);
+
+  useEffect(() => {
+    getMySales();
+  }, []);
+
+  const getMySales = async () => {
+    try {
+      const res = await requester.get(
+        "/users/me/products/?pageNumber=0&pageSize=15"
+      );
+      setSalesList(res.data.content);
+      setOnSaleList(
+        res.data.content.filter(
+          (data: myProductsData) =>
+            data.status === "FOR_SALE" || data.status === "RESERVED"
+        )
+      );
+      setSoldList(
+        res.data.content.filter(
+          (data: myProductsData) => data.status === "SOLD_OUT"
+        )
+      );
+      console.log(res.data.content);
+    } catch (error) {
+      console.log("get sales error");
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -54,7 +87,35 @@ const Sales = () => {
         </Button>
         <div className={`${styles.underline} ${styles[mode]}`} />
       </div>
-      <div className={styles["body-wrapper"]}></div>
+      <div className={styles["body-wrapper"]}>
+        {mode === "one" &&
+          salesList?.map((article) => (
+            <SalesArticle key={article.id} article={article} />
+          ))}
+        {mode === "two" &&
+          onSaleList?.map((article) => (
+            <SalesArticle key={article.id} article={article} />
+          ))}
+        {mode === "three" &&
+          soldList?.map((article) => (
+            <SalesArticle key={article.id} article={article} />
+          ))}
+        {mode === "one" && salesList?.length === 0 && (
+          <div className={styles.empty}>
+            <span className={styles.first}>게시글이 없어요.</span>
+          </div>
+        )}
+        {mode === "two" && onSaleList?.length === 0 && (
+          <div className={styles.empty}>
+            <span className={styles.second}>판매중인 게시글이 없어요.</span>
+          </div>
+        )}
+        {mode === "three" && soldList?.length === 0 && (
+          <div className={styles.empty}>
+            <span className={styles.third}>거래완료된 게시글이 없어요.</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

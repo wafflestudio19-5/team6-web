@@ -93,17 +93,40 @@
 
   .body-wrapper {
     position: fixed;
-    display: flex;
-    flex-direction: column;
     top: 81px;
     width: 100%;
     height: calc(100% - 81px);
+
 
     overflow-y: scroll;
     -ms-overflow-style: none;
 
     &::-webkit-scrollbar {
       display: none;
+    }
+
+    .empty {
+      width: 100%;
+      height: 100%;
+      background-color: #f2f3f7;
+
+      span {
+        position: relative;
+        top: 50%;
+
+        margin: 0;
+
+        color: #777777;
+      }
+      .first {
+        left: calc(50% - 53px);
+      }
+      .second {
+        left: calc(50% - 82px);
+      }
+      .third {
+        left: calc(50% - 99px);
+      }
     }
   }
 }

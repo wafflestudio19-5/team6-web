@@ -107,7 +107,7 @@ const SignUp = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate("/setlocation", {
+    navigate("/set-location", {
       state: { prev: "signup", signupForm: inputs },
     });
   };
