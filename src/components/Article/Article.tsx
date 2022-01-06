@@ -1,4 +1,9 @@
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./Article.module.scss";
 import dummyData from "./DummyData";
@@ -74,7 +79,6 @@ const settings = {
 
 type CustomText = { text: string };
 type CustomElement = { type: "paragraph"; children: CustomText[] };
-
 declare module "slate" {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor & HistoryEditor;
@@ -127,6 +131,7 @@ const Article = () => {
   );
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const carouselImg = user?.product_img.map((image) => {
     return (
@@ -137,7 +142,11 @@ const Article = () => {
   });
 
   const onClickArrow = () => {
-    navigate("/main");
+    if (location.state) {
+      navigate("/" + location.state.prev);
+    } else {
+      navigate("/main");
+    }
   };
   const onClickHome = () => {
     navigate("/main");
