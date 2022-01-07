@@ -3,7 +3,7 @@ import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { myRequestData } from "../../../type/types";
+import { myRequestData, userType } from "../../../type/types";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { srcPair } from "../PurchaseHistory";
@@ -12,7 +12,7 @@ import bell from "../../../icons/bell.png";
 
 const Requests = (props: {
   requestList: myRequestData[];
-  setRequestActions: Dispatch<SetStateAction<boolean>>;
+  setRequestUser: Dispatch<SetStateAction<userType | null>>;
 }) => {
   const navigate = useNavigate();
   const [srcList, setSrcList] = useState<srcPair[]>([]);
@@ -53,7 +53,7 @@ const Requests = (props: {
   };
 
   const handleAction = (data: myRequestData) => {
-    props.setRequestActions(true);
+    props.setRequestUser(data.product.user);
   };
 
   const requestComponents = props.requestList.map((article) => {
