@@ -6,7 +6,7 @@ import requester from "../../../apis/requester";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { srcPair } from "../PurchaseHistory";
-import { Base64 } from "js-base64";
+
 import { useNavigate } from "react-router-dom";
 
 const Refused = (props: { refusedList: myRequestData[] }) => {
@@ -31,7 +31,7 @@ const Refused = (props: { refusedList: myRequestData[] }) => {
   }, []);
 
   const changeToRequestPage = (id: number) => {
-    /* 구매 요청 페이지 구현 후 연결
+    /*(now) 구매 요청 페이지 구현 후 연결
     navigate(`/request/${id}`, {
       state: { prev: "purchase-history" },
     });

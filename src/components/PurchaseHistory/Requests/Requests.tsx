@@ -7,7 +7,7 @@ import { myRequestData } from "../../../type/product";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { srcPair } from "../PurchaseHistory";
-import { Base64 } from "js-base64";
+
 import bell from "../../../icons/bell.png";
 
 const Requests = (props: {
@@ -41,7 +41,7 @@ const Requests = (props: {
   };
 
   const changeToRequestPage = (id: number) => {
-    /* 구매 요청 페이지 구현 후 연결
+    /* (now) 구매 요청 페이지 구현 후 연결
     navigate(`/request/${id}`, {
       state: { prev: "purchase-history" },
     });
@@ -49,8 +49,9 @@ const Requests = (props: {
   };
 
   const cancelRequest = (data: myRequestData) => {
-    // api 없음. 판매자 정보 받아와서 저장, Modal 띄우기
+  // (next) api doesn't return the request id
   };
+
 
   const handleAction = (data: myRequestData) => {
     props.setRequestActions(true);

@@ -7,7 +7,7 @@ import requester from "../../../apis/requester";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { srcPair } from "../PurchaseHistory";
-import { Base64 } from "js-base64";
+
 import { useNavigate } from "react-router-dom";
 
 const Purchased = (props: { purchasedList: myRequestData[] }) => {
@@ -37,10 +37,8 @@ const Purchased = (props: { purchasedList: myRequestData[] }) => {
     });
   };
 
-  const changeToVisible = (data: myRequestData) => {
-    requester
-      .put(`/products/${data.product.id}/status/`, { action: "show" })
-      .catch((e) => console.log(e));
+  const changeToReview = (data: myRequestData) => {
+    // (next) 거래 후기 페이지로 연결
   };
 
   const soldoutComponents = props.purchasedList.map((article) => {
@@ -103,7 +101,7 @@ const Purchased = (props: { purchasedList: myRequestData[] }) => {
           <div className={styles.buttons}>
             <div
               className={styles.button}
-              onClick={() => changeToVisible(article)}
+              onClick={() => changeToReview(article)}
             >
               거래 후기 작성하기
             </div>

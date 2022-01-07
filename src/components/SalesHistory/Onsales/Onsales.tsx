@@ -8,7 +8,6 @@ import { myProductsData } from "../../../type/product";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { srcPair } from "../SalesHistory";
-import { Base64 } from "js-base64";
 
 const Onsales = (props: {
   onsaleList: myProductsData[];
@@ -53,7 +52,13 @@ const Onsales = (props: {
       .catch((e) => console.log(e));
   };
   const changeToSoldout = (data: myProductsData) => {
-    console.log("거래 완료로 변경");
+    // (next) make it possible to select the buyer
+    requester
+      .put(`/products/${data.id}/status/`, { action: "sold out" })
+      .then((res) => {
+        props.setUpdate((update) => !update);
+      })
+      .catch((e) => console.log(e));
   };
   const goToProductPage = (data: myProductsData) => {
     navigate(`/article/${data.id}`, {
