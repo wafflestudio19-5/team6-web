@@ -41,29 +41,36 @@ export type myProductsData = {
   last_bring_up_my_post: string;
 };
 
-export type myRequestData = {
-  product: {
-    id: number;
-    user: {
-      name: string;
-      nickname: string;
-      email: string;
-      location: string;
-      range_of_location: string;
-    };
-    image: number;
-    title: string;
-    price: number;
+export type myProductsContent = {
+  id: number;
+  user: {
+    name: string;
+    nickname: string;
+    email: string;
     location: string;
-    likes: number;
-    chats: number;
-    status: string;
-    created_at: string;
-    updated_at: string;
-    last_bring_up_my_post: string;
+    range_of_location: string;
   };
+  image: number;
+  title: string;
+  price: number;
+  location: string;
+  likes: number;
+  chats: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  last_bring_up_my_post: string;
+};
+
+export type myRequestData = {
+  product: myProductsContent;
   suggested_price: number;
   accepted: boolean | null;
   updated_at: string;
   created_at: string;
 };
+
+export type rawProductsData = {
+  data: myProductsContent;
+  url: string;
+}[];
