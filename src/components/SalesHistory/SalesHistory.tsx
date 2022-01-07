@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import Onsales from "./Onsales/Onsales";
 import Hiddens from "./Hiddens/Hiddens";
 import Soldouts from "./Soldouts/Soldouts";
-import requester from "../../apis/requester";
-import { myProductsData } from "../../type/product";
+import { productType } from "../../type/types";
 import { toast } from "react-hot-toast";
+import requester from "../../apis/requester";
 
 export type srcPair = {
   id: number;
@@ -16,9 +16,9 @@ export type srcPair = {
 
 const SalesHistory = () => {
   const [mode, setMode] = useState(1);
-  const [onsaleList, setOnsaleList] = useState<myProductsData[]>([]);
-  const [soldoutList, setSoldoutList] = useState<myProductsData[]>([]);
-  const [hiddenList, setHiddenList] = useState<myProductsData[]>([]);
+  const [onsaleList, setOnsaleList] = useState<productType[]>([]);
+  const [soldoutList, setSoldoutList] = useState<productType[]>([]);
+  const [hiddenList, setHiddenList] = useState<productType[]>([]);
   const [onsaleActions, setOnsaleActions] = useState(false);
   const [soldoutActions, setSoldoutActions] = useState(false);
   const [hiddenActions, setHiddenActions] = useState(false);
@@ -31,25 +31,27 @@ const SalesHistory = () => {
       .then((res) => {
         setOnsaleList(
           res.data.content.filter(
-            (data: myProductsData) =>
+            (data: productType) =>
               data.status === "FOR_SALE" || data.status === "RESERVED"
           )
         );
         setSoldoutList(
           res.data.content.filter(
-            (data: myProductsData) => data.status === "SOLD_OUT"
+            (data: productType) => data.status === "SOLD_OUT"
           )
         );
         setHiddenList(
           res.data.content.filter(
-            (data: myProductsData) => data.status === "HIDDEN"
+            (data: productType) => data.status === "HIDDEN"
           )
         );
       })
       .catch((e) => console.log(e.response));
   }, [update]);
 
-  const changeToModification = () => {};
+  const changeToModification = (id: number) => {
+    // (next) 게시글 수정 페이지로
+  };
 
   const handleHiding = () => {
     requester
@@ -120,7 +122,10 @@ const SalesHistory = () => {
             }`}
           >
             <div className={styles.upperBox}>
-              <div className={styles.blueText} onClick={changeToModification}>
+              <div
+                className={styles.blueText}
+                onClick={() => changeToModification(actionTarget)}
+              >
                 게시글 수정
               </div>
               <div className={styles.line} />

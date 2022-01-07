@@ -2,8 +2,8 @@ import styles from "./Hiddens.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
-import { myProductsData } from "../../../type/product";
 import requester from "../../../apis/requester";
+import { productType } from "../../../type/types";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { srcPair } from "../SalesHistory";
@@ -11,7 +11,7 @@ import { srcPair } from "../SalesHistory";
 import { useNavigate } from "react-router-dom";
 
 const Hiddens = (props: {
-  hiddenList: myProductsData[];
+  hiddenList: productType[];
   setUpdate: Dispatch<SetStateAction<boolean>>;
   setHiddenActions: Dispatch<SetStateAction<boolean>>;
   setActionTarget: Dispatch<SetStateAction<number>>;
@@ -36,7 +36,7 @@ const Hiddens = (props: {
     );
   }, []);
 
-  const changeToVisible = (data: myProductsData) => {
+  const changeToVisible = (data: productType) => {
     requester
       .put(`/products/${data.id}/status/`, { action: "show" })
       .then((res) => {
@@ -45,7 +45,7 @@ const Hiddens = (props: {
       .catch((e) => console.log(e));
   };
 
-  const goToProductPage = (data: myProductsData) => {
+  const goToProductPage = (data: productType) => {
     navigate(`/article/${data.id}`, {
       state: { prev: "sales-history" },
     });
@@ -80,7 +80,10 @@ const Hiddens = (props: {
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.location} ·</p>
               <p className={styles.time}>
-                {calculateTimeDifference(article.created_at, article.last_bring_up_my_post)}
+                {calculateTimeDifference(
+                  article.created_at,
+                  article.last_bring_up_my_post
+                )}
               </p>
             </div>
             <div className={styles.thirdLine}>

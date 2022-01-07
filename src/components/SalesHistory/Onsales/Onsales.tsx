@@ -4,13 +4,13 @@ import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import moreActions from "../../../icons/more.png";
-import { myProductsData } from "../../../type/product";
+import { productType } from "../../../type/types";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { srcPair } from "../SalesHistory";
 
 const Onsales = (props: {
-  onsaleList: myProductsData[];
+  onsaleList: productType[];
   setUpdate: Dispatch<SetStateAction<boolean>>;
   setOnsaleActions: Dispatch<SetStateAction<boolean>>;
   setActionTarget: Dispatch<SetStateAction<number>>;
@@ -35,7 +35,7 @@ const Onsales = (props: {
     );
   }, []);
 
-  const changeToReserved = (data: myProductsData) => {
+  const changeToReserved = (data: productType) => {
     requester
       .put(`/products/${data.id}/status/`, { action: "reserved" })
       .then((res) => {
@@ -43,7 +43,7 @@ const Onsales = (props: {
       })
       .catch((e) => console.log(e));
   };
-  const changeToOnsale = (data: myProductsData) => {
+  const changeToOnsale = (data: productType) => {
     requester
       .put(`/products/${data.id}/status/`, { action: "for sale" })
       .then((res) => {
@@ -51,7 +51,7 @@ const Onsales = (props: {
       })
       .catch((e) => console.log(e));
   };
-  const changeToSoldout = (data: myProductsData) => {
+  const changeToSoldout = (data: productType) => {
     // (next) make it possible to select the buyer
     requester
       .put(`/products/${data.id}/status/`, { action: "sold out" })
@@ -60,7 +60,7 @@ const Onsales = (props: {
       })
       .catch((e) => console.log(e));
   };
-  const goToProductPage = (data: myProductsData) => {
+  const goToProductPage = (data: productType) => {
     navigate(`/article/${data.id}`, {
       state: { prev: "sales-history" },
     });

@@ -1,37 +1,48 @@
 .box {
   position: absolute;
   width: 70%;
-  min-height: 15%;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 
   background: white;
   border-radius: 15px;
-  padding: 15px;
 
   z-index: 2;
 
   display: block;
+  padding: 5%;
 
   .title {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
     position: relative;
-    left: 5%;
     font-size: 16px;
     margin-bottom: 0;
   }
-  .contents {
+  .subTitle{
+
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
     position: relative;
-    left: 5%;
     font-size: 11px;
-    margin-top: 5px;
-    margin-bottom: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .contents {
+    width: 90%;
+    position: relative;
+    font-size: 11px;
+    margin: 5px auto 20px;
   }
   .confirmButton {
+    margin-left: auto;
+    margin-right: auto;
     position: relative;
     width: 90%;
     height: 35px;
-    left: 5%;
 
     text-align: center;
     line-height: 35px;
@@ -52,9 +63,10 @@
     transform: scale(0.95, 0.95);
   }
   .cancelButton {
+    margin-left: auto;
+    margin-right: auto;
     position: relative;
     width: 90%;
-    left: 5%;
     height: 35px;
 
     text-align: center;
@@ -73,5 +85,26 @@
   .cancelButton:active {
     border-style: solid;
     transform: scale(0.95, 0.95);
+  }
+  .textBox{
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    width: 90%;
+    height: 35px;
+
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+    font-weight: bold;
+
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #e5e5e5;
+    border-style: solid;
+    margin-bottom: 10px;
+
+    background: white;
+    cursor: default;
   }
 }

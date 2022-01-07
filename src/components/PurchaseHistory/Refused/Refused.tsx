@@ -1,8 +1,8 @@
 import styles from "./Refused.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
-import { myProductsData, myRequestData } from "../../../type/product";
 import requester from "../../../apis/requester";
+import { productType, myRequestData } from "../../../type/types";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { srcPair } from "../PurchaseHistory";
@@ -64,7 +64,10 @@ const Refused = (props: { refusedList: myRequestData[] }) => {
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.product.location} ·</p>
               <p className={styles.time}>
-                {calculateTimeDifference(article.created_at, article.product.last_bring_up_my_post)}
+                {calculateTimeDifference(
+                  article.created_at,
+                  article.product.last_bring_up_my_post
+                )}
               </p>
             </div>
             <div className={styles.thirdLine}>

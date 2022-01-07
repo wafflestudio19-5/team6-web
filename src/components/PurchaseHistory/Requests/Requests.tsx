@@ -3,7 +3,7 @@ import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { myRequestData } from "../../../type/product";
+import { myRequestData } from "../../../type/types";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { srcPair } from "../PurchaseHistory";
@@ -49,9 +49,8 @@ const Requests = (props: {
   };
 
   const cancelRequest = (data: myRequestData) => {
-  // (next) api doesn't return the request id
+    // (next) api doesn't return the request id
   };
-
 
   const handleAction = (data: myRequestData) => {
     props.setRequestActions(true);
@@ -84,7 +83,10 @@ const Requests = (props: {
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.product.location} ·</p>
               <p className={styles.time}>
-                {calculateTimeDifference(article.product.created_at, article.product.last_bring_up_my_post)}
+                {calculateTimeDifference(
+                  article.product.created_at,
+                  article.product.last_bring_up_my_post
+                )}
               </p>
             </div>
             <div className={styles.thirdLine}>

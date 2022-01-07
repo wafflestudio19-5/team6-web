@@ -2,7 +2,7 @@ import styles from "./Soldouts.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
-import { myProductsData } from "../../../type/product";
+import { productType } from "../../../type/types";
 import requester from "../../../apis/requester";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -11,7 +11,7 @@ import { srcPair } from "../SalesHistory";
 import { useNavigate } from "react-router-dom";
 
 const Soldouts = (props: {
-  soldoutList: myProductsData[];
+  soldoutList: productType[];
   setSoldoutActions: Dispatch<SetStateAction<boolean>>;
   setActionTarget: Dispatch<SetStateAction<number>>;
 }) => {
@@ -35,12 +35,12 @@ const Soldouts = (props: {
     });
   }, []);
 
-  const goToProductPage = (data: myProductsData) => {
+  const goToProductPage = (data: productType) => {
     navigate(`/article/${data.id}`, {
       state: { prev: "sales-history" },
     });
   };
-  const changeToVisible = (data: myProductsData) => {
+  const changeToVisible = (data: productType) => {
     requester
       .put(`/products/${data.id}/status/`, { action: "show" })
       .catch((e) => console.log(e));
@@ -76,7 +76,10 @@ const Soldouts = (props: {
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.location} ·</p>
               <p className={styles.time}>
-                {calculateTimeDifference(article.created_at, article.last_bring_up_my_post)}
+                {calculateTimeDifference(
+                  article.created_at,
+                  article.last_bring_up_my_post
+                )}
               </p>
             </div>
             <div className={styles.thirdLine}>
