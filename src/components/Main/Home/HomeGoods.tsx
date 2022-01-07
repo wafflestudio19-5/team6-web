@@ -8,7 +8,6 @@ import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
 import Product from "../../../apis/Product/Product";
-import * as fs from "fs";
 
 type homeGoodsData = {
   count: number;
@@ -38,7 +37,7 @@ const HomeGoods = (props: {
   setWriteHandle: Dispatch<SetStateAction<boolean>>;
 }) => {
   const navigate = useNavigate();
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<any>([]);
 
   const handleWrite = () => {
     navigate("/write");
@@ -109,74 +108,78 @@ const HomeGoods = (props: {
         );
     }
   };
+
   useEffect(() => {
     Product.getAllProducts().then((res) => {
-      setData(
-        res.data.content.map((article: homeGoods) => {
-          const time = new Date(article.created_at);
-          const bringUpTime = new Date(article.last_bring_up_my_post);
-          let url;
-          requester
-            .get(`/images/${article.image}/`)
-            .then((res) => {
-              url = res.data.url;
-            })
-            .catch();
-          return (
-            <div
-              className={styles.articleWrapper}
-              key={article.id}
-              onClick={() => onClickArticle(article.id)}
-            >
-              <img className={styles.thumbnail} src={url} alt="대표 이미지" />
-              <div className={styles.dataContainer}>
-                <p className={styles.title}>{article.title}</p>
-                <div className={styles.secondLine}>
-                  <p className={styles.region}>{article.location} ·</p>
-                  <p className={styles.time}>
-                    {calculateTimeDifference(time, bringUpTime)}
-                  </p>
-                </div>
-                <div className={styles.thirdLine}>
-                  {article.status === "RESERVED" && (
-                    <div className={styles.reservation}>예약중</div>
-                  )}
-                  {article.status === "SOLD_OUT" && (
-                    <div className={styles.saleClosed}>거래완료</div>
-                  )}
-                  <p className={styles.price}>
-                    {article.price !== 0 &&
-                      article.price.toLocaleString("ko-KR") + "원"}
-                    {article.price === 0 && "나눔🧡"}
-                  </p>
-                </div>
-                <div className={styles.lastLine}>
-                  {article.chats !== 0 && (
-                    <div className={styles.chatContainer}>
-                      <img
-                        className={styles.chatImg}
-                        src={chatIcon}
-                        alt="채팅"
-                      />
-                      <p className={styles.chat}>{article.chats}</p>
+      res.data.content.forEach((article: homeGoods) => {
+        const time = new Date(article.created_at);
+        const bringUpTime = new Date(article.last_bring_up_my_post);
+        requester
+          .get(`/images/${article.image}/`)
+          .then((res) => {
+            setData((prevState: any) => {
+              const tempState = prevState.concat(
+                <div
+                  className={styles.articleWrapper}
+                  key={article.id}
+                  onClick={() => onClickArticle(article.id)}
+                >
+                  <img
+                    className={styles.thumbnail}
+                    src={res.data.url}
+                    alt="대표 이미지"
+                  />
+                  <div className={styles.dataContainer}>
+                    <p className={styles.title}>{article.title}</p>
+                    <div className={styles.secondLine}>
+                      <p className={styles.region}>{article.location} ·</p>
+                      <p className={styles.time}>
+                        {calculateTimeDifference(time, bringUpTime)}
+                      </p>
                     </div>
-                  )}
-                  {article.likes !== 0 && (
-                    <div className={styles.heartContainer}>
-                      <img
-                        className={styles.heartImg}
-                        src={heartIcon}
-                        alt="좋아요"
-                      />
-                      <p className={styles.heart}>{article.likes}</p>
+                    <div className={styles.thirdLine}>
+                      {article.status === "RESERVED" && (
+                        <div className={styles.reservation}>예약중</div>
+                      )}
+                      {article.status === "SOLD_OUT" && (
+                        <div className={styles.saleClosed}>거래완료</div>
+                      )}
+                      <p className={styles.price}>
+                        {article.price !== 0 &&
+                          article.price.toLocaleString("ko-KR") + "원"}
+                        {article.price === 0 && "나눔🧡"}
+                      </p>
                     </div>
-                  )}
+                    <div className={styles.lastLine}>
+                      {article.chats !== 0 && (
+                        <div className={styles.chatContainer}>
+                          <img
+                            className={styles.chatImg}
+                            src={chatIcon}
+                            alt="채팅"
+                          />
+                          <p className={styles.chat}>{article.chats}</p>
+                        </div>
+                      )}
+                      {article.likes !== 0 && (
+                        <div className={styles.heartContainer}>
+                          <img
+                            className={styles.heartImg}
+                            src={heartIcon}
+                            alt="좋아요"
+                          />
+                          <p className={styles.heart}>{article.likes}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })
-      );
+              );
+              return tempState;
+            });
+          })
+          .catch();
+      });
     });
   }, []);
 

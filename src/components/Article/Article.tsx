@@ -24,6 +24,7 @@ import {
   TextareaAutosize,
 } from "@mui/material";
 import { toast } from "react-hot-toast";
+import requester from "../../apis/requester";
 
 type articleData = {
   id: number;
@@ -73,6 +74,7 @@ const Article = () => {
   const [isHeartClicked, setIsHeartClicked] = useState<boolean>(false);
   const [status, setStatus] = useState<string>("FOR_SALE");
   const [isSettingModalOpen, setIsSettingModalOpen] = useState<boolean>(false);
+  const [carouselImg, setCarouselImg] = useState<any>([]);
 
   useEffect(() => {
     Product.getProduct(id).then((res) => {
@@ -85,16 +87,24 @@ const Article = () => {
         });
       }
       setStatus(res.data.status);
+      res.data.images?.map((image: number) => {
+        requester(`/images/${image}/`).then((res) =>
+          setCarouselImg((prevState: any) => {
+            const tempState = prevState.concat(
+              <div>
+                <img
+                  className={styles.carouselImg}
+                  src={res.data.url}
+                  alt={"상품 이미지"}
+                />
+              </div>
+            );
+            return tempState;
+          })
+        );
+      });
     });
   }, [id]);
-
-  const carouselImg = currentArticle?.image?.map((image) => {
-    return (
-      <div>
-        <img className={styles.carouselImg} src={""} alt={"상품 이미지"} />
-      </div>
-    );
-  });
 
   const onClickArrow = () => {
     navigate("/main");
