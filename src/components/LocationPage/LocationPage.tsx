@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import axios from "axios";
-import { requester } from "../../apis/requester";
+import requester from "../../apis/requester";
 
 declare global {
   interface Window {

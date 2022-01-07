@@ -13,7 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
-import { requester } from "../../../apis/requester";
+import requester from "../../../apis/requester";
 import Product from "../../../apis/Product/Product";
 import { calculateTimeDifference } from "../../Utilities/functions";
 
@@ -100,7 +100,7 @@ const HomeGoods = (props: {
                     <div className={styles.secondLine}>
                       <p className={styles.region}>{article.location} ·</p>
                       <p className={styles.time}>
-                        {calculateTimeDifference(time, bringUpTime)}
+                        {calculateTimeDifference(article.created_at, article.last_bring_up_my_post)}
                       </p>
                     </div>
                     <div className={styles.thirdLine}>
