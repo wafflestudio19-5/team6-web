@@ -7,7 +7,7 @@ import { requester } from "../../../apis/requester";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { srcPair } from "../SalesHistory";
-import { Base64 } from "js-base64";
+
 import { useNavigate } from "react-router-dom";
 
 const Soldouts = (props: {

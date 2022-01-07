@@ -93,10 +93,8 @@ const SalesHistory = () => {
       });
   };
   const changeToOnsale = () => {
-    //api 없음
-    /*
     requester
-      .put(`/products/${actionTarget}/status/`, { action: "hide" })
+      .put(`/products/${actionTarget}/status/`, { action: "for sale" })
       .then((res) => {
         setUpdate((update) => !update);
       })
@@ -104,7 +102,6 @@ const SalesHistory = () => {
     setOnsaleActions(false);
     setSoldoutActions(false);
     setHiddenActions(false);
-    */
   };
 
   return (
