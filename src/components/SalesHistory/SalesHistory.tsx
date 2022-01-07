@@ -6,7 +6,7 @@ import Onsales from "./Onsales/Onsales";
 import Hiddens from "./Hiddens/Hiddens";
 import Soldouts from "./Soldouts/Soldouts";
 import { requester } from "../../apis/requester";
-import { myProductsData } from "../../type/product";
+import { myProductsData } from "../../type/types";
 import { toast } from "react-hot-toast";
 
 export type srcPair = {
@@ -49,7 +49,9 @@ const SalesHistory = () => {
       .catch((e) => console.log(e.response));
   }, [update]);
 
-  const changeToModification = () => {};
+  const changeToModification = (id: number) => {
+    // (next) 게시글 수정 페이지로
+  };
 
   const handleHiding = () => {
     requester
@@ -120,7 +122,10 @@ const SalesHistory = () => {
             }`}
           >
             <div className={styles.upperBox}>
-              <div className={styles.blueText} onClick={changeToModification}>
+              <div
+                className={styles.blueText}
+                onClick={() => changeToModification(actionTarget)}
+              >
                 게시글 수정
               </div>
               <div className={styles.line} />

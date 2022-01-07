@@ -1,5 +1,4 @@
 import styles from "./PurchaseHistory.module.scss";
-import styles2 from "../Utilities/confirm.module.scss";
 import { Link } from "react-router-dom";
 import BackArrow from "../../icons/leftArrow.png";
 import { useEffect, useState } from "react";
@@ -7,7 +6,7 @@ import Requests from "./Requests/Requests";
 import Refused from "./Refused/Refused";
 import Purchased from "./Purchased/Purchased";
 import { requester } from "../../apis/requester";
-import { myRequestData } from "../../type/product";
+import { myRequestData } from "../../type/types";
 
 export type srcPair = {
   id: number;
@@ -21,7 +20,6 @@ const PurchaseHistory = () => {
   const [refusedList, setRefusedList] = useState<myRequestData[]>([]);
   const [requestActions, setRequestActions] = useState(false);
   const [update, setUpdate] = useState(false);
-
   useEffect(() => {
     requester
       .get(`/users/me/purchase-requests/`)

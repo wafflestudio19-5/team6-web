@@ -18,6 +18,7 @@ import LocationPage from "./components/LocationPage/LocationPage";
 import SearchPage from "./components/SearchPage/SearchPage";
 import { Toaster } from "react-hot-toast";
 import PurchaseHistory from "./components/PurchaseHistory/PurchaseHistory";
+import RequestPage from "./components/Requests/RequestPage";
 
 function App() {
   const token: string | null = localStorage.getItem("token");
@@ -37,6 +38,7 @@ function App() {
           <Route path="/write" element={<WriteArticle />} />
           <Route path="/setlocation" element={<LocationPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/request/:id" element={<RequestPage />} />
           <Route
             path="/*"
             element={<Navigate replace to={token ? "/main" : "/login"} />}

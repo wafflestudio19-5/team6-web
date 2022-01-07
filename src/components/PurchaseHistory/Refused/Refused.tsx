@@ -1,7 +1,7 @@
 import styles from "./Refused.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
-import { myProductsData, myRequestData } from "../../../type/product";
+import { myProductsData, myRequestData } from "../../../type/types";
 import { requester } from "../../../apis/requester";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";

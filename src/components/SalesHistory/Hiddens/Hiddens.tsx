@@ -2,7 +2,7 @@ import styles from "./Hiddens.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
-import { myProductsData } from "../../../type/product";
+import { myProductsData } from "../../../type/types";
 import { requester } from "../../../apis/requester";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";

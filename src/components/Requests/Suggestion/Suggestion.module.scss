@@ -1,0 +1,184 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+  background: #f2f3f7;
+
+  .priceBar {
+    width: 100%;
+    height: 50px;
+    font-size: 20px;
+    background-color: white;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+
+    border-bottom: 1px solid #f2f3f7;
+  }
+
+  .requestWrapper {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    background-color: white;
+    margin-bottom: 5px;
+
+    .clickArea {
+      position: absolute;
+      width: calc(100% - 100px);
+      height: calc(100% - 36px);
+      left: 110px;
+      z-index: 3;
+    }
+
+    .upper {
+      position: relative;
+      width: 100%;
+      display: flex;
+
+      .thumbnail {
+        position: relative;
+        height: 100px;
+        width: 100px;
+        background-position: center;
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+
+      .dataContainer {
+        position: relative;
+        width: calc(100% - 70px);
+        height: 94px;
+        margin: 10px;
+        display: inline;
+
+        .firstLine {
+          position: relative;
+          display: flex;
+          top: 12px;
+
+          .title {
+            position: relative;
+            width: 305px;
+            left: 10px;
+            color: black;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+        }
+        .secondLine {
+          position: relative;
+          left: 10px;
+          top: 10px;
+          display: flex;
+          color: #777777;
+          font-size: 13px;
+
+          .region {
+            position: relative;
+            left: 0;
+            margin-top: 5px;
+            margin-bottom: 0;
+          }
+          .time {
+            position: relative;
+            left: 0;
+            margin-top: 5px;
+            margin-bottom: 0;
+            margin-left: 5px;
+          }
+
+          .price {
+            position: relative;
+            left: 0;
+            color: black;
+            font-weight: bolder;
+          }
+        }
+        .thirdLine {
+          position: relative;
+          left: 10px;
+          top: 10px;
+          margin-top: 5px;
+          display: flex;
+          align-items: center;
+
+          .price {
+            position: relative;
+            left: 0;
+            color: black;
+            font-weight: bolder;
+          }
+        }
+      }
+    }
+
+    .lower {
+      position: relative;
+      width: 100%;
+      margin-top: 10px;
+
+      .line {
+        position: relative;
+        height: 0;
+        border-bottom: 1px solid #f2f3f7;
+      }
+
+      .buttons {
+        position: relative;
+        height: 36px;
+        display: flex;
+        cursor: pointer;
+        .button {
+          width: 50%;
+          text-align: center;
+          line-height: 36px;
+          font-size: 15px;
+          font-weight: bold;
+          &:hover {
+            background-color: lavenderblush;
+            transition: 0.3s;
+          }
+        }
+
+        .button.unable {
+          background-color: #dddddd;
+          cursor: default;
+        }
+
+        .button.unable.long {
+          width: 100%;
+        }
+
+        .orangeButton {
+          width: 50%;
+          text-align: center;
+          line-height: 36px;
+          font-size: 15px;
+          font-weight: bold;
+          background-color: #ff8a3d;
+          color: white;
+          &:hover {
+            background-color: #ee792c;
+            transition: 0.3s;
+          }
+        }
+
+        .verticalLine {
+          position: relative;
+          height: 36px;
+          width: 0;
+          border: 1px solid #f2f3f7;
+        }
+      }
+    }
+  }
+
+  p {
+    position: absolute;
+    top: calc(50% - 5px);
+    left: calc(50% - 80px);
+    margin: 0;
+    color: silver;
+  }
+}
