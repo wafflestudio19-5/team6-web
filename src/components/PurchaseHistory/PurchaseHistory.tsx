@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Requests from "./Requests/Requests";
 import Refused from "./Refused/Refused";
 import Purchased from "./Purchased/Purchased";
-import { requester } from "../../apis/requester";
+import requester from "../../apis/requester";
 import { myRequestData } from "../../type/product";
 
 export type srcPair = {

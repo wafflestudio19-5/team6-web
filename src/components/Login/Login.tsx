@@ -1,10 +1,11 @@
 import "./Login.scss";
 import carrotLogo from "../../icons/daangn-logo.svg";
 import kakaoLogo from "../../icons/kakao-logo.png";
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { user } from "../../apis/requester";
+import { toast } from "react-hot-toast";
 
 type TLoginForm = {
   username: string;
@@ -37,7 +38,7 @@ const Login = () => {
       localStorage.setItem("token", res.data.access_token);
       navigate("/main");
     } catch (error) {
-      window.alert("로그인 정보 틀림");
+      toast.error("로그인 정보 틀림");
     }
   };
 

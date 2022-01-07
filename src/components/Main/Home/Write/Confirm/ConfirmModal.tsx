@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 
 type TConfirmForm = {
   title: string;
-  category: number;
+  category: number | undefined;
   content: string;
   setIsConfirmOpen: Dispatch<boolean>;
 };

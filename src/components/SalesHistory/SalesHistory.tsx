@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Onsales from "./Onsales/Onsales";
 import Hiddens from "./Hiddens/Hiddens";
 import Soldouts from "./Soldouts/Soldouts";
-import { requester } from "../../apis/requester";
+import requester from "../../apis/requester";
 import { myProductsData } from "../../type/product";
 import { toast } from "react-hot-toast";
 

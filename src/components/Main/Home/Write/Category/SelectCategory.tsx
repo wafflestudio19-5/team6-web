@@ -9,8 +9,8 @@ const SelectCategory = ({
   setCategory,
   setIsCategoryModalOpen,
 }: {
-  category: number;
-  setCategory: Dispatch<React.SetStateAction<number>>;
+  category: number | undefined;
+  setCategory: Dispatch<React.SetStateAction<number | undefined>>;
   setIsCategoryModalOpen: Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const onClickBack = () => {
@@ -256,7 +256,6 @@ const SelectCategory = ({
           </div>
         </div>
       </div>
-      )
     </>
   );
 };

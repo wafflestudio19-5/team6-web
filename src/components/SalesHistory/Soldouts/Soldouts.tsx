@@ -3,7 +3,7 @@ import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
 import { myProductsData } from "../../../type/product";
-import { requester } from "../../../apis/requester";
+import requester from "../../../apis/requester";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { srcPair } from "../SalesHistory";
@@ -76,7 +76,7 @@ const Soldouts = (props: {
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.location} ·</p>
               <p className={styles.time}>
-                {calculateTimeDifference(article.created_at)}
+                {calculateTimeDifference(article.created_at, article.last_bring_up_my_post)}
               </p>
             </div>
             <div className={styles.thirdLine}>

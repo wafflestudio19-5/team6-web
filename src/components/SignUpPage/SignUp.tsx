@@ -7,6 +7,7 @@ import { ChangeEventHandler, useEffect, useState } from "react";
 import CheckIcon from "./CheckIcon/CheckIcon";
 import Button from "@mui/material/Button";
 import { user } from "../../apis/requester";
+import { toast } from "react-hot-toast";
 
 type TSignupForm = {
   username: string;
@@ -101,7 +102,7 @@ const SignUp = () => {
       const res = await user.get(`/users/duplicate/?name=${inputs.username}`);
       setDuplicated(res.data);
     } catch (error) {
-      console.log("에러");
+      toast.error("중복된 아이디가 존재합니다.");
     }
   };
 

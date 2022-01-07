@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./Article.module.scss";
-import dummyData from "./DummyData";
+import confirmStyles from "./confirm.module.scss";
 import leftArrowIcon from "../../icons/leftArrow.png";
 import homeIcon from "../../icons/home.png";
 import shareIcon from "../../icons/share.png";
@@ -18,39 +18,31 @@ import Slider from "react-slick";
 import "./slickTheme.scss";
 import "./slick.scss";
 
-import { BaseEditor, createEditor, Descendant } from "slate";
-import { Slate, Editable, withReact, ReactEditor } from "slate-react";
-import { HistoryEditor, withHistory } from "slate-history";
-import { requester } from "../../apis/requester";
-import { TextareaAutosize } from "@mui/material";
+import Product from "../../apis/Product/Product";
+import User from "../../apis/User/User";
 
-type userData = {
-  id: number;
-  name: string; //
-  profile_img: string; //
-  region: string; //
-  title: string;
-  product_img: string[];
-  article: Descendant[];
-  price: number;
-  time: string;
-  temperature: number; //
-  category: string;
-  chat: number;
-  interest: number;
-  hit: number;
-  sale_state: string;
-};
+import {
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextareaAutosize,
+} from "@mui/material";
+import { toast } from "react-hot-toast";
+import requester from "../../apis/requester";
+import {calculateTimeDifference} from "../Utilities/functions";
+
 type articleData = {
   id: number;
   user: {
     name: string;
     email: string;
   };
-  image: any;
+  image: number[];
   title: string;
   content: string;
   price: number;
+  negotiable: boolean;
   location: string;
   category: string;
   hit: number;
@@ -60,6 +52,7 @@ type articleData = {
   status: string;
   created_at: string;
   updated_at: string;
+  last_bring_up_my_post: string;
   for_age:
     | "ZERO_TO_SIX_MONTH"
     | "SEVEN_TO_TWELVE_MONTH"
@@ -77,72 +70,51 @@ const settings = {
   arrows: false,
 };
 
-type CustomText = { text: string };
-type CustomElement = { type: "paragraph"; children: CustomText[] };
-declare module "slate" {
-  interface CustomTypes {
-    Editor: BaseEditor & ReactEditor & HistoryEditor;
-    Element: CustomElement;
-    Text: CustomText;
-  }
-}
-// Define a deserializing function that takes a string and returns a value.
-const deserialize = (string: string) => {
-  // Return a value array of children derived by splitting the string.
-  return string.split("\n").map((line) => {
-    return {
-      type: "paragraph",
-      children: [{ text: line }],
-    };
-  });
-};
 const Article = () => {
   const { id } = useParams() as { id: string };
-  // const currentUser = dummyData.filter((data) => data.id === parseInt(id))[0];
-
-  useEffect(() => {
-    requester.get(`/products/${id}/`).then((res) => {
-      if (res.data.id !== parseInt(id)) navigate("/main");
-      else {
-        setCurrentArticle(res.data);
-        console.log(res.data);
-      }
-    });
-  }, [id]);
-
-  const [user, setUser] = useState<userData | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isSeller, setIsSeller] = useState<boolean>(false);
   const [currentArticle, setCurrentArticle] = useState<articleData | null>(
     null
   );
   const [isHeartClicked, setIsHeartClicked] = useState<boolean>(false);
-  const [value, setValue] = useState<Descendant[]>([
-    {
-      type: "paragraph",
-      children: [
-        {
-          text: "hello",
-        },
-      ],
-    },
-  ]);
-  const editor = useMemo(
-    () => withHistory(withReact(createEditor() as ReactEditor)),
-    []
-  );
+  const [status, setStatus] = useState<string>("FOR_SALE");
+  const [isSettingModalOpen, setIsSettingModalOpen] = useState<boolean>(false);
+  const [carouselImg, setCarouselImg] = useState<any>([]);
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const carouselImg = user?.product_img.map((image) => {
-    return (
-      <div>
-        <img className={styles.carouselImg} src={image} alt={"상품 이미지"} />
-      </div>
-    );
-  });
+  useEffect(() => {
+    Product.getProduct(id).then((res) => {
+      if (res.data.id !== parseInt(id)) navigate("/main");
+      else {
+        setCurrentArticle(res.data);
+        User.getMe().then((r) => {
+          if (res.data.user.email === r.data.email) setIsSeller(true);
+          else setIsSeller(false);
+        });
+      }
+      setStatus(res.data.status);
+      res.data.images?.map((image: number) => {
+        requester(`/images/${image}/`).then((res) =>
+          setCarouselImg((prevState: any) => {
+            const tempState = prevState.concat(
+              <div>
+                <img
+                  className={styles.carouselImg}
+                  src={res.data.url}
+                  alt={"상품 이미지"}
+                />
+              </div>
+            );
+            return tempState;
+          })
+        );
+      });
+    });
+  }, [id]);
 
   const onClickArrow = () => {
-    if (location.state) {
+    if (location?.state) {
       navigate("/" + location.state.prev);
     } else {
       navigate("/main");
@@ -154,8 +126,8 @@ const Article = () => {
   const onClickShare = () => {
     console.log("share");
   };
-  const onClickReport = () => {
-    console.log("Report this user");
+  const onClickSetting = () => {
+    setIsSettingModalOpen(true);
   };
   const onClickHeart = () => {
     setIsHeartClicked((prevState) => !prevState);
@@ -172,37 +144,7 @@ const Article = () => {
     console.log("profile image");
     // navigate("/profile/{id}");
   };
-  const calculateTimeDifference = (current: string | undefined) => {
-    if (!!current) {
-      const now = new Date();
-      const late = new Date(current);
-      if ((now.getTime() - late.getTime()) / 1000 < 60)
-        return (
-          Math.floor((now.getTime() - late.getTime()) / 1000).toString() +
-          "초 전"
-        );
-      // 초 단위
-      else if ((now.getTime() - late.getTime()) / (1000 * 60) < 60)
-        return (
-          Math.floor(
-            (now.getTime() - late.getTime()) / (1000 * 60)
-          ).toString() + "분 전"
-        );
-      // 분 단위
-      else if ((now.getTime() - late.getTime()) / (1000 * 60 * 60) < 24)
-        return (
-          Math.floor(
-            (now.getTime() - late.getTime()) / (1000 * 60 * 60)
-          ).toString() + "시간 전"
-        );
-      else
-        return (
-          Math.floor(
-            (now.getTime() - late.getTime()) / (1000 * 60 * 60 * 24)
-          ).toString() + "일 전"
-        );
-    } else return null;
-  };
+
   const categoryFormat = (category: string | undefined) => {
     switch (category) {
       case "DIGITAL_DEVICE":
@@ -269,6 +211,61 @@ const Article = () => {
         return null;
     }
   };
+  const handleStatus = (e: SelectChangeEvent) => {
+    if (e.target.value === "RESERVED") {
+      Product.putStatus(id, "reserve")
+        .then((res) => {
+          setStatus(e.target.value);
+        })
+        .catch((e) => console.log(e));
+    } else if (e.target.value === "FOR_SALE" && status === "RESERVED") {
+      Product.putStatus(id, "cancel reserve")
+        .then((res) => {
+          setStatus(e.target.value);
+        })
+        .catch((e) => console.log(e));
+    }
+  };
+
+  const selectSetting = (select: string) => {
+    if (select === "patch") {
+      navigate("/write", {
+        state: {
+          title: currentArticle?.title,
+          category: categoryFormat(currentArticle?.category),
+          price: currentArticle?.price,
+          negotiable: currentArticle?.negotiable,
+          for_age: currentArticle?.for_age,
+          content: currentArticle?.content,
+          id: id,
+        },
+      });
+    } else if (select === "bump") {
+      Product.putStatus(id, select)
+        .then((res) => {
+          toast("success");
+          navigate("/main");
+        })
+        .catch((e) => toast.error(e.response.data.error_message));
+    } else if (select === "hide") {
+      Product.putStatus(id, select)
+        .then((res) => toast("success"))
+        .catch((e) => toast.error(e.response.data.error_message));
+    } else if (select === "delete") {
+      Product.deleteProduct(id)
+        .then((res) => {
+          toast("success");
+          navigate("/main");
+        })
+        .catch((e) => toast.error(e.response.data.error_message));
+    } else if (select === "report") {
+      toast("신고 완료!");
+      setIsSettingModalOpen(false);
+    } else if (select === "hideUser") {
+      toast("유저 차단 완료!");
+      setIsSettingModalOpen(false);
+    }
+  };
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -298,7 +295,7 @@ const Article = () => {
             className={styles.reportButton}
             src={moreIcon}
             alt={"뒤로 가기"}
-            onClick={onClickReport}
+            onClick={onClickSetting}
           />
         </div>
         <div className={styles.footer}>
@@ -308,13 +305,17 @@ const Article = () => {
             onClick={onClickHeart}
           />
           <h1 className={styles.price}>
-            {currentArticle?.price.toLocaleString("ko-KR")}원
+            {currentArticle?.price !== 0 &&
+              currentArticle?.price.toLocaleString("ko-KR") + "원"}
+            {currentArticle?.price === 0 && "나눔🧡"}
           </h1>
           <p className={styles.priceProposal} onClick={onClickPriceProposal}>
-            가격 제안하기
+            {isSeller
+              ? `가격제안 ${currentArticle?.price_suggestions}명`
+              : "가격 제안하기"}
           </p>
           <button className={styles.chatButton} onClick={onClickChatButton}>
-            채팅으로 거래하기
+            {isSeller ? "요청 목록 보기" : "거래 요청하기"}
           </button>
         </div>
         <div className={styles.contentWrapper}>
@@ -323,14 +324,31 @@ const Article = () => {
           </div>
           <div className={styles.profile}>
             <img
-              src={user?.profile_img}
+              src={"currentArticle?.profileImg"}
               className={styles.profileImg}
               onClick={onClickProfileImg}
             />
             <h1 className={styles.userName}>{currentArticle?.user.name}</h1>
             <p className={styles.userRegion}>{currentArticle?.location}</p>
-            <h1 className={styles.mannerTemp}>{user?.temperature}°C</h1>
+            <h1 className={styles.mannerTemp}>{""}°C</h1>
           </div>
+          {isSeller && (
+            <div className={styles.statusSelect}>
+              <FormControl size={"small"}>
+                <Select
+                  className={styles.select}
+                  id="demo-simple-select"
+                  value={status}
+                  onChange={(e) => handleStatus(e)}
+                  displayEmpty
+                >
+                  <MenuItem value={"FOR_SALE"}>판매중</MenuItem>
+                  <MenuItem value={"RESERVED"}>예약중</MenuItem>
+                  <MenuItem value={"SOLD_OUT"}>판매완료</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          )}
           <div className={styles.article}>
             <h1 className={styles.title}>
               {currentArticle?.status === "예약중" && (
@@ -346,7 +364,10 @@ const Article = () => {
                 {categoryFormat(currentArticle?.category)} ·
               </p>
               <p className={styles.time}>
-                {calculateTimeDifference(currentArticle?.created_at)}
+                {calculateTimeDifference(
+                  currentArticle?.created_at,
+                  currentArticle?.last_bring_up_my_post
+                )}
               </p>
             </div>
             <TextareaAutosize
@@ -354,7 +375,7 @@ const Article = () => {
               className={styles.content}
               value={currentArticle?.content}
             />
-            {currentArticle?.category === "KIDS" && (
+            {currentArticle?.category === "KIDS" && !!currentArticle?.for_age && (
               <div className={styles.kidsContainer}>
                 <h1 className={styles.kidsHeader}>사용 나이</h1>
                 <p className={styles.kidsContent}>
@@ -368,6 +389,79 @@ const Article = () => {
             </div>
           </div>
         </div>
+        {isSettingModalOpen && (
+          <div>
+            {isSeller && (
+              <div>
+                <div className={confirmStyles.sellerBox}>
+                  <div className={confirmStyles.contents}>
+                    <p
+                      className={confirmStyles.content}
+                      onClick={() => selectSetting("patch")}
+                    >
+                      게시글 수정
+                    </p>
+                    <p
+                      className={confirmStyles.content}
+                      onClick={() => selectSetting("bump")}
+                    >
+                      끌어올리기
+                    </p>
+                    <p
+                      className={confirmStyles.content}
+                      onClick={() => selectSetting("hide")}
+                    >
+                      숨기기
+                    </p>
+                    <p
+                      className={confirmStyles.contentDelete}
+                      onClick={() => selectSetting("delete")}
+                    >
+                      삭제
+                    </p>
+                  </div>
+                </div>
+                <div className={confirmStyles.buttonBox}>
+                  <div className={confirmStyles.button}>취소</div>
+                </div>
+              </div>
+            )}
+            {!isSeller && (
+              <div>
+                <div className={confirmStyles.customerBox}>
+                  <div className={confirmStyles.contents}>
+                    <p
+                      className={confirmStyles.content}
+                      onClick={() => selectSetting("report")}
+                    >
+                      신고
+                    </p>
+                    <p
+                      className={confirmStyles.contentHide}
+                      onClick={() => selectSetting("hideUser")}
+                    >
+                      이 사용자의 글 보지 않기
+                    </p>
+                  </div>
+                </div>
+                <div className={confirmStyles.buttonBox}>
+                  <div
+                    className={confirmStyles.button}
+                    onClick={() => setIsSettingModalOpen(false)}
+                  >
+                    취소
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        <div
+          className={`${styles.backShadow} ${
+            isSettingModalOpen ? styles.show : ""
+          }`}
+          onClick={() => setIsSettingModalOpen(false)}
+        />
       </div>
     </>
   );
