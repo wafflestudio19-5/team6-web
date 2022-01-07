@@ -31,6 +31,7 @@ const MyCarrot = () => {
     try {
       const res = await requester.get("/users/me/");
       setMyInfo(res.data);
+      console.log(res.data);
     } catch (error) {
       console.log("getMe error");
     }

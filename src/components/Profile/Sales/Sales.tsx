@@ -24,6 +24,7 @@ const Sales = () => {
       const res = await requester.get(
         "/users/me/products/?pageNumber=0&pageSize=15"
       );
+      console.log(res.data.content);
       setSalesList(res.data.content);
       setOnSaleList(
         res.data.content.filter(
@@ -50,7 +51,6 @@ const Sales = () => {
           })
           .catch((e) => console.log(e))
       );
-      console.log(res.data.content);
     } catch (error) {
       console.log("get sales error");
     }

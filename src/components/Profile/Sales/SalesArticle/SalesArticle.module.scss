@@ -140,18 +140,25 @@
     }
     .chats-likes-wrapper {
       position: relative;
-      width: 35px;
+      display: flex;
+      width: 38px;
       height: 20px;
-      top: 37px;
+      top: 35px;
       left: calc(100% - 35px);
 
       @media screen and (max-width: 400px) {
-        top: 39px;
+        top: 33px;
+        left: calc(100% - 19px);
       }
 
       .container {
-        margin-right: 8px;
+        width: 32px;
+        margin-right: 4px;
 
+        @media screen and (max-width: 400px) {
+          width: 28px;
+          margin-right: 4px;
+        }
         img {
           width: 16px;
 
@@ -172,8 +179,13 @@
       }
     }
     .coexist {
-      width: 70px;
+      width: 76px;
       left: calc(100% - 70px);
+
+      @media screen and (max-width: 400px) {
+        width: 76px;
+        left: calc(100% - 50px);
+      }
     }
   }
 }
