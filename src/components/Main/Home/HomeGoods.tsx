@@ -2,12 +2,20 @@ import styles from "./HomeGoods.module.scss";
 import Close from "../../../icons/Home/add-2.png";
 import Write from "../../../icons/Home/write.png";
 import Open from "../../../icons/Home/add-1.png";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
 import Product from "../../../apis/Product/Product";
+import { calculateTimeDifference } from "../../Utilities/functions";
 
 type homeGoodsData = {
   count: number;
@@ -38,6 +46,18 @@ const HomeGoods = (props: {
 }) => {
   const navigate = useNavigate();
   const [data, setData] = useState<any>([]);
+  const [pageNumber, setPageNumber] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(false);
+
+  const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight) {
+      // 페이지 끝에 도달하면 추가 데이터를 받아온다
+      setPageNumber((prevState) => prevState + 1);
+    }
+  };
 
   const handleWrite = () => {
     navigate("/write");
@@ -45,73 +65,19 @@ const HomeGoods = (props: {
   const onClickArticle = (id: number) => {
     navigate(`/article/${id}`);
   };
-  const calculateTimeDifference = (init: Date, bump: Date) => {
-    const now = new Date();
-    if (init.getTime() - bump.getTime() === 0) {
-      if ((now.getTime() - init.getTime()) / 1000 < 60)
-        return (
-          Math.floor((now.getTime() - init.getTime()) / 1000).toString() +
-          "초 전"
-        );
-      // 초 단위
-      else if ((now.getTime() - init.getTime()) / (1000 * 60) < 60)
-        return (
-          Math.floor(
-            (now.getTime() - init.getTime()) / (1000 * 60)
-          ).toString() + "분 전"
-        );
-      // 분 단위
-      else if ((now.getTime() - init.getTime()) / (1000 * 60 * 60) < 24)
-        return (
-          Math.floor(
-            (now.getTime() - init.getTime()) / (1000 * 60 * 60)
-          ).toString() + "시간 전"
-        );
-      else
-        return (
-          Math.floor(
-            (now.getTime() - init.getTime()) / (1000 * 60 * 60 * 24)
-          ).toString() + "일 전"
-        );
-    } else {
-      if ((now.getTime() - bump.getTime()) / 1000 < 60)
-        return (
-          "끌올 " +
-          Math.floor((now.getTime() - bump.getTime()) / 1000).toString() +
-          "초 전"
-        );
-      // 초 단위
-      else if ((now.getTime() - bump.getTime()) / (1000 * 60) < 60)
-        return (
-          "끌올 " +
-          Math.floor(
-            (now.getTime() - bump.getTime()) / (1000 * 60)
-          ).toString() +
-          "분 전"
-        );
-      // 분 단위
-      else if ((now.getTime() - bump.getTime()) / (1000 * 60 * 60) < 24)
-        return (
-          "끌올 " +
-          Math.floor(
-            (now.getTime() - bump.getTime()) / (1000 * 60 * 60)
-          ).toString() +
-          "시간 전"
-        );
-      else
-        return (
-          "끌올 " +
-          Math.floor(
-            (now.getTime() - bump.getTime()) / (1000 * 60 * 60 * 24)
-          ).toString() +
-          "일 전"
-        );
-    }
-  };
 
   useEffect(() => {
-    Product.getAllProducts().then((res) => {
-      res.data.content.forEach((article: homeGoods) => {
+    // scroll event listener 등록
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      // scroll event listener 해제
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
+
+  useEffect(() => {
+    Product.getAllProducts(pageNumber).then((res) => {
+      res.data.content.forEach((article: homeGoods, index: number) => {
         const time = new Date(article.created_at);
         const bringUpTime = new Date(article.last_bring_up_my_post);
         requester
@@ -180,6 +146,7 @@ const HomeGoods = (props: {
           })
           .catch();
       });
+      setHasMore(res.data.total_page > pageNumber);
     });
   }, []);
 

@@ -1,9 +1,9 @@
 import requester from "../requester";
 
 export default {
-  getAllProducts() {
+  getAllProducts(pageNumber: number) {
     return requester({
-      url: `/products/?pageNumber=0&pageSize=15`,
+      url: `/products/?pageNumber=${pageNumber}&pageSize=15`,
     });
   },
   getProduct(id: string) {
