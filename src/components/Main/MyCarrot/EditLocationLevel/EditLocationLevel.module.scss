@@ -61,23 +61,34 @@
 
     .slider-wrapper {
       position: relative;
-      top: 20px;
+      top: 25px;
       left: 30px;
       width: calc(100% - 60px);
+      height: 40px;
     }
 
     .span-wrapper {
+      position: relative;
+      top: 15px;
+      width: calc(100% - 60px);
       span {
         position: relative;
-        top: 5px;
         font-size: 14px;
         font-weight: 400;
+
+        @media screen and (max-width: 400px){
+          font-size: 12px;
+        }
       }
       .left-span {
         left: 30px;
       }
       .right-span {
-        left: calc(100% - 121px);
+        left: calc(100% - 61px);
+
+        @media screen and (max-width: 400px){
+          left: calc(100% - 50px);
+        }
       }
     }
 
