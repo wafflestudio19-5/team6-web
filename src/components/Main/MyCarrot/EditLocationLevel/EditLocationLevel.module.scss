@@ -76,7 +76,7 @@
         font-size: 14px;
         font-weight: 400;
 
-        @media screen and (max-width: 400px){
+        @media screen and (max-width: 400px) {
           font-size: 12px;
         }
       }
@@ -86,12 +86,11 @@
       .right-span {
         left: calc(100% - 61px);
 
-        @media screen and (max-width: 400px){
+        @media screen and (max-width: 400px) {
           left: calc(100% - 50px);
         }
       }
     }
-
 
     img {
       width: 400px;

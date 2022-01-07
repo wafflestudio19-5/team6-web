@@ -7,8 +7,12 @@ import {
   toShortDivision,
 } from "../../../Utilities/functions";
 import { useNavigate } from "react-router-dom";
+import { srcPair } from "../../../SalesHistory/SalesHistory";
 
-const SalesArticle = (props: { article: myProductsData }) => {
+const SalesArticle = (props: {
+  article: myProductsData;
+  srcList: srcPair[];
+}) => {
   const navigate = useNavigate();
 
   const LinkToArticle = () => {
@@ -20,7 +24,10 @@ const SalesArticle = (props: { article: myProductsData }) => {
   return (
     <article className={styles["article-wrapper"]} onClick={LinkToArticle}>
       <div className={styles.thumbnail}>
-        <img src={""} alt="상품 이미지" />
+        <img
+          src={props.srcList.find((pair) => pair.id === props.article.id)?.src}
+          alt="상품 이미지"
+        />
       </div>
       <div className={styles["data-wrapper"]}>
         <p className={styles.title}>{props.article.title}</p>

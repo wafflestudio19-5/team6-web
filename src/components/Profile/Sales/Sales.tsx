@@ -6,9 +6,11 @@ import { useEffect, useState } from "react";
 import SalesArticle from "./SalesArticle/SalesArticle";
 import { myProductsData } from "../../../type/product";
 import { requester } from "../../../apis/requester";
+import { srcPair } from "../../SalesHistory/SalesHistory";
 
 const Sales = () => {
   const [mode, setMode] = useState<string>("one");
+  const [srcList, setSrcList] = useState<srcPair[]>([]);
   const [salesList, setSalesList] = useState<myProductsData[] | null>(null);
   const [onSaleList, setOnSaleList] = useState<myProductsData[] | null>(null);
   const [soldList, setSoldList] = useState<myProductsData[] | null>(null);
@@ -33,6 +35,20 @@ const Sales = () => {
         res.data.content.filter(
           (data: myProductsData) => data.status === "SOLD_OUT"
         )
+      );
+      res.data.content.forEach((article: myProductsData) =>
+        requester
+          .get(`/images/${article.image}/`)
+          .then((res) => {
+            setSrcList((srcList) => [
+              ...srcList,
+              {
+                id: article.id,
+                src: res.data.url,
+              },
+            ]);
+          })
+          .catch((e) => console.log(e))
       );
       console.log(res.data.content);
     } catch (error) {
@@ -90,15 +106,27 @@ const Sales = () => {
       <div className={styles["body-wrapper"]}>
         {mode === "one" &&
           salesList?.map((article) => (
-            <SalesArticle key={article.id} article={article} />
+            <SalesArticle
+              key={article.id}
+              article={article}
+              srcList={srcList}
+            />
           ))}
         {mode === "two" &&
           onSaleList?.map((article) => (
-            <SalesArticle key={article.id} article={article} />
+            <SalesArticle
+              key={article.id}
+              article={article}
+              srcList={srcList}
+            />
           ))}
         {mode === "three" &&
           soldList?.map((article) => (
-            <SalesArticle key={article.id} article={article} />
+            <SalesArticle
+              key={article.id}
+              article={article}
+              srcList={srcList}
+            />
           ))}
         {mode === "one" && salesList?.length === 0 && (
           <div className={styles.empty}>

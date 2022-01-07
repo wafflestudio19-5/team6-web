@@ -2,10 +2,14 @@
   display: flex;
   width: 100%;
   padding-left: 12px;
-  height: 131px;;
+  height: 131px;
 
   border-bottom: 1px solid #e5e5e5;
   box-sizing: border-box;
+
+  @media screen and (max-width: 400px) {
+    height: 121px;
+  }
 
   &:hover {
     cursor: pointer;
@@ -23,6 +27,19 @@
     border-radius: 7px;
     box-sizing: border-box;
     overflow: hidden;
+
+    img {
+      height: 100px;
+    }
+
+    @media screen and (max-width: 400px) {
+      width: 90px;
+      height: 90px;
+
+      img {
+        height: 90px;
+      }
+    }
   }
 
   .data-wrapper {
@@ -32,12 +49,20 @@
     top: 10px;
     left: 15px;
 
+    @media screen and (max-width: 400px) {
+      left: 10px;
+    }
+
     p {
       margin: 0;
     }
     .title {
       position: relative;
-      top: 7px;
+      top: 6px;
+
+      @media screen and (max-width: 400px) {
+        font-size: 14px;
+      }
     }
     .location-time {
       position: relative;
@@ -45,6 +70,10 @@
 
       color: #777777;
       font-size: 12px;
+
+      @media screen and (max-width: 400px) {
+        font-size: 11px;
+      }
     }
     .status-price-wrapper {
       position: relative;
@@ -60,6 +89,10 @@
 
         border-radius: 2px;
 
+        @media screen and (max-width: 400px) {
+          height: 19px;
+          font-size: 14px;
+        }
 
         span {
           position: relative;
@@ -70,19 +103,36 @@
 
           color: white;
           font-weight: 600;
+
+          @media screen and (max-width: 400px) {
+            top: -1px;
+            font-size: 10px;
+          }
         }
       }
       .reserved {
         width: 42px;
         background-color: #aaaaaa;
+
+        @media screen and (max-width: 400px) {
+          width: 37px;
+        }
       }
       .sold-out {
         width: 54px;
         background-color: darkslategray;
+
+        @media screen and (max-width: 400px) {
+          width: 47px;
+        }
       }
     }
     .price {
       font-weight: 600;
+
+      @media screen and (max-width: 400px) {
+        font-size: 14px;
+      }
     }
     .free {
       position: relative;
@@ -95,17 +145,29 @@
       top: 37px;
       left: calc(100% - 35px);
 
+      @media screen and (max-width: 400px) {
+        top: 39px;
+      }
+
       .container {
         margin-right: 8px;
 
         img {
           width: 16px;
+
+          @media screen and (max-width: 400px) {
+            width: 14px;
+          }
         }
         span {
           position: relative;
           top: -2px;
           margin-left: 3px;
           font-size: 15px;
+
+          @media screen and (max-width: 400px) {
+            font-size: 13px;
+          }
         }
       }
     }

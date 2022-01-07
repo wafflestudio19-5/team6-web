@@ -4,9 +4,26 @@ import Test from "../../icons/MyCarrot/default-profile-image.png";
 import { Link, useNavigate } from "react-router-dom";
 import MannerTemperature from "./MannerTemperature/MannerTemperature";
 import ProfileButtons from "./ProfileButtons/ProfileButtons";
+import { requester } from "../../apis/requester";
+import { useEffect, useState } from "react";
+import { TUserInfo } from "../../type/user";
 
 const Profile = () => {
+  const [myInfo, setMyInfo] = useState<TUserInfo>();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getInfo();
+  });
+
+  const getInfo = async () => {
+    try {
+      const res = await requester.get("/users/me/");
+      setMyInfo(res.data);
+    } catch (error) {
+      console.log("getMe error");
+    }
+  };
 
   const handleToEditProfilePage = () => {
     navigate("./edit", { state: { prev: "profile" } });
@@ -24,8 +41,12 @@ const Profile = () => {
         <div className={styles.imageframe}>
           <img className={styles.image} src={Test} alt="profile image" />
         </div>
-        <p className={styles.nickname}>닉네임</p>
-        <p className={styles["id-location"]}>#id</p>
+        <p className={styles.nickname}>{`${
+          myInfo ? myInfo.nickname : "닉네임"
+        }`}</p>
+        <p className={styles["id-location"]}>{`#${
+          myInfo ? myInfo.name : "id"
+        }`}</p>
         <button className={styles.edit} onClick={handleToEditProfilePage}>
           프로필 수정
         </button>
