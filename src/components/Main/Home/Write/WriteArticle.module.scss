@@ -21,12 +21,19 @@
       width: 20px;
       cursor: pointer;
     }
-    .headerTitle {
+    .headerPostTitle {
       position: absolute;
       font-size: 20px;
       top: 0;
-      left: 30%;
-      margin: 15px;
+      left: 32%;
+      margin: 12px;
+    }
+    .headerPatchTitle {
+      position: absolute;
+      font-size: 20px;
+      top: 0;
+      left: 28%;
+      margin: 12px;
     }
     .finish {
       position: absolute;
@@ -238,6 +245,21 @@
       width: calc(100% - 40px);
       margin: 20px 10px 20px 10px;
       padding: 0 10px 0 10px;
+      .content {
+        width: 100%;
+        padding: 0;
+        height: auto;
+        resize: none;
+        border: none;
+        white-space: pre-wrap;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+        font-size: 16px;
+        &:focus {
+          outline: none;
+        }
+      }
     }
     .kidsAgeSelector {
       width: 100%;

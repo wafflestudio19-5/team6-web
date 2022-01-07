@@ -6,7 +6,7 @@ import * as React from "react";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import CheckIcon from "./CheckIcon/CheckIcon";
 import Button from "@mui/material/Button";
-import { requester } from "../../apis/requester";
+import requester from "../../apis/requester";
 
 type TSignupForm = {
   username: string;

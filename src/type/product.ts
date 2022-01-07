@@ -17,6 +17,7 @@ export type articleData = {
   status: string;
   created_at: string;
   updated_at: string;
+  last_bring_up_my_post: string;
   for_age:
     | "ZERO_TO_SIX_MONTH"
     | "SEVEN_TO_TWELVE_MONTH"
@@ -37,6 +38,7 @@ export type myProductsData = {
   status: string;
   created_at: string;
   updated_At: string;
+  last_bring_up_my_post: string;
 };
 
 export type myRequestData = {
@@ -47,7 +49,7 @@ export type myRequestData = {
       nickname: string;
       email: string;
       location: string;
-      range_og_location: string;
+      range_of_location: string;
     };
     image: number;
     title: string;

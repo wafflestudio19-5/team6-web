@@ -5,8 +5,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
 type TKidAgeForm = {
-  forAge: number;
-  setForAge: Dispatch<number>;
+  forAge: number | null;
+  setForAge: Dispatch<number | null>;
   setIsKidsModalOpen: Dispatch<boolean>;
 };
 
@@ -15,8 +15,8 @@ const SelectKidAge = ({
   setForAge,
   setIsKidsModalOpen,
 }: TKidAgeForm) => {
-  const ageHandle = (age: number) => {
-    if (forAge === age) setForAge(0);
+  const ageHandle = (age: number | null) => {
+    if (forAge === age) setForAge(null);
     else setForAge(age);
   };
   return (
