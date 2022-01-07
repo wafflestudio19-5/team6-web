@@ -1,11 +1,11 @@
 import styles from "./Sales.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import BackArrowIcon from "../../../icons/leftArrow.png";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import SalesArticle from "./SalesArticle/SalesArticle";
 import { myProductsData } from "../../../type/product";
-import { requester } from "../../../apis/requester";
+import requester from "../../../apis/requester";
 import { srcPair } from "../../SalesHistory/SalesHistory";
 
 const Sales = () => {
@@ -15,7 +15,11 @@ const Sales = () => {
   const [onSaleList, setOnSaleList] = useState<myProductsData[] | null>(null);
   const [soldList, setSoldList] = useState<myProductsData[] | null>(null);
 
+  const location = useLocation();
+
   useEffect(() => {
+    location.state && setMode(location.state.mode);
+    location.state = null;
     getMySales();
   }, []);
 
@@ -24,7 +28,6 @@ const Sales = () => {
       const res = await requester.get(
         "/users/me/products/?pageNumber=0&pageSize=15"
       );
-      console.log(res.data.content);
       setSalesList(res.data.content);
       setOnSaleList(
         res.data.content.filter(
@@ -59,7 +62,7 @@ const Sales = () => {
   return (
     <div className={styles.wrapper}>
       <header>
-        <Link to="/main" state={{ page: "user" }} className={styles.back}>
+        <Link to="/profile" className={styles.back}>
           <img src={BackArrowIcon} alt="뒤로" />
         </Link>
         <p>판매 상품 보기</p>
@@ -108,6 +111,7 @@ const Sales = () => {
           salesList?.map((article) => (
             <SalesArticle
               key={article.id}
+              mode={mode}
               article={article}
               srcList={srcList}
             />
@@ -116,6 +120,7 @@ const Sales = () => {
           onSaleList?.map((article) => (
             <SalesArticle
               key={article.id}
+              mode={mode}
               article={article}
               srcList={srcList}
             />
@@ -124,6 +129,7 @@ const Sales = () => {
           soldList?.map((article) => (
             <SalesArticle
               key={article.id}
+              mode={mode}
               article={article}
               srcList={srcList}
             />

@@ -8,7 +8,7 @@ import LevelTwo from "../../../../icons/MyCarrot/level_two.png";
 import LevelThree from "../../../../icons/MyCarrot/level_three.png";
 import { Box, Slider } from "@mui/material";
 import { toShortDivision } from "../../../Utilities/functions";
-import { requester } from "../../../../apis/requester";
+import requester from "../../../../apis/requester";
 
 type TNumberOfRegions = {
   zero: number;

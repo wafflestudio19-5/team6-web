@@ -30,7 +30,7 @@ import {
 } from "@mui/material";
 import { toast } from "react-hot-toast";
 import requester from "../../apis/requester";
-import {calculateTimeDifference} from "../Utilities/functions";
+import { calculateTimeDifference } from "../Utilities/functions";
 
 type articleData = {
   id: number;
@@ -115,7 +115,10 @@ const Article = () => {
 
   const onClickArrow = () => {
     if (location?.state) {
-      navigate("/" + location.state.prev);
+      location.state.prev === "profile/sales" &&
+        navigate("/" + location.state.prev, {
+          state: { mode: location.state.mode },
+        });
     } else {
       navigate("/main");
     }

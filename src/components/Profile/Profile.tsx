@@ -4,7 +4,7 @@ import Test from "../../icons/MyCarrot/default-profile-image.png";
 import { Link, useNavigate } from "react-router-dom";
 import MannerTemperature from "./MannerTemperature/MannerTemperature";
 import ProfileButtons from "./ProfileButtons/ProfileButtons";
-import { requester } from "../../apis/requester";
+import requester from "../../apis/requester";
 import { useEffect, useState } from "react";
 import { TUserInfo } from "../../type/user";
 

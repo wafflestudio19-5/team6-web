@@ -6,7 +6,7 @@ import CameraIcon from "../../../icons/MyCarrot/camera.png";
 import WarningIcon from "../../../icons/MyCarrot/warning.png";
 import { Link, useLocation } from "react-router-dom";
 import { ChangeEventHandler, useEffect, useState } from "react";
-import { requester } from "../../../apis/requester";
+import requester from "../../../apis/requester";
 
 const EditProfile = () => {
   const [prev, setPrev] = useState<string | null>(null);

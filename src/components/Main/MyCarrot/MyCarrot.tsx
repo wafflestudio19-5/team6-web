@@ -8,7 +8,7 @@ import icon6 from "../../../icons/MyCarrot/category.png";
 import ProfileBar from "./ProfileBar/ProfileBar";
 import HistoryButtons from "./HistoryButtons/HistoryButtons";
 import { useNavigate } from "react-router-dom";
-import { requester } from "../../../apis/requester";
+import requester from "../../../apis/requester";
 import { useEffect, useState } from "react";
 import { TUserInfo } from "../../../type/user";
 

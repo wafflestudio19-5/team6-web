@@ -3,7 +3,7 @@ import ChatIcon from "../../../../icons/chatting.png";
 import LikesIcon from "../../../../icons/blackHeart.png";
 import { myProductsData } from "../../../../type/product";
 import {
-  calculateTimeDifference,
+  calculateTimeDifferenceForProfile,
   toShortDivision,
 } from "../../../Utilities/functions";
 import { useNavigate } from "react-router-dom";
@@ -12,12 +12,13 @@ import { srcPair } from "../../../SalesHistory/SalesHistory";
 const SalesArticle = (props: {
   article: myProductsData;
   srcList: srcPair[];
+  mode: string;
 }) => {
   const navigate = useNavigate();
 
   const LinkToArticle = () => {
     navigate(`/article/${props.article.id}`, {
-      state: { prev: "profile-sales" },
+      state: { prev: "profile/sales", mode: props.mode },
     });
   };
 
@@ -33,7 +34,7 @@ const SalesArticle = (props: {
         <p className={styles.title}>{props.article.title}</p>
         <p className={styles["location-time"]}>
           {toShortDivision(props.article.location)} ·{" "}
-          {calculateTimeDifference(props.article.created_at)}
+          {calculateTimeDifferenceForProfile(props.article.created_at)}
         </p>
         <div className={styles["status-price-wrapper"]}>
           {props.article.status === "RESERVED" && (
