@@ -112,7 +112,11 @@ const Article = () => {
   }, [id]);
 
   const onClickArrow = () => {
-    navigate("/main");
+    if (location.state) {
+      navigate("/" + location.state.prev);
+    } else {
+      navigate("/main");
+    }
   };
   const onClickHome = () => {
     navigate("/main");

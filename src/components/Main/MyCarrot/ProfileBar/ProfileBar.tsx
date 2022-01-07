@@ -1,10 +1,16 @@
 import styles from "./ProfileBar.module.scss";
 import ArrowIcon from "../../../../icons/MyCarrot/right-arrow.png";
 import EditIcon from "../../../../icons/MyCarrot/edit.png";
-import Test from "../../../../icons/MyCarrot/test-profile.png";
-import { Link } from "react-router-dom";
+import Test from "../../../../icons/MyCarrot/default-profile-image.png";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProfileBar = () => {
+  const navigate = useNavigate();
+
+  const handleToEditProfilePage = () => {
+    navigate("/profile/edit", { state: { prev: "main" } });
+  };
+
   return (
     <div>
       <Link to="/profile" className={styles["profile-button"]}>
@@ -15,12 +21,7 @@ const ProfileBar = () => {
         <p className={styles["id-location"]}>주소 #id</p>
         <img className={styles.rightarrow} src={ArrowIcon} alt="right arrow" />
       </Link>
-      <button
-        className={styles.editbutton}
-        onClick={() => {
-          console.log("편집 버튼 클릭");
-        }}
-      >
+      <button className={styles.editbutton} onClick={handleToEditProfilePage}>
         <img className={styles.editicon} src={EditIcon} alt="edit" />
       </button>
     </div>

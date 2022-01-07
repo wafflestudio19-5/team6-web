@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import axios from "axios";
+import { requester } from "../../apis/requester";
 
 declare global {
   interface Window {
@@ -42,7 +43,7 @@ const LocationPage = () => {
       location.state.prev === "signup" &&
         setSignupForm(location.state.signupForm);
       location.state.prev === "edit" &&
-        !!localStorage.getItem("token") &&
+        !localStorage.getItem("token") &&
         navigate("/login");
       location.state = null;
     } else {
@@ -97,9 +98,31 @@ const LocationPage = () => {
   };
 
   const handleToGoBack = () => {
-    navigate("/signup", {
-      state: { inputs: signupForm },
-    });
+    prev === "signup"
+      ? navigate("/signup", {
+          state: { inputs: signupForm },
+        })
+      : navigate("/main", {
+          state: { page: "user" },
+        });
+  };
+
+  const handleToSignUp = async () => {
+    try {
+      const res1 = await requester.post("/users/", {
+        ...signupForm,
+        name: signupForm?.username,
+        location: localCode,
+      });
+      const res2 = await requester.post("/users/signin/", {
+        name: signupForm?.username,
+        password: signupForm?.password,
+      });
+      localStorage.setItem("token", res2.data.access_token);
+      navigate("/main");
+    } catch (error) {
+      console.log("회원가입 실패");
+    }
   };
 
   return (
@@ -140,7 +163,11 @@ const LocationPage = () => {
         ) : (
           <p className={styles.locationtext}>현재 위치를 찾는 중입니다.</p>
         )}
-        <button className={styles.signup} disabled={!localPosition}>
+        <button
+          className={styles.signup}
+          disabled={!localPosition}
+          onClick={handleToSignUp}
+        >
           <b>{!!specificPosition ? specificPosition : "이 동네"}</b>에서
           {prev === "signup" ? " 회원가입" : " 거래하기"}
         </button>

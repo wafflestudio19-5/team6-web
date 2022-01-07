@@ -6,6 +6,7 @@ import * as React from "react";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import CheckIcon from "./CheckIcon/CheckIcon";
 import Button from "@mui/material/Button";
+import { requester } from "../../apis/requester";
 
 type TSignupForm = {
   username: string;
@@ -29,6 +30,7 @@ const SignUp = () => {
     email: "",
     location: "",
   });
+  const [duplicated, setDuplicated] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -79,11 +81,28 @@ const SignUp = () => {
         ...inputs,
         phone: formatPhoneNumber(e.target.value),
       });
+    } else if (e.target.name === "username") {
+      setInputs({
+        ...inputs,
+        username: e.target.value,
+      });
+      setDuplicated(true);
     } else {
       setInputs({
         ...inputs,
         [e.target.name]: e.target.value,
       });
+    }
+  };
+
+  const handleToCheckDuplicate = async () => {
+    try {
+      const res = await requester.get(
+        `/users/duplicate/?name=${inputs.username}`
+      );
+      setDuplicated(res.data);
+    } catch (error) {
+      console.log("에러");
     }
   };
 
@@ -134,6 +153,7 @@ const SignUp = () => {
               variant="contained"
               color="primary"
               disabled={!regId.test(inputs.username)}
+              onClick={handleToCheckDuplicate}
             >
               중복체크
             </Button>
@@ -214,6 +234,11 @@ const SignUp = () => {
               />
             ) : null}
           </div>
+          <div className={styles["text-wrapper"]}>
+            {duplicated && (
+              <p>중복체크 버튼을 눌러 중복된 아이디가 없는지 확인해주세요.</p>
+            )}
+          </div>
           <button
             className={styles["set-location"]}
             disabled={
@@ -221,7 +246,8 @@ const SignUp = () => {
               !regPassword.test(inputs.password) ||
               inputs.password !== inputs.passwordConfirm ||
               !regPhone.test(inputs.phone) ||
-              !regEmail.test(inputs.email)
+              !regEmail.test(inputs.email) ||
+              duplicated
             }
           >
             내 동네 설정하기

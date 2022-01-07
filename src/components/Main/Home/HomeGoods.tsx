@@ -13,7 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
-import requester from "../../../apis/requester";
+import { requester } from "../../../apis/requester";
 import Product from "../../../apis/Product/Product";
 import { calculateTimeDifference } from "../../Utilities/functions";
 

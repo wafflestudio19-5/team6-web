@@ -4,7 +4,7 @@ import kakaoLogo from "../../icons/kakao-logo.png";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import requester from "../../apis/requester";
+import { requester } from "../../apis/requester";
 import { toast } from "react-hot-toast";
 
 type TLoginForm = {
