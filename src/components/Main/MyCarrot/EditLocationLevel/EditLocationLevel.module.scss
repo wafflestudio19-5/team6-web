@@ -43,12 +43,57 @@
   }
 
   .body-wrapper {
+    .first-text {
+      position: relative;
+      top: 20px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .second-text {
+      position: relative;
+      top: 12px;
+      text-align: center;
+      color: #777777;
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .slider-wrapper {
+      position: relative;
+      top: 20px;
+      left: 30px;
+      width: calc(100% - 60px);
+    }
+
+    .span-wrapper {
+      span {
+        position: relative;
+        top: 5px;
+        font-size: 14px;
+        font-weight: 400;
+      }
+      .left-span {
+        left: 30px;
+      }
+      .right-span {
+        left: calc(100% - 121px);
+      }
+    }
+
+
     img {
       width: 400px;
       position: absolute;
-      top: 150px;
+      top: 240px;
       left: calc(50% - 200px);
       visibility: hidden;
+
+      @media screen and (max-width: 400px) {
+        top: 230px;
+        width: 80%;
+        left: 10%;
+      }
     }
     .show {
       visibility: visible;

@@ -31,6 +31,7 @@ const MyCarrot = () => {
     try {
       const res = await requester.get("/users/me/");
       setMyInfo(res.data);
+      console.log(res.data);
     } catch (error) {
       console.log("getMe error");
     }
@@ -38,7 +39,10 @@ const MyCarrot = () => {
 
   const LinkToEditLocationLevel = () => {
     navigate("/set-location-level", {
-      state: { level: myInfo.range_of_location },
+      state: {
+        level: myInfo.range_of_location,
+        localPosition: myInfo.location,
+      },
     });
   };
 

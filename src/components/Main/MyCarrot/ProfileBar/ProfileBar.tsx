@@ -4,13 +4,10 @@ import EditIcon from "../../../../icons/MyCarrot/edit.png";
 import Test from "../../../../icons/MyCarrot/default-profile-image.png";
 import { Link, useNavigate } from "react-router-dom";
 import { TUserInfo } from "../../../../type/user";
+import { toShortDivision } from "../../../Utilities/functions";
 
 const ProfileBar = (props: { myInfo: TUserInfo }) => {
   const navigate = useNavigate();
-
-  const toShort = (location: any) => {
-    return location.split(" ").at(-1);
-  };
 
   const handleToEditProfilePage = () => {
     navigate("/profile/edit", { state: { prev: "main" } });
@@ -24,7 +21,7 @@ const ProfileBar = (props: { myInfo: TUserInfo }) => {
         </div>
         <p className={styles.nickname}>{props.myInfo.nickname}</p>
         <p className={styles["id-location"]}>
-          {toShort(props.myInfo.location)}
+          {toShortDivision(props.myInfo.location)}
         </p>
         <img className={styles.rightarrow} src={ArrowIcon} alt="right arrow" />
       </Link>

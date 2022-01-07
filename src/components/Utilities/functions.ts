@@ -27,3 +27,7 @@ export const calculateTimeDifference = (current: string | undefined) => {
       );
   } else return null;
 };
+
+export const toShortDivision = (division: any) => {
+  return division.split(" ").at(-1);
+};

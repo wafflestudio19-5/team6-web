@@ -6,21 +6,74 @@ import LevelZero from "../../../../icons/MyCarrot/level_zero.png";
 import LevelOne from "../../../../icons/MyCarrot/level_one.png";
 import LevelTwo from "../../../../icons/MyCarrot/level_two.png";
 import LevelThree from "../../../../icons/MyCarrot/level_three.png";
-import { Slider } from "@mui/material";
+import { Box, Slider } from "@mui/material";
+import { toShortDivision } from "../../../Utilities/functions";
+import { requester } from "../../../../apis/requester";
+
+type TNumberOfRegions = {
+  zero: number;
+  one: number;
+  two: number;
+  three: number;
+};
 
 const EditLocationLevel = () => {
+  const [reflected, setReflected] = useState<boolean>(false);
   const [level, setLevel] = useState<number>(1);
+  const [localPosition, setLocalPosition] = useState<string>("");
+  const [adjacentRegions, setAdjacentRegions] = useState<TNumberOfRegions>({
+    zero: 0,
+    one: 0,
+    two: 0,
+    three: 0,
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    //location.state && setLevel(location.state.level);
-    location.state = null;
+    if (location.state) {
+      setReflected(true);
+      if (!reflected) {
+        setLevel(toNumber(location.state.level));
+        setLocalPosition(location.state.localPosition);
+        getAdjacentRegion(location.state.localPosition);
+      }
+    } else {
+      navigate("/main");
+    }
   });
 
-  const handleSliderChange = (event: any, newLevel: number) => {
-    setLevel(newLevel);
+  const toNumber = (level: string) => {
+    if (level === "LEVEL_ZERO") return 0;
+    else if (level === "LEVEL_ONE") return 1;
+    else if (level === "LEVEL_TWO") return 2;
+    else return 3;
+  };
+
+  const numberOfRegionsByLevel = (level: number) => {
+    if (level === 0) return adjacentRegions.zero;
+    else if (level === 1) return adjacentRegions.one;
+    else if (level === 2) return adjacentRegions.two;
+    else return adjacentRegions.three;
+  };
+
+  const getAdjacentRegion = async (localPosition: string) => {
+    try {
+      const res = await requester.get(`/location/?name=${localPosition}`);
+      setAdjacentRegions({
+        zero: res.data.level_zero_count,
+        one: res.data.level_one_count,
+        two: res.data.level_two_count,
+        three: res.data.level_three_count,
+      });
+    } catch (error) {
+      console.log("get adjacent regions error");
+    }
+  };
+
+  const handleSliderChange = (event: any, newValue: any) => {
+    setLevel(newValue);
   };
 
   return (
@@ -32,16 +85,30 @@ const EditLocationLevel = () => {
         <p>거래범위 설정</p>
       </header>
       <div className={styles["body-wrapper"]}>
-        <p>{level}</p>
-        <Slider
-          aria-label="Temperature"
-          color="primary"
-          defaultValue={1}
-          step={1}
-          marks
-          min={0}
-          max={3}
-        />
+        <p className={styles["first-text"]}>{`${toShortDivision(
+          localPosition
+        )}과 근처 동네 ${numberOfRegionsByLevel(level)}개`}</p>
+        <p className={styles["second-text"]}>
+          선택한 범위의 게시글만 볼 수 있어요.
+        </p>
+        <div className={styles["slider-wrapper"]}>
+          <Slider
+            aria-label="Temperature"
+            color="primary"
+            defaultValue={1}
+            value={level}
+            onChange={handleSliderChange}
+            step={1}
+            marks
+            min={0}
+            max={3}
+          />
+        </div>
+        <div className={styles["span-wrapper"]}>
+          <span className={styles["left-span"]}>내 동네</span>
+          <span className={styles["right-span"]}>근처 동네</span>
+        </div>
+
         <img
           className={`${level === 0 ? styles.show : ""}`}
           src={LevelZero}
@@ -62,34 +129,6 @@ const EditLocationLevel = () => {
           src={LevelThree}
           alt="레벨 3"
         />
-        <button
-          onClick={() => {
-            setLevel(0);
-          }}
-        >
-          눌러 0
-        </button>
-        <button
-          onClick={() => {
-            setLevel(1);
-          }}
-        >
-          눌러 1
-        </button>
-        <button
-          onClick={() => {
-            setLevel(2);
-          }}
-        >
-          눌러 2
-        </button>
-        <button
-          onClick={() => {
-            setLevel(3);
-          }}
-        >
-          눌러 3
-        </button>
       </div>
     </div>
   );

@@ -2,15 +2,14 @@ import styles from "./SalesArticle.module.scss";
 import ChatIcon from "../../../../icons/chatting.png";
 import LikesIcon from "../../../../icons/blackHeart.png";
 import { myProductsData } from "../../../../type/product";
-import { calculateTimeDifference } from "../../../Utilities/functions";
+import {
+  calculateTimeDifference,
+  toShortDivision,
+} from "../../../Utilities/functions";
 import { useNavigate } from "react-router-dom";
 
 const SalesArticle = (props: { article: myProductsData }) => {
   const navigate = useNavigate();
-
-  const toShort = (location: any) => {
-    return location.split(" ").at(-1);
-  };
 
   const LinkToArticle = () => {
     navigate(`/article/${props.article.id}`, {
@@ -26,7 +25,7 @@ const SalesArticle = (props: { article: myProductsData }) => {
       <div className={styles["data-wrapper"]}>
         <p className={styles.title}>{props.article.title}</p>
         <p className={styles["location-time"]}>
-          {toShort(props.article.location)} ·{" "}
+          {toShortDivision(props.article.location)} ·{" "}
           {calculateTimeDifference(props.article.created_at)}
         </p>
         <div className={styles["status-price-wrapper"]}>
