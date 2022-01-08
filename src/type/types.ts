@@ -26,7 +26,6 @@ export type articleData = {
     | "OVER_NINE";
 };
 
-
 export type userType = {
   name: string;
   nickname: string;
@@ -37,7 +36,7 @@ export type userType = {
 export type productType = {
   id: number;
   user: userType;
-  image: number[];
+  image: number;
   title: string;
   price: number;
   negotiable: boolean;
@@ -54,6 +53,7 @@ export type productType = {
   updated_at: string;
   last_bring_up_my_post: string;
 };
+
 export type myRequestData = {
   product: productType;
   suggested_price: number;
@@ -75,3 +75,8 @@ export type otherRequestType = {
   updated_at: string;
   created_At: string;
 };
+
+export type rawProductsData = {
+  data: productType;
+  url: string;
+}[];

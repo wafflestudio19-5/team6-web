@@ -133,7 +133,10 @@ const Article = () => {
 
   const onClickArrow = () => {
     if (location?.state) {
-      navigate("/" + location.state.prev);
+      location.state.prev === "profile/sales" &&
+        navigate("/" + location.state.prev, {
+          state: { mode: location.state.mode },
+        });
     } else {
       navigate("/main");
     }

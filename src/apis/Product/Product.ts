@@ -1,9 +1,23 @@
 import requester from "../requester";
 
 export default {
-  getAllProducts(pageNumber: number) {
+  getAllProducts(
+    pageNumber: number,
+    title?: string,
+    category?: number,
+    minPrice?: number,
+    maxPrice?: number,
+    rangeOfLocation?: number
+  ) {
+    const searchParams = new URLSearchParams();
+    if (!!title) searchParams.set("title", title);
+    if (!!category) searchParams.set("category", category.toString());
+    if (!!minPrice) searchParams.set("minPrice", minPrice.toString());
+    if (!!maxPrice) searchParams.set("maxPrice", maxPrice.toString());
+    if (!!rangeOfLocation || rangeOfLocation === 0)
+      searchParams.set("rangeOfLocation", rangeOfLocation.toString());
     return requester({
-      url: `/products/?pageNumber=${pageNumber}&pageSize=15`,
+      url: `/products/?pageNumber=${pageNumber}&pageSize=10&${searchParams.toString()}`,
     });
   },
   getProduct(id: string) {
@@ -12,7 +26,7 @@ export default {
     });
   },
   postProduct(data: {
-    images: number[];
+    images: number[] | null;
     title: string;
     content: string;
     price: number;

@@ -6,7 +6,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import axios from "axios";
-import requester from "../../apis/requester";
+import requester, { user } from "../../apis/requester";
+import { toast } from "react-hot-toast";
 
 declare global {
   interface Window {
@@ -27,7 +28,6 @@ type TSignupForm = {
 const LocationPage = () => {
   const [lat, setLat] = useState<number>(37.460103);
   const [lon, setLon] = useState<number>(126.951873);
-  const [localCode, setLocalCode] = useState<number>();
   const [prev, setPrev] = useState<string>("");
   const [signupForm, setSignupForm] = useState<TSignupForm>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -89,7 +89,6 @@ const LocationPage = () => {
           },
         }
       );
-      setLocalCode(res.data.documents[1].code);
       setLocalPosition(res.data.documents[1].address_name);
       setSpecificPosition(res.data.documents[1].region_3depth_name);
     } catch (error) {
@@ -109,12 +108,13 @@ const LocationPage = () => {
 
   const handleToSignUp = async () => {
     try {
-      const res1 = await requester.post("/users/", {
+      console.log(localPosition);
+      const res1 = await user.post("/users/", {
         ...signupForm,
         name: signupForm?.username,
-        location: localCode,
+        location: localPosition,
       });
-      const res2 = await requester.post("/users/signin/", {
+      const res2 = await user.post("/users/signin/", {
         name: signupForm?.username,
         password: signupForm?.password,
       });
@@ -123,6 +123,22 @@ const LocationPage = () => {
     } catch (error) {
       console.log("회원가입 실패");
     }
+  };
+
+  const handleToEditLocation = () => {
+    requester
+      .patch("/users/me/", {
+        location: localPosition,
+      })
+      .then(() => {
+        toast("내 동네가 변경되었습니다.");
+        navigate("/main", {
+          state: { page: "user" },
+        });
+      })
+      .catch(() => {
+        console.log("edit location error");
+      });
   };
 
   return (
@@ -166,7 +182,7 @@ const LocationPage = () => {
         <button
           className={styles.signup}
           disabled={!localPosition}
-          onClick={handleToSignUp}
+          onClick={prev === "signup" ? handleToSignUp : handleToEditLocation}
         >
           <b>{!!specificPosition ? specificPosition : "이 동네"}</b>에서
           {prev === "signup" ? " 회원가입" : " 거래하기"}
