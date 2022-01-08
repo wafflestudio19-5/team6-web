@@ -17,7 +17,7 @@ export default {
     if (!!rangeOfLocation || rangeOfLocation === 0)
       searchParams.set("rangeOfLocation", rangeOfLocation.toString());
     return requester({
-      url: `/products/?pageNumber=${pageNumber}&pageSize=3&${searchParams.toString()}`,
+      url: `/products/?pageNumber=${pageNumber}&pageSize=10&${searchParams.toString()}`,
     });
   },
   getProduct(id: string) {
