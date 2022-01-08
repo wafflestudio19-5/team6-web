@@ -1,38 +1,21 @@
 import styles from "./Requests.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
-import requester from "../../../apis/requester";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { myRequestData } from "../../../type/product";
+import { myRequestData, userType } from "../../../type/types";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { srcPair } from "../PurchaseHistory";
-import { Base64 } from "js-base64";
+
 import bell from "../../../icons/bell.png";
+import requester from "../../../apis/requester";
 
 const Requests = (props: {
   requestList: myRequestData[];
-  setRequestActions: Dispatch<SetStateAction<boolean>>;
+  setRequestUser: Dispatch<SetStateAction<userType | null>>;
+  srcList: srcPair[];
 }) => {
   const navigate = useNavigate();
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
-
-  useEffect(() => {
-    props.requestList.forEach((article) =>
-      requester
-        .get(`/images/${article.product.image}/`)
-        .then((res) => {
-          setSrcList((srcList) => [
-            ...srcList,
-            {
-              id: article.product.id,
-              src: res.data.url,
-            },
-          ]);
-        })
-        .catch((e) => console.log(e))
-    );
-  }, []);
 
   const goToProductPage = (id: number) => {
     navigate(`/article/${id}`, {
@@ -41,7 +24,7 @@ const Requests = (props: {
   };
 
   const changeToRequestPage = (id: number) => {
-    /* 구매 요청 페이지 구현 후 연결
+    /* (now) 구매 요청 페이지 구현 후 연결
     navigate(`/request/${id}`, {
       state: { prev: "purchase-history" },
     });
@@ -49,11 +32,11 @@ const Requests = (props: {
   };
 
   const cancelRequest = (data: myRequestData) => {
-    // api 없음. 판매자 정보 받아와서 저장, Modal 띄우기
+    // (next) api doesn't return the request id
   };
 
   const handleAction = (data: myRequestData) => {
-    props.setRequestActions(true);
+    props.setRequestUser(data.product.user);
   };
 
   const requestComponents = props.requestList.map((article) => {
@@ -66,7 +49,9 @@ const Requests = (props: {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={srcList.find((pair) => pair.id === article.product.id)?.src}
+            src={
+              props.srcList.find((pair) => pair.id === article.product.id)?.src
+            }
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
@@ -83,7 +68,10 @@ const Requests = (props: {
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.product.location} ·</p>
               <p className={styles.time}>
-                {calculateTimeDifference(article.product.created_at, article.product.last_bring_up_my_post)}
+                {calculateTimeDifference(
+                  article.product.created_at,
+                  article.product.last_bring_up_my_post
+                )}
               </p>
             </div>
             <div className={styles.thirdLine}>

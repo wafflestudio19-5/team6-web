@@ -1,37 +1,22 @@
 import styles from "./Refused.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
-import { myProductsData, myRequestData } from "../../../type/product";
 import requester from "../../../apis/requester";
+import { productType, myRequestData } from "../../../type/types";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { srcPair } from "../PurchaseHistory";
-import { Base64 } from "js-base64";
+
 import { useNavigate } from "react-router-dom";
 
-const Refused = (props: { refusedList: myRequestData[] }) => {
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
+const Refused = (props: {
+  refusedList: myRequestData[];
+  srcList: srcPair[];
+}) => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    props.refusedList.forEach((article) =>
-      requester
-        .get(`/images/${article.product.image}/`)
-        .then((res) => {
-          setSrcList((srcList) => [
-            ...srcList,
-            {
-              id: article.product.id,
-              src: res.data.url,
-            },
-          ]);
-        })
-        .catch((e) => console.log(e))
-    );
-  }, []);
-
   const changeToRequestPage = (id: number) => {
-    /* 구매 요청 페이지 구현 후 연결
+    /*(now) 구매 요청 페이지 구현 후 연결
     navigate(`/request/${id}`, {
       state: { prev: "purchase-history" },
     });
@@ -54,7 +39,9 @@ const Refused = (props: { refusedList: myRequestData[] }) => {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={srcList.find((pair) => pair.id === article.product.id)?.src}
+            src={
+              props.srcList.find((pair) => pair.id === article.product.id)?.src
+            }
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
@@ -64,7 +51,10 @@ const Refused = (props: { refusedList: myRequestData[] }) => {
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.product.location} ·</p>
               <p className={styles.time}>
-                {calculateTimeDifference(article.created_at, article.product.last_bring_up_my_post)}
+                {calculateTimeDifference(
+                  article.created_at,
+                  article.product.last_bring_up_my_post
+                )}
               </p>
             </div>
             <div className={styles.thirdLine}>

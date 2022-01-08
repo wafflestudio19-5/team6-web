@@ -1,5 +1,4 @@
 import styles from "./PurchaseHistory.module.scss";
-import styles2 from "../Utilities/confirm.module.scss";
 import { Link } from "react-router-dom";
 import BackArrow from "../../icons/leftArrow.png";
 import { useEffect, useState } from "react";
@@ -7,7 +6,8 @@ import Requests from "./Requests/Requests";
 import Refused from "./Refused/Refused";
 import Purchased from "./Purchased/Purchased";
 import requester from "../../apis/requester";
-import { myRequestData } from "../../type/product";
+import { myRequestData, userType } from "../../type/types";
+import styles2 from "../Utilities/confirm.module.scss";
 
 export type srcPair = {
   id: number;
@@ -19,34 +19,46 @@ const PurchaseHistory = () => {
   const [requestList, setRequestList] = useState<myRequestData[]>([]);
   const [purchasedList, setPurchasedList] = useState<myRequestData[]>([]);
   const [refusedList, setRefusedList] = useState<myRequestData[]>([]);
-  const [requestActions, setRequestActions] = useState(false);
+  const [requestUser, setRequestUser] = useState<userType | null>(null);
   const [update, setUpdate] = useState(false);
-
+  const [srcList, setSrcList] = useState<srcPair[]>([]);
   useEffect(() => {
     requester
       .get(`/users/me/purchase-requests/`)
       .then((res) => {
+        console.log(res.data);
         setRequestList(
           res.data.filter(
-            //api 수정 이후 변경
             (data: myRequestData) =>
-              data.accepted === null && data.product.status !== "SOLD_OUT"
+              data.accepted !== false && data.product.status !== "SOLD_OUT"
           )
         );
         setPurchasedList(
           res.data.filter(
-            //api 수정 이후 변경
             (data: myRequestData) =>
               data.accepted && data.product.status === "SOLD_OUT"
           )
         );
         setRefusedList(
           res.data.filter(
-            //api 수정 이후 변경
             (data: myRequestData) =>
               data.accepted === false ||
               (data.accepted === null && data.product.status === "SOLD_OUT")
           )
+        );
+        res.data.forEach((article: myRequestData) =>
+          requester
+            .get(`/images/${article.product.image}/`)
+            .then((res) => {
+              setSrcList((srcList) => [
+                ...srcList,
+                {
+                  id: article.product.id,
+                  src: res.data.url,
+                },
+              ]);
+            })
+            .catch((e) => console.log(e))
         );
       })
       .catch((e) => console.log(e.response));
@@ -58,10 +70,20 @@ const PurchaseHistory = () => {
         <>
           <div
             className={`${styles["back-shadow"]} ${
-              requestActions ? styles.show : ""
+              requestUser ? styles.show : ""
             }`}
-            onClick={() => setRequestActions(false)}
+            onClick={() => setRequestUser(null)}
           />
+          {requestUser && (
+            <div className={styles2.box}>
+              <p className={styles2.title}>상대방이 요청을 수락했어요.</p>
+              <p className={styles2.contents}>
+                연락을 처음 할 때에는 본인의 신원을 먼저 밝혀주세요.
+              </p>
+              <p className={styles2.subTitle}>이메일</p>
+              <div className={styles2.textBox}>{requestUser.email}</div>
+            </div>
+          )}
         </>
       )}
       <header>
@@ -106,11 +128,14 @@ const PurchaseHistory = () => {
         {mode === 1 && (
           <Requests
             requestList={requestList}
-            setRequestActions={setRequestActions}
+            setRequestUser={setRequestUser}
+            srcList={srcList}
           />
         )}
-        {mode === 2 && <Purchased purchasedList={purchasedList} />}
-        {mode === 3 && <Refused refusedList={refusedList} />}
+        {mode === 2 && (
+          <Purchased purchasedList={purchasedList} srcList={srcList} />
+        )}
+        {mode === 3 && <Refused refusedList={refusedList} srcList={srcList} />}
       </section>
     </div>
   );

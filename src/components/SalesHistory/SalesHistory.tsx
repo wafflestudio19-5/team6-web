@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import Onsales from "./Onsales/Onsales";
 import Hiddens from "./Hiddens/Hiddens";
 import Soldouts from "./Soldouts/Soldouts";
-import requester from "../../apis/requester";
-import { myProductsData } from "../../type/product";
+import { productType } from "../../type/types";
 import { toast } from "react-hot-toast";
+import requester from "../../apis/requester";
 
 export type srcPair = {
   id: number;
@@ -16,40 +16,56 @@ export type srcPair = {
 
 const SalesHistory = () => {
   const [mode, setMode] = useState(1);
-  const [onsaleList, setOnsaleList] = useState<myProductsData[]>([]);
-  const [soldoutList, setSoldoutList] = useState<myProductsData[]>([]);
-  const [hiddenList, setHiddenList] = useState<myProductsData[]>([]);
+  const [onsaleList, setOnsaleList] = useState<productType[]>([]);
+  const [soldoutList, setSoldoutList] = useState<productType[]>([]);
+  const [hiddenList, setHiddenList] = useState<productType[]>([]);
   const [onsaleActions, setOnsaleActions] = useState(false);
   const [soldoutActions, setSoldoutActions] = useState(false);
   const [hiddenActions, setHiddenActions] = useState(false);
   const [update, setUpdate] = useState(false);
   const [actionTarget, setActionTarget] = useState(0);
-
+  const [srcList, setSrcList] = useState<srcPair[]>([]);
   useEffect(() => {
     requester
       .get(`/users/me/products/?pageNumber=0&pageSize=30`)
       .then((res) => {
         setOnsaleList(
           res.data.content.filter(
-            (data: myProductsData) =>
+            (data: productType) =>
               data.status === "FOR_SALE" || data.status === "RESERVED"
           )
         );
         setSoldoutList(
           res.data.content.filter(
-            (data: myProductsData) => data.status === "SOLD_OUT"
+            (data: productType) => data.status === "SOLD_OUT"
           )
         );
         setHiddenList(
           res.data.content.filter(
-            (data: myProductsData) => data.status === "HIDDEN"
+            (data: productType) => data.status === "HIDDEN"
           )
         );
+        res.data.content.forEach((article: productType) => {
+          requester
+            .get(`/images/${article.image}/`)
+            .then((res) => {
+              setSrcList((srcList) => [
+                ...srcList,
+                {
+                  id: article.id,
+                  src: res.data.url,
+                },
+              ]);
+            })
+            .catch((e) => console.log("??", e));
+        });
       })
       .catch((e) => console.log(e.response));
   }, [update]);
 
-  const changeToModification = () => {};
+  const changeToModification = (id: number) => {
+    // (next) 게시글 수정 페이지로
+  };
 
   const handleHiding = () => {
     requester
@@ -93,10 +109,8 @@ const SalesHistory = () => {
       });
   };
   const changeToOnsale = () => {
-    //api 없음
-    /*
     requester
-      .put(`/products/${actionTarget}/status/`, { action: "hide" })
+      .put(`/products/${actionTarget}/status/`, { action: "for sale" })
       .then((res) => {
         setUpdate((update) => !update);
       })
@@ -104,7 +118,6 @@ const SalesHistory = () => {
     setOnsaleActions(false);
     setSoldoutActions(false);
     setHiddenActions(false);
-    */
   };
 
   return (
@@ -123,7 +136,10 @@ const SalesHistory = () => {
             }`}
           >
             <div className={styles.upperBox}>
-              <div className={styles.blueText} onClick={changeToModification}>
+              <div
+                className={styles.blueText}
+                onClick={() => changeToModification(actionTarget)}
+              >
                 게시글 수정
               </div>
               <div className={styles.line} />
@@ -259,6 +275,7 @@ const SalesHistory = () => {
             setUpdate={setUpdate}
             setOnsaleActions={setOnsaleActions}
             setActionTarget={setActionTarget}
+            srcList={srcList}
           />
         )}
         {mode === 2 && (
@@ -266,6 +283,7 @@ const SalesHistory = () => {
             soldoutList={soldoutList}
             setSoldoutActions={setSoldoutActions}
             setActionTarget={setActionTarget}
+            srcList={srcList}
           />
         )}
         {mode === 3 && (
@@ -274,6 +292,7 @@ const SalesHistory = () => {
             setUpdate={setUpdate}
             setHiddenActions={setHiddenActions}
             setActionTarget={setActionTarget}
+            srcList={srcList}
           />
         )}
       </section>

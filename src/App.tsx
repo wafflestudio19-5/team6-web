@@ -19,6 +19,7 @@ import EditProfile from "./components/Profile/EditProfile/EditProfile";
 import SearchPage from "./components/SearchPage/SearchPage";
 import { Toaster } from "react-hot-toast";
 import PurchaseHistory from "./components/PurchaseHistory/PurchaseHistory";
+import RequestPage from "./components/Requests/RequestPage";
 import Sales from "./components/Profile/Sales/Sales";
 import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/EditLocationLevel";
 
@@ -43,6 +44,7 @@ function App() {
           <Route path="/set-location" element={<LocationPage />} />
           <Route path="/set-location-level" element={<EditLocationLevel />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/request/:id" element={<RequestPage />} />
           <Route
             path="/*"
             element={<Navigate replace to={token ? "/main" : "/login"} />}

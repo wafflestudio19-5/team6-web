@@ -2,34 +2,19 @@ import styles from "./Purchased.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
-import { myRequestData } from "../../../type/product";
 import requester from "../../../apis/requester";
+import { myRequestData } from "../../../type/types";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { srcPair } from "../PurchaseHistory";
-import { Base64 } from "js-base64";
+
 import { useNavigate } from "react-router-dom";
 
-const Purchased = (props: { purchasedList: myRequestData[] }) => {
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
+const Purchased = (props: {
+  purchasedList: myRequestData[];
+  srcList: srcPair[];
+}) => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    props.purchasedList.forEach((article) => {
-      requester
-        .get(`/images/${article.product.image}/`)
-        .then((res) => {
-          setSrcList((srcList) => [
-            ...srcList,
-            {
-              id: article.product.id,
-              src: res.data.url,
-            },
-          ]);
-        })
-        .catch((e) => console.log("??", e));
-    });
-  }, []);
 
   const goToProductPage = (id: number) => {
     navigate(`/article/${id}`, {
@@ -37,10 +22,8 @@ const Purchased = (props: { purchasedList: myRequestData[] }) => {
     });
   };
 
-  const changeToVisible = (data: myRequestData) => {
-    requester
-      .put(`/products/${data.product.id}/status/`, { action: "show" })
-      .catch((e) => console.log(e));
+  const changeToReview = (data: myRequestData) => {
+    // (next) 거래 후기 페이지로 연결
   };
 
   const soldoutComponents = props.purchasedList.map((article) => {
@@ -53,7 +36,9 @@ const Purchased = (props: { purchasedList: myRequestData[] }) => {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={srcList.find((pair) => pair.id === article.product.id)?.src}
+            src={
+              props.srcList.find((pair) => pair.id === article.product.id)?.src
+            }
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
@@ -63,7 +48,10 @@ const Purchased = (props: { purchasedList: myRequestData[] }) => {
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.product.location} ·</p>
               <p className={styles.time}>
-                {calculateTimeDifference(article.created_at, article.product.last_bring_up_my_post)}
+                {calculateTimeDifference(
+                  article.created_at,
+                  article.product.last_bring_up_my_post
+                )}
               </p>
             </div>
             <div className={styles.thirdLine}>
@@ -103,7 +91,7 @@ const Purchased = (props: { purchasedList: myRequestData[] }) => {
           <div className={styles.buttons}>
             <div
               className={styles.button}
-              onClick={() => changeToVisible(article)}
+              onClick={() => changeToReview(article)}
             >
               거래 후기 작성하기
             </div>

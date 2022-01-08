@@ -11,6 +11,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
 
+
   .header {
     position: fixed;
     z-index: 2;
@@ -68,6 +69,7 @@
       color: #e97341;
       top: -74px;
       left: 72px;
+      cursor: pointer;
     }
     .chatButton {
       position: absolute;
