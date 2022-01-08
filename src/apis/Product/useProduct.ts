@@ -36,15 +36,23 @@ export default function useProduct({
       rangeOfLocation
     ).then((res) => {
       res.data.content.forEach((article: myProductsContent) => {
-        Image.getImage(article.image).then((res) => {
-          const tempState = {
-            data: article,
-            url: res.data.url,
-          };
-          setProducts((prevState) => {
-            return prevState.concat(tempState);
+        Image.getImage(article.image)
+          .then((res) => {
+            const tempState = {
+              data: article,
+              url: res.data.url,
+            };
+            setProducts((prevState) => {
+              return prevState.concat(tempState);
+            });
+          })
+          .catch((e) => {
+            const tempState = {
+              data: article,
+              url: "",
+            };
+            setProducts((prevState) => prevState.concat(tempState));
           });
-        });
       });
       setHasMore(!res.data.last);
     });

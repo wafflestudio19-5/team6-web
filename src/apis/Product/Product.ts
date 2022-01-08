@@ -26,7 +26,7 @@ export default {
     });
   },
   postProduct(data: {
-    images: number[];
+    images: number[] | null;
     title: string;
     content: string;
     price: number;

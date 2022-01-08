@@ -30,7 +30,7 @@ import {
 } from "@mui/material";
 import { toast } from "react-hot-toast";
 import requester from "../../apis/requester";
-import {calculateTimeDifference} from "../Utilities/functions";
+import { calculateTimeDifference } from "../Utilities/functions";
 
 type articleData = {
   id: number;
