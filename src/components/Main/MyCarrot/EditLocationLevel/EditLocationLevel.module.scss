@@ -109,4 +109,15 @@
       visibility: visible;
     }
   }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+    .complete-button {
+      width: 100%;
+      height: 45px;
+    }
+  }
 }

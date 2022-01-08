@@ -4,15 +4,18 @@ import DefaultImageIcon from "../../../icons/MyCarrot/default-image.png";
 import BackArrowIcon from "../../../icons/leftArrow.png";
 import CameraIcon from "../../../icons/MyCarrot/camera.png";
 import WarningIcon from "../../../icons/MyCarrot/warning.png";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import requester from "../../../apis/requester";
+import { toast } from "react-hot-toast";
 
 const EditProfile = () => {
   const [prev, setPrev] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string>("");
   const [prevNickname, setPrevNickname] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const navigate = useNavigate();
   const location = useLocation();
 
   const regNickname = /^[가-힣A-Za-z0-9]{3,14}$/;
@@ -35,6 +38,22 @@ const EditProfile = () => {
 
   const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setNickname(e.target.value);
+  };
+
+  const handleToEditNickname = () => {
+    requester
+      .patch("/users/me/", {
+        nickname: nickname,
+      })
+      .then(() => {
+        toast("닉네임이 변경되었습니다.");
+        navigate(`${prev === "main" ? "/main" : "/profile"}`, {
+          state: prev === "main" ? { page: "user" } : null,
+        });
+      })
+      .catch(() => {
+        console.log("edit nickname error");
+      });
   };
 
   return (
@@ -74,6 +93,7 @@ const EditProfile = () => {
           variant="contained"
           color="warning"
           disabled={nickname === prevNickname || !regNickname.test(nickname)}
+          onClick={handleToEditNickname}
         >
           완료
         </Button>

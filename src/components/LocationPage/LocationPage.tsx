@@ -6,7 +6,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import axios from "axios";
-import { user } from "../../apis/requester";
+import requester, { user } from "../../apis/requester";
+import { toast } from "react-hot-toast";
 
 declare global {
   interface Window {
@@ -124,6 +125,22 @@ const LocationPage = () => {
     }
   };
 
+  const handleToEditLocation = () => {
+    requester
+      .patch("/users/me/", {
+        location: localPosition,
+      })
+      .then(() => {
+        toast("내 동네가 변경되었습니다.");
+        navigate("/main", {
+          state: { page: "user" },
+        });
+      })
+      .catch(() => {
+        console.log("edit location error");
+      });
+  };
+
   return (
     <div className={styles.wrapper}>
       <header>
@@ -165,7 +182,7 @@ const LocationPage = () => {
         <button
           className={styles.signup}
           disabled={!localPosition}
-          onClick={handleToSignUp}
+          onClick={prev === "signup" ? handleToSignUp : handleToEditLocation}
         >
           <b>{!!specificPosition ? specificPosition : "이 동네"}</b>에서
           {prev === "signup" ? " 회원가입" : " 거래하기"}
