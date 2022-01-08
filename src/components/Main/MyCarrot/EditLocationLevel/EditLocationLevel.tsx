@@ -9,6 +9,8 @@ import LevelThree from "../../../../icons/MyCarrot/level_three.png";
 import { Box, Slider } from "@mui/material";
 import { toShortDivision } from "../../../Utilities/functions";
 import requester from "../../../../apis/requester";
+import Button from "@mui/material/Button";
+import { toast } from "react-hot-toast";
 
 type TNumberOfRegions = {
   zero: number;
@@ -20,6 +22,7 @@ type TNumberOfRegions = {
 const EditLocationLevel = () => {
   const [reflected, setReflected] = useState<boolean>(false);
   const [level, setLevel] = useState<number>(1);
+  const [prevLevel, setPrevLevel] = useState<string>("LEVEL_ONE");
   const [localPosition, setLocalPosition] = useState<string>("");
   const [adjacentRegions, setAdjacentRegions] = useState<TNumberOfRegions>({
     zero: 0,
@@ -36,19 +39,27 @@ const EditLocationLevel = () => {
       setReflected(true);
       if (!reflected) {
         setLevel(toNumber(location.state.level));
+        setPrevLevel(location.state.level);
         setLocalPosition(location.state.localPosition);
         getAdjacentRegion(location.state.localPosition);
       }
     } else {
       navigate("/main");
     }
-  });
+  }, []);
 
   const toNumber = (level: string) => {
     if (level === "LEVEL_ZERO") return 0;
     else if (level === "LEVEL_ONE") return 1;
     else if (level === "LEVEL_TWO") return 2;
     else return 3;
+  };
+
+  const toString = (level: number) => {
+    if (level === 0) return "LEVEL_ZERO";
+    else if (level === 1) return "LEVEL_ONE";
+    else if (level === 2) return "LEVEL_TWO";
+    else return "LEVEL_THREE";
   };
 
   const numberOfRegionsByLevel = (level: number) => {
@@ -74,6 +85,22 @@ const EditLocationLevel = () => {
 
   const handleSliderChange = (event: any, newValue: any) => {
     setLevel(newValue);
+  };
+
+  const handleToEditRangeOfLocation = () => {
+    requester
+      .patch("/users/me/", {
+        range_of_location: toString(level),
+      })
+      .then(() => {
+        toast("거래 범위가 변경되었습니다.");
+        navigate("/main", {
+          state: { page: "user" },
+        });
+      })
+      .catch(() => {
+        console.log("edit range_of_location error");
+      });
   };
 
   return (
@@ -130,6 +157,17 @@ const EditLocationLevel = () => {
           alt="레벨 3"
         />
       </div>
+      <footer>
+        <Button
+          className={styles["complete-button"]}
+          variant="contained"
+          color="warning"
+          disabled={level === toNumber(prevLevel)}
+          onClick={handleToEditRangeOfLocation}
+        >
+          완료
+        </Button>
+      </footer>
     </div>
   );
 };
