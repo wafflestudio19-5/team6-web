@@ -1,7 +1,7 @@
 import styles from "./Settings.module.scss";
 import backArrow from "../../../icons/leftArrow.png";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { requester } from "../../../apis/requester";
+import requester from "../../../apis/requester";
 import { userType } from "../../../type/types";
 
 const Account = (props: { setAccount: Dispatch<SetStateAction<boolean>> }) => {

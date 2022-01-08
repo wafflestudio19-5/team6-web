@@ -107,4 +107,58 @@
     background: white;
     cursor: default;
   }
+  .priceBox{
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    width: 90%;
+    height: 35px;
+    left: 5%;
+
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #e5e5e5;
+    border-style: solid;
+    margin-bottom: 10px;
+
+    background: white;
+  }
+  .messageBox{
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    width: 90%;
+    height: 100px;
+    left: 5%;
+
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #e5e5e5;
+    border-style: solid;
+    margin-bottom: 10px;
+
+    background: white;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+  }
+  .messageBox::-webkit-scrollbar {
+    display: none;
+  }
+  .priceText{
+  text-align: center;
+    width: 90%;
+    position: relative;
+    font-size: 11px;
+    margin: 5px auto 20px;
+    font-weight: bold;
+    color: #555555;
+  }
 }

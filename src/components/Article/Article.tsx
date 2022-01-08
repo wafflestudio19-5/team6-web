@@ -4,8 +4,15 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import styles from "./Article.module.scss";
+import styles2 from "../Utilities/confirm.module.scss";
 import confirmStyles from "./confirm.module.scss";
 import leftArrowIcon from "../../icons/leftArrow.png";
 import homeIcon from "../../icons/home.png";
@@ -30,7 +37,8 @@ import {
 } from "@mui/material";
 import { toast } from "react-hot-toast";
 import requester from "../../apis/requester";
-import {calculateTimeDifference} from "../Utilities/functions";
+import { calculateTimeDifference } from "../Utilities/functions";
+import confirmModal from "../Main/Home/Write/Confirm/ConfirmModal";
 
 type articleData = {
   id: number;
@@ -70,6 +78,10 @@ const settings = {
   arrows: false,
 };
 
+const readInKorean = (price: number) => {
+  return;
+};
+
 const Article = () => {
   const { id } = useParams() as { id: string };
   const navigate = useNavigate();
@@ -82,6 +94,12 @@ const Article = () => {
   const [status, setStatus] = useState<string>("FOR_SALE");
   const [isSettingModalOpen, setIsSettingModalOpen] = useState<boolean>(false);
   const [carouselImg, setCarouselImg] = useState<any>([]);
+  const [requestModal, setRequestModal] = useState(false);
+  const [inputs, setInputs] = useState<{
+    suggested_price: number | undefined;
+    message: string;
+  }>({ suggested_price: undefined, message: "" });
+  const [suggest, setSuggest] = useState(false);
 
   useEffect(() => {
     Product.getProduct(id).then((res) => {
@@ -266,6 +284,60 @@ const Article = () => {
       setIsSettingModalOpen(false);
     }
   };
+  const changeToRequests = () => {
+    navigate(`/request/${id}`);
+  };
+  const handleRequest = () => {
+    if (currentArticle) {
+      setInputs({ ...inputs, suggested_price: currentArticle.price });
+    }
+    setSuggest(false);
+    setRequestModal(true);
+  };
+  const handlePriceChange: ChangeEventHandler<
+    HTMLInputElement | HTMLSelectElement
+  > = (e) => {
+    if (e.target.name === "price") {
+      if (e.target.value) {
+        setInputs({
+          ...inputs,
+          suggested_price: parseInt(e.target.value),
+        });
+      } else {
+        setInputs({
+          ...inputs,
+          suggested_price: undefined,
+        });
+      }
+    }
+  };
+
+  const handleMessageChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    if (e.target.name === "message") {
+      setInputs({
+        ...inputs,
+        message: e.target.value,
+      });
+    }
+  };
+  const handleConfirm = () => {
+    if (currentArticle) {
+      if (inputs.suggested_price) {
+        requester
+          .post(`/products/${currentArticle.id}/purchases/`, {
+            suggested_price: inputs.suggested_price,
+            message: inputs.message,
+          })
+          .catch((e) => {
+            console.log(e.response);
+          });
+        setRequestModal(false);
+      } else {
+        toast.error("가격은 반드시 입력해야 해요");
+      }
+    }
+  };
+
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -309,14 +381,31 @@ const Article = () => {
               currentArticle?.price.toLocaleString("ko-KR") + "원"}
             {currentArticle?.price === 0 && "나눔🧡"}
           </h1>
-          <p className={styles.priceProposal} onClick={onClickPriceProposal}>
-            {isSeller
-              ? `가격제안 ${currentArticle?.price_suggestions}명`
-              : "가격 제안하기"}
-          </p>
-          <button className={styles.chatButton} onClick={onClickChatButton}>
-            {isSeller ? "요청 목록 보기" : "거래 요청하기"}
-          </button>
+          {isSeller ? (
+            <p className={styles.priceProposal} onClick={changeToRequests}>
+              가격제안 {currentArticle?.price_suggestions}명
+            </p>
+          ) : (
+            <p
+              className={styles.priceProposal}
+              onClick={() => {
+                setSuggest(true);
+                setInputs({ suggested_price: undefined, message: "" });
+                setRequestModal(true);
+              }}
+            >
+              가격 제안하기
+            </p>
+          )}
+          {isSeller ? (
+            <button className={styles.chatButton} onClick={changeToRequests}>
+              요청 목록 보기
+            </button>
+          ) : (
+            <button className={styles.chatButton} onClick={handleRequest}>
+              거래 요청하기
+            </button>
+          )}
         </div>
         <div className={styles.contentWrapper}>
           <div className={styles.carousel}>
@@ -462,6 +551,71 @@ const Article = () => {
           }`}
           onClick={() => setIsSettingModalOpen(false)}
         />
+        <div
+          className={`${styles.backShadow} ${requestModal ? styles.show : ""}`}
+          onClick={() => {
+            setRequestModal(false);
+          }}
+        />
+        {requestModal && (
+          <div className={styles2.box}>
+            {suggest ? (
+              <>
+                <p className={styles2.title}>가격 제안하기</p>
+                <p className={styles2.contents}>
+                  구매하고 싶은 가격을 입력하세요. 판매자가 올린 가격{" "}
+                  {currentArticle?.price.toLocaleString("ko-KR")}원에 비해 너무
+                  높거나 낮은 가격을 적으면 거래가 어려울 수 있어요.
+                </p>
+                <input
+                  name="price"
+                  className={styles2.priceBox}
+                  placeholder="가격을 입력하세요"
+                  value={inputs.suggested_price}
+                  onChange={handlePriceChange}
+                />
+                <p className={styles2.priceText}>
+                  {inputs.suggested_price?.toLocaleString("ko-KR")}원
+                </p>
+                <textarea
+                  name="message"
+                  className={styles2.messageBox}
+                  placeholder="전달할 메시지를 입력해주세요"
+                  value={inputs.message}
+                  onChange={handleMessageChange}
+                />
+              </>
+            ) : (
+              <>
+                <p className={styles2.title}>정가에 구매 요청하기</p>
+                <p className={styles2.contents}>
+                  메시지를 정성껏 적어 보내면 거래가 성사될 가능성이 더
+                  높아질거에요. 판매자가 올린 가격{" "}
+                  {currentArticle?.price.toLocaleString("ko-KR")}원에
+                  구매하시려면 확인 버튼을 눌러주세요.
+                </p>
+                <textarea
+                  name="message"
+                  className={styles2.messageBox}
+                  placeholder="전달할 메시지를 입력해주세요"
+                  value={inputs.message}
+                  onChange={handleMessageChange}
+                />
+              </>
+            )}
+            <div className={styles2.confirmButton} onClick={handleConfirm}>
+              확인
+            </div>
+            <div
+              className={styles2.cancelButton}
+              onClick={() => {
+                setRequestModal(false);
+              }}
+            >
+              닫기
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

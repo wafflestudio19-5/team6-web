@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { otherRequestType, userType } from "../../../type/types";
 import { srcPair } from "../../SalesHistory/SalesHistory";
-import { requester } from "../../../apis/requester";
+import requester from "../../../apis/requester";
 import styles from "./FixedPrice.module.scss";
 import profile from "../../../icons/MyCarrot/test-profile.png";
 import { calculateTimeDifference } from "../../Utilities/functions";
@@ -101,7 +101,10 @@ const FixedPrice = ({
             <div className={styles.secondLine}>
               <p className={styles.region}>{request.user.location}</p>
               <p className={styles.time}>
-                {calculateTimeDifference(request.updated_at)}
+                {calculateTimeDifference(
+                  request.updated_at,
+                  request.created_At
+                )}
               </p>
             </div>
           </div>

@@ -3,7 +3,7 @@ import styles2 from "../Utilities/confirm.module.scss";
 import { useEffect, useState } from "react";
 import { otherRequestType, userType } from "../../type/types";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { requester } from "../../apis/requester";
+import requester from "../../apis/requester";
 import BackArrow from "../../icons/leftArrow.png";
 import FixedPrice from "./FixedPrice/FixedPrice";
 import Suggestion from "./Suggestion/Suggestion";
