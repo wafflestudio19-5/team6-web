@@ -13,26 +13,9 @@ import requester from "../../../apis/requester";
 const Requests = (props: {
   requestList: myRequestData[];
   setRequestUser: Dispatch<SetStateAction<userType | null>>;
+  srcList: srcPair[];
 }) => {
   const navigate = useNavigate();
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
-
-  useEffect(() => {
-    props.requestList.forEach((article) =>
-      requester
-        .get(`/images/${article.product.image}/`)
-        .then((res) => {
-          setSrcList((srcList) => [
-            ...srcList,
-            {
-              id: article.product.id,
-              src: res.data.url,
-            },
-          ]);
-        })
-        .catch((e) => console.log(e))
-    );
-  }, []);
 
   const goToProductPage = (id: number) => {
     navigate(`/article/${id}`, {
@@ -66,7 +49,9 @@ const Requests = (props: {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={srcList.find((pair) => pair.id === article.product.id)?.src}
+            src={
+              props.srcList.find((pair) => pair.id === article.product.id)?.src
+            }
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>

@@ -21,6 +21,7 @@ const PurchaseHistory = () => {
   const [refusedList, setRefusedList] = useState<myRequestData[]>([]);
   const [requestUser, setRequestUser] = useState<userType | null>(null);
   const [update, setUpdate] = useState(false);
+  const [srcList, setSrcList] = useState<srcPair[]>([]);
   useEffect(() => {
     requester
       .get(`/users/me/purchase-requests/`)
@@ -44,6 +45,20 @@ const PurchaseHistory = () => {
               data.accepted === false ||
               (data.accepted === null && data.product.status === "SOLD_OUT")
           )
+        );
+        res.data.forEach((article: myRequestData) =>
+          requester
+            .get(`/images/${article.product.image}/`)
+            .then((res) => {
+              setSrcList((srcList) => [
+                ...srcList,
+                {
+                  id: article.product.id,
+                  src: res.data.url,
+                },
+              ]);
+            })
+            .catch((e) => console.log(e))
         );
       })
       .catch((e) => console.log(e.response));
@@ -111,10 +126,16 @@ const PurchaseHistory = () => {
       </button>
       <section className={styles["body-wrapper"]}>
         {mode === 1 && (
-          <Requests requestList={requestList} setRequestUser={setRequestUser} />
+          <Requests
+            requestList={requestList}
+            setRequestUser={setRequestUser}
+            srcList={srcList}
+          />
         )}
-        {mode === 2 && <Purchased purchasedList={purchasedList} />}
-        {mode === 3 && <Refused refusedList={refusedList} />}
+        {mode === 2 && (
+          <Purchased purchasedList={purchasedList} srcList={srcList} />
+        )}
+        {mode === 3 && <Refused refusedList={refusedList} srcList={srcList} />}
       </section>
     </div>
   );

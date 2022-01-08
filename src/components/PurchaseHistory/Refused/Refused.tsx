@@ -9,26 +9,11 @@ import { srcPair } from "../PurchaseHistory";
 
 import { useNavigate } from "react-router-dom";
 
-const Refused = (props: { refusedList: myRequestData[] }) => {
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
+const Refused = (props: {
+  refusedList: myRequestData[];
+  srcList: srcPair[];
+}) => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    props.refusedList.forEach((article) =>
-      requester
-        .get(`/images/${article.product.image}/`)
-        .then((res) => {
-          setSrcList((srcList) => [
-            ...srcList,
-            {
-              id: article.product.id,
-              src: res.data.url,
-            },
-          ]);
-        })
-        .catch((e) => console.log(e))
-    );
-  }, []);
 
   const changeToRequestPage = (id: number) => {
     /*(now) 구매 요청 페이지 구현 후 연결
@@ -54,7 +39,9 @@ const Refused = (props: { refusedList: myRequestData[] }) => {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={srcList.find((pair) => pair.id === article.product.id)?.src}
+            src={
+              props.srcList.find((pair) => pair.id === article.product.id)?.src
+            }
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>

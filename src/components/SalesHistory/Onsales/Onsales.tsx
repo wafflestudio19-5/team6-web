@@ -14,26 +14,9 @@ const Onsales = (props: {
   setUpdate: Dispatch<SetStateAction<boolean>>;
   setOnsaleActions: Dispatch<SetStateAction<boolean>>;
   setActionTarget: Dispatch<SetStateAction<number>>;
+  srcList: srcPair[];
 }) => {
   const navigate = useNavigate();
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
-
-  useEffect(() => {
-    props.onsaleList.forEach((article) =>
-      requester
-        .get(`/images/${article.image}/`)
-        .then((res) => {
-          setSrcList((srcList) => [
-            ...srcList,
-            {
-              id: article.id,
-              src: res.data.url,
-            },
-          ]);
-        })
-        .catch((e) => console.log(e))
-    );
-  }, []);
 
   const changeToReserved = (data: productType) => {
     requester
@@ -80,7 +63,7 @@ const Onsales = (props: {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={srcList.find((pair) => pair.id === article.id)?.src}
+            src={props.srcList.find((pair) => pair.id === article.id)?.src}
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
@@ -95,7 +78,10 @@ const Onsales = (props: {
             <div className={styles.secondLine}>
               <p className={styles.region}>{article.location} ·</p>
               <p className={styles.time}>
-                {calculateTimeDifference(article.created_at, article.last_bring_up_my_post)}
+                {calculateTimeDifference(
+                  article.created_at,
+                  article.last_bring_up_my_post
+                )}
               </p>
             </div>
             <div className={styles.thirdLine}>

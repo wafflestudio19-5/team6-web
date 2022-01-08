@@ -14,26 +14,9 @@ const Soldouts = (props: {
   soldoutList: productType[];
   setSoldoutActions: Dispatch<SetStateAction<boolean>>;
   setActionTarget: Dispatch<SetStateAction<number>>;
+  srcList: srcPair[];
 }) => {
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    props.soldoutList.forEach((article) => {
-      requester
-        .get(`/images/${article.image}/`)
-        .then((res) => {
-          setSrcList((srcList) => [
-            ...srcList,
-            {
-              id: article.id,
-              src: res.data.url,
-            },
-          ]);
-        })
-        .catch((e) => console.log("??", e));
-    });
-  }, []);
 
   const goToProductPage = (data: productType) => {
     navigate(`/article/${data.id}`, {
@@ -61,7 +44,7 @@ const Soldouts = (props: {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={srcList.find((pair) => pair.id === article.id)?.src}
+            src={props.srcList.find((pair) => pair.id === article.id)?.src}
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>

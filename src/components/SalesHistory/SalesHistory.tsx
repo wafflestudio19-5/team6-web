@@ -24,7 +24,7 @@ const SalesHistory = () => {
   const [hiddenActions, setHiddenActions] = useState(false);
   const [update, setUpdate] = useState(false);
   const [actionTarget, setActionTarget] = useState(0);
-
+  const [srcList, setSrcList] = useState<srcPair[]>([]);
   useEffect(() => {
     requester
       .get(`/users/me/products/?pageNumber=0&pageSize=30`)
@@ -45,6 +45,20 @@ const SalesHistory = () => {
             (data: productType) => data.status === "HIDDEN"
           )
         );
+        res.data.content.forEach((article: productType) => {
+          requester
+            .get(`/images/${article.image}/`)
+            .then((res) => {
+              setSrcList((srcList) => [
+                ...srcList,
+                {
+                  id: article.id,
+                  src: res.data.url,
+                },
+              ]);
+            })
+            .catch((e) => console.log("??", e));
+        });
       })
       .catch((e) => console.log(e.response));
   }, [update]);
@@ -261,6 +275,7 @@ const SalesHistory = () => {
             setUpdate={setUpdate}
             setOnsaleActions={setOnsaleActions}
             setActionTarget={setActionTarget}
+            srcList={srcList}
           />
         )}
         {mode === 2 && (
@@ -268,6 +283,7 @@ const SalesHistory = () => {
             soldoutList={soldoutList}
             setSoldoutActions={setSoldoutActions}
             setActionTarget={setActionTarget}
+            srcList={srcList}
           />
         )}
         {mode === 3 && (
@@ -276,6 +292,7 @@ const SalesHistory = () => {
             setUpdate={setUpdate}
             setHiddenActions={setHiddenActions}
             setActionTarget={setActionTarget}
+            srcList={srcList}
           />
         )}
       </section>
