@@ -19,6 +19,8 @@ import EditProfile from "./components/Profile/EditProfile/EditProfile";
 import SearchPage from "./components/SearchPage/SearchPage";
 import { Toaster } from "react-hot-toast";
 import PurchaseHistory from "./components/PurchaseHistory/PurchaseHistory";
+import Sales from "./components/Profile/Sales/Sales";
+import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/EditLocationLevel";
 
 function App() {
   const token: string | null = localStorage.getItem("token");
@@ -33,11 +35,13 @@ function App() {
           <Route path="/main" element={<Main />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="/profile/sales" element={<Sales />} />
           <Route path="/sales-history" element={<SalesHistory />} />
           <Route path="/purchase-history" element={<PurchaseHistory />} />
           <Route path="/article/:id" element={<Article />} />
           <Route path="/write" element={<WriteArticle />} />
-          <Route path="/setlocation" element={<LocationPage />} />
+          <Route path="/set-location" element={<LocationPage />} />
+          <Route path="/set-location-level" element={<EditLocationLevel />} />
           <Route path="/search" element={<SearchPage />} />
           <Route
             path="/*"

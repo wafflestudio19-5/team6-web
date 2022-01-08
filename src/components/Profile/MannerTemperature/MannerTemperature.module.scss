@@ -5,5 +5,13 @@
 
   top: 120px;
 
-  background: #777777;
+  background: #f2f3f7;
+
+  p {
+    position: relative;
+    top: calc(50% - 10px);
+    text-align: center;
+    color: #777777;
+    font-size: 13px;
+  }
 }

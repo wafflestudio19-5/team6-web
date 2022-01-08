@@ -8,27 +8,57 @@ import icon6 from "../../../icons/MyCarrot/category.png";
 import ProfileBar from "./ProfileBar/ProfileBar";
 import HistoryButtons from "./HistoryButtons/HistoryButtons";
 import { useNavigate } from "react-router-dom";
+import requester from "../../../apis/requester";
+import { useEffect, useState } from "react";
+import { TUserInfo } from "../../../type/user";
 
 const MyCarrot = () => {
+  const [myInfo, setMyInfo] = useState<TUserInfo>({
+    name: "",
+    nickname: "",
+    email: "",
+    location: "",
+    range_of_location: "",
+  });
+
   const navigate = useNavigate();
 
+  useEffect(() => {
+    getInfo();
+  }, []);
+
+  const getInfo = async () => {
+    try {
+      const res = await requester.get("/users/me/");
+      setMyInfo(res.data);
+      console.log(res.data);
+    } catch (error) {
+      console.log("getMe error");
+    }
+  };
+
+  const LinkToEditLocationLevel = () => {
+    navigate("/set-location-level", {
+      state: {
+        level: myInfo.range_of_location,
+        localPosition: myInfo.location,
+      },
+    });
+  };
+
   const LinkToEditLocation = () => {
-    navigate("/setlocation", {
+    navigate("/set-location", {
       state: { prev: "edit" },
     });
   };
   return (
     <div className={styles["mycarrot-wrapper"]}>
       <div className={styles["profile-wrapper"]}>
-        <ProfileBar />
+        <ProfileBar myInfo={myInfo} />
         <HistoryButtons />
       </div>
       <div className={styles.settings}>
-        <button
-          onClick={() => {
-            console.log("내 동네 설정");
-          }}
-        >
+        <button onClick={LinkToEditLocationLevel}>
           <img src={icon1} alt="location" />
           <p>내 동네 설정</p>
         </button>
@@ -46,7 +76,7 @@ const MyCarrot = () => {
         </button>
         <button
           onClick={() => {
-            console.log("관심 카테고리 설정");
+            console.log(myInfo);
           }}
         >
           <img src={icon6} alt="toggle switch" />

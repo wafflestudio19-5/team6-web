@@ -25,7 +25,7 @@ const CheckIcon = ({
     <>
       {config ? (
         <IconButton tabIndex={-1} className={styles.iconbutton}>
-          <img src={Check} />
+          <img src={Check} alt="ok" />
         </IconButton>
       ) : (
         <ClickAwayListener onClickAway={handleTooltipClose}>
@@ -47,7 +47,7 @@ const CheckIcon = ({
               className={styles.iconbutton}
               onClick={handleTooltipOpen}
             >
-              <img src={Cross} />
+              <img src={Cross} alt="denied" />
             </IconButton>
           </Tooltip>
         </ClickAwayListener>

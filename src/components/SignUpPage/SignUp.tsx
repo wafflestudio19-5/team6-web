@@ -6,7 +6,8 @@ import * as React from "react";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import CheckIcon from "./CheckIcon/CheckIcon";
 import Button from "@mui/material/Button";
-import requester from "../../apis/requester";
+import { user } from "../../apis/requester";
+import { toast } from "react-hot-toast";
 
 type TSignupForm = {
   username: string;
@@ -41,6 +42,7 @@ const SignUp = () => {
 
   /* 회원가입 format
      username: 6-14자의 영문+숫자 조합
+     nickname: 3-14자의 한글,영문,숫자
      password: 8-16자의 영문+숫자+특수문자 조합
      phone: xxx-xxxx-xxxx
      email: 일반적인 email 양식
@@ -97,18 +99,16 @@ const SignUp = () => {
 
   const handleToCheckDuplicate = async () => {
     try {
-      const res = await requester.get(
-        `/users/duplicate/?name=${inputs.username}`
-      );
+      const res = await user.get(`/users/duplicate/?name=${inputs.username}`);
       setDuplicated(res.data);
     } catch (error) {
-      console.log("에러");
+      toast.error("중복된 아이디가 존재합니다.");
     }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate("/setlocation", {
+    navigate("/set-location", {
       state: { prev: "signup", signupForm: inputs },
     });
   };
