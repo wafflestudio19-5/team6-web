@@ -100,9 +100,10 @@ const SignUp = () => {
   const handleToCheckDuplicate = async () => {
     try {
       const res = await user.get(`/users/duplicate/?name=${inputs.username}`);
+      if (res.data) toast.error("중복된 아이디가 존재합니다.");
       setDuplicated(res.data);
     } catch (error) {
-      toast.error("중복된 아이디가 존재합니다.");
+      console.log("duplicate error");
     }
   };
 

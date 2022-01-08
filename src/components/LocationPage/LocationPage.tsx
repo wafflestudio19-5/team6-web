@@ -113,6 +113,7 @@ const LocationPage = () => {
         ...signupForm,
         name: signupForm?.username,
         location: localPosition,
+        range_of_location: "LEVEL_ONE",
       });
       const res2 = await user.post("/users/signin/", {
         name: signupForm?.username,
