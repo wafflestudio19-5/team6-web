@@ -16,6 +16,7 @@ import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
 import Product from "../../../apis/Product/Product";
 import { calculateTimeDifference } from "../../Utilities/functions";
+import useProduct from "../../../apis/Product/useProduct";
 
 type homeGoodsData = {
   count: number;
@@ -47,17 +48,26 @@ const HomeGoods = (props: {
   const navigate = useNavigate();
   const [data, setData] = useState<any>([]);
   const [pageNumber, setPageNumber] = useState<number>(0);
-  const [hasMore, setHasMore] = useState<boolean>(false);
+  const observer = useRef<IntersectionObserver | null>(null);
 
-  const handleScroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight) {
-      // 페이지 끝에 도달하면 추가 데이터를 받아온다
-      setPageNumber((prevState) => prevState + 1);
-    }
-  };
+  const { products, hasMore } = useProduct({
+    pageNumber: pageNumber,
+    searched: true,
+  });
+
+  const lastElementRef = useCallback(
+    (node) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          setPageNumber((prevState) => prevState + 1);
+          console.log("didit");
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [hasMore]
+  );
 
   const handleWrite = () => {
     navigate("/write");
@@ -65,15 +75,6 @@ const HomeGoods = (props: {
   const onClickArticle = (id: number) => {
     navigate(`/article/${id}`);
   };
-
-  useEffect(() => {
-    // scroll event listener 등록
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      // scroll event listener 해제
-      window.removeEventListener("scroll", handleScroll);
-    };
-  });
 
   useEffect(() => {
     Product.getAllProducts(pageNumber).then((res) => {
@@ -86,6 +87,7 @@ const HomeGoods = (props: {
             setData((prevState: any) => {
               const tempState = prevState.concat(
                 <div
+                  ref={lastElementRef}
                   className={styles.articleWrapper}
                   key={article.id}
                   onClick={() => onClickArticle(article.id)}
@@ -100,7 +102,10 @@ const HomeGoods = (props: {
                     <div className={styles.secondLine}>
                       <p className={styles.region}>{article.location} ·</p>
                       <p className={styles.time}>
-                        {calculateTimeDifference(article.created_at, article.last_bring_up_my_post)}
+                        {calculateTimeDifference(
+                          article.created_at,
+                          article.last_bring_up_my_post
+                        )}
                       </p>
                     </div>
                     <div className={styles.thirdLine}>
@@ -146,14 +151,74 @@ const HomeGoods = (props: {
           })
           .catch();
       });
-      setHasMore(res.data.total_page > pageNumber);
     });
   }, []);
 
   if (props.writeHandle) {
     return (
       <div className={styles.wrapper}>
-        {data}
+        {products.map((rawData) => {
+          return (
+            <div
+              className={styles.articleWrapper}
+              key={rawData.data.id}
+              onClick={() => onClickArticle(rawData.data.id)}
+            >
+              <img
+                className={styles.thumbnail}
+                src={rawData.url}
+                alt="대표 이미지"
+              />
+              <div className={styles.dataContainer}>
+                <p className={styles.title}>{rawData.data.title}</p>
+                <div className={styles.secondLine}>
+                  <p className={styles.region}>{rawData.data.location} ·</p>
+                  <p className={styles.time}>
+                    {calculateTimeDifference(
+                      rawData.data.created_at,
+                      rawData.data.last_bring_up_my_post
+                    )}
+                  </p>
+                </div>
+                <div className={styles.thirdLine}>
+                  {rawData.data.status === "RESERVED" && (
+                    <div className={styles.reservation}>예약중</div>
+                  )}
+                  {rawData.data.status === "SOLD_OUT" && (
+                    <div className={styles.saleClosed}>거래완료</div>
+                  )}
+                  <p className={styles.price}>
+                    {rawData.data.price !== 0 &&
+                      rawData.data.price.toLocaleString("ko-KR") + "원"}
+                    {rawData.data.price === 0 && "나눔🧡"}
+                  </p>
+                </div>
+                <div className={styles.lastLine}>
+                  {rawData.data.chats !== 0 && (
+                    <div className={styles.chatContainer}>
+                      <img
+                        className={styles.chatImg}
+                        src={chatIcon}
+                        alt="채팅"
+                      />
+                      <p className={styles.chat}>{rawData.data.chats}</p>
+                    </div>
+                  )}
+                  {rawData.data.likes !== 0 && (
+                    <div className={styles.heartContainer}>
+                      <img
+                        className={styles.heartImg}
+                        src={heartIcon}
+                        alt="좋아요"
+                      />
+                      <p className={styles.heart}>{rawData.data.likes}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
         <img
           className={styles.closeButton}
           src={Close}
@@ -173,7 +238,132 @@ const HomeGoods = (props: {
 
   return (
     <div className={styles.wrapper}>
-      {data}
+      {products.map((rawData, index) => {
+        if (products.length === index + 1)
+          return (
+            <div
+              ref={lastElementRef}
+              className={styles.articleWrapper}
+              key={rawData.data.id}
+              onClick={() => onClickArticle(rawData.data.id)}
+            >
+              <img
+                className={styles.thumbnail}
+                src={rawData.url}
+                alt="대표 이미지"
+              />
+              <div className={styles.dataContainer}>
+                <p className={styles.title}>{rawData.data.title}</p>
+                <div className={styles.secondLine}>
+                  <p className={styles.region}>{rawData.data.location} ·</p>
+                  <p className={styles.time}>
+                    {calculateTimeDifference(
+                      rawData.data.created_at,
+                      rawData.data.last_bring_up_my_post
+                    )}
+                  </p>
+                </div>
+                <div className={styles.thirdLine}>
+                  {rawData.data.status === "RESERVED" && (
+                    <div className={styles.reservation}>예약중</div>
+                  )}
+                  {rawData.data.status === "SOLD_OUT" && (
+                    <div className={styles.saleClosed}>거래완료</div>
+                  )}
+                  <p className={styles.price}>
+                    {rawData.data.price !== 0 &&
+                      rawData.data.price.toLocaleString("ko-KR") + "원"}
+                    {rawData.data.price === 0 && "나눔🧡"}
+                  </p>
+                </div>
+                <div className={styles.lastLine}>
+                  {rawData.data.chats !== 0 && (
+                    <div className={styles.chatContainer}>
+                      <img
+                        className={styles.chatImg}
+                        src={chatIcon}
+                        alt="채팅"
+                      />
+                      <p className={styles.chat}>{rawData.data.chats}</p>
+                    </div>
+                  )}
+                  {rawData.data.likes !== 0 && (
+                    <div className={styles.heartContainer}>
+                      <img
+                        className={styles.heartImg}
+                        src={heartIcon}
+                        alt="좋아요"
+                      />
+                      <p className={styles.heart}>{rawData.data.likes}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        else
+          return (
+            <div
+              className={styles.articleWrapper}
+              key={rawData.data.id}
+              onClick={() => onClickArticle(rawData.data.id)}
+            >
+              <img
+                className={styles.thumbnail}
+                src={rawData.url}
+                alt="대표 이미지"
+              />
+              <div className={styles.dataContainer}>
+                <p className={styles.title}>{rawData.data.title}</p>
+                <div className={styles.secondLine}>
+                  <p className={styles.region}>{rawData.data.location} ·</p>
+                  <p className={styles.time}>
+                    {calculateTimeDifference(
+                      rawData.data.created_at,
+                      rawData.data.last_bring_up_my_post
+                    )}
+                  </p>
+                </div>
+                <div className={styles.thirdLine}>
+                  {rawData.data.status === "RESERVED" && (
+                    <div className={styles.reservation}>예약중</div>
+                  )}
+                  {rawData.data.status === "SOLD_OUT" && (
+                    <div className={styles.saleClosed}>거래완료</div>
+                  )}
+                  <p className={styles.price}>
+                    {rawData.data.price !== 0 &&
+                      rawData.data.price.toLocaleString("ko-KR") + "원"}
+                    {rawData.data.price === 0 && "나눔🧡"}
+                  </p>
+                </div>
+                <div className={styles.lastLine}>
+                  {rawData.data.chats !== 0 && (
+                    <div className={styles.chatContainer}>
+                      <img
+                        className={styles.chatImg}
+                        src={chatIcon}
+                        alt="채팅"
+                      />
+                      <p className={styles.chat}>{rawData.data.chats}</p>
+                    </div>
+                  )}
+                  {rawData.data.likes !== 0 && (
+                    <div className={styles.heartContainer}>
+                      <img
+                        className={styles.heartImg}
+                        src={heartIcon}
+                        alt="좋아요"
+                      />
+                      <p className={styles.heart}>{rawData.data.likes}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+      })}
+
       <img
         className={styles.openButton}
         src={Open}
