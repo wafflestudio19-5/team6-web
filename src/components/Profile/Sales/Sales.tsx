@@ -26,7 +26,7 @@ const Sales = () => {
   const getMySales = async () => {
     try {
       const res = await requester.get(
-        "/users/me/products/?pageNumber=0&pageSize=15"
+        "/users/me/products/?pageNumber=0&pageSize=20"
       );
       setSalesList(res.data.content);
       setOnSaleList(
