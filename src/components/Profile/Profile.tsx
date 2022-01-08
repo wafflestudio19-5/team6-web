@@ -14,7 +14,7 @@ const Profile = () => {
 
   useEffect(() => {
     getInfo();
-  });
+  }, []);
 
   const getInfo = async () => {
     try {
