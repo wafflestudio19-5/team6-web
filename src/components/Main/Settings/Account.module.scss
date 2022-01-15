@@ -16,6 +16,7 @@
 
     background-color: white;
     z-index: 1;
+
     .backArrow-wrapper {
       position: relative;
       width: 48px;
@@ -48,7 +49,6 @@
       position: relative;
       border-bottom: 1px solid #e5e5e5;
       padding-top: 10px;
-      cursor: pointer;
 
       .title {
         position: relative;
@@ -63,23 +63,28 @@
         padding-top: 10px;
         padding-bottom: 10px;
         padding-left: 10px;
+        display: flex;
 
-        .contents {
-          position: relative;
-          font-size: 11px;
-          background-color: red;
-          width: 200px;
+        .textArea {
+          width: calc(100% - 60px);
+
+          .contents {
+            position: relative;
+            font-size: 11px;
+            cursor: pointer;
+          }
         }
 
         .changeText {
           color: rgba(255, 143, 69, 255);
+          font-size: 18px;
+          padding: 10px;
+          cursor: pointer;
         }
 
-
-      }
-
-      .button:hover {
-        background: lavenderblush;
+        .changeText:hover {
+           background: lavenderblush;
+         }
       }
     }
   }
