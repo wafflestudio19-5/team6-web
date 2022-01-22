@@ -6,6 +6,7 @@ import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { user } from "../../apis/requester";
 import { toast } from "react-hot-toast";
+import { KAKAO_AUTH_URL } from "../../KakaoLogin/OAuth";
 
 type TLoginForm = {
   username: string;
@@ -66,10 +67,10 @@ const Login = () => {
           />
           <button className="login-button">로그인</button>
         </form>
-        <button className="social-login-button kakao">
+        <a className="social-login-button kakao" href={KAKAO_AUTH_URL}>
           <img src={kakaoLogo} alt="logo" />
           <span>카카오 로그인</span>
-        </button>
+        </a>
         <div className="sign-up-wrapper">
           <span>동네 주민들과 가깝고 따뜻한 거래를</span>
           <Link to="/signup" className="sign-up-button">

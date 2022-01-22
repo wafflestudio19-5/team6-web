@@ -72,20 +72,18 @@
       position: absolute;
       bottom: 0;
       height: 2px;
-      border-top: 2px solid darkslategrey;
-      border-bottom: 1px solid darkslategrey;
-      box-sizing: border-box;
+      background-color: darkslategrey;
       transition-duration: 0.2s;
     }
-    .underline.one {
+    .underline.entire {
       width: 33.3%;
       left: 0;
     }
-    .underline.two {
+    .underline.on-sale {
       width: 33.4%;
       left: 33.3%;
     }
-    .underline.three {
+    .underline.sold {
       width: 33.3%;
       left: 66.7%;
     }

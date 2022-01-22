@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const ProfileButtons = () => {
   return (
     <div className={styles["sales-wrapper"]}>
-      <Link to={"./sales"} className={styles.link}>
+      <Link to={"./sales?mode=entire"} className={styles.link}>
         <span>판매상품 #개</span>
         <img src={RightArrow} alt="바로가기" />
       </Link>

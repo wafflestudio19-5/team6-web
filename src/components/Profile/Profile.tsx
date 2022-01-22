@@ -9,7 +9,16 @@ import { useEffect, useState } from "react";
 import { TUserInfo } from "../../type/user";
 
 const Profile = () => {
-  const [myInfo, setMyInfo] = useState<TUserInfo>();
+  const [myInfo, setMyInfo] = useState<TUserInfo>({
+    name: "",
+    nickname: "",
+    image_url: null,
+    is_active: true,
+    phone: "",
+    email: "",
+    location: "",
+    range_of_location: "LEVEL_ONE",
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,13 +48,15 @@ const Profile = () => {
       </header>
       <div className={styles["body-wrapper"]}>
         <div className={styles.imageframe}>
-          <img className={styles.image} src={Test} alt="profile image" />
+          <img
+            className={styles.image}
+            src={myInfo?.image_url ? myInfo?.image_url : Test}
+            alt="profile image"
+          />
         </div>
-        <p className={styles.nickname}>{`${
-          myInfo ? myInfo.nickname : "닉네임"
-        }`}</p>
+        <p className={styles.nickname}>{`${myInfo ? myInfo.nickname : ""}`}</p>
         <p className={styles["id-location"]}>{`#${
-          myInfo ? myInfo.name : "id"
+          myInfo ? myInfo.name : ""
         }`}</p>
         <button className={styles.edit} onClick={handleToEditProfilePage}>
           프로필 수정

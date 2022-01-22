@@ -43,7 +43,12 @@
   }
 
   .body-wrapper {
-    justify-content: center;
+    height: calc(100% - 85px);
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera*/
+    }
 
     .image-frame {
       position: relative;
@@ -107,9 +112,9 @@
     .warning {
       position: relative;
       display: flex;
-      width: 70%;
+      width: 75%;
       top: 70px;
-      left: calc(50% - 108px);
+      left: 22%;
 
       img {
         position: relative;

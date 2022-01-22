@@ -1,13 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.scss";
 import Login from "./components/Login/Login";
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Main from "./components/Main/Main";
 import Article from "./components/Article/Article";
 import SignUp from "./components/SignUpPage/SignUp";
@@ -22,6 +16,7 @@ import PurchaseHistory from "./components/PurchaseHistory/PurchaseHistory";
 import RequestPage from "./components/Requests/RequestPage";
 import Sales from "./components/Profile/Sales/Sales";
 import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/EditLocationLevel";
+import KakaoPage from "./KakaoLogin/KakaoPage";
 
 function App() {
   const token: string | null = localStorage.getItem("token");
@@ -32,6 +27,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/oauth/callback/kakao" element={<KakaoPage />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/main" element={<Main />} />
           <Route path="/profile" element={<Profile />} />

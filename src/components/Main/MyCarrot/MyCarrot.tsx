@@ -11,14 +11,18 @@ import { useNavigate } from "react-router-dom";
 import requester from "../../../apis/requester";
 import { useEffect, useState } from "react";
 import { TUserInfo } from "../../../type/user";
+import { toShortDivision } from "../../Utilities/functions";
 
 const MyCarrot = () => {
   const [myInfo, setMyInfo] = useState<TUserInfo>({
     name: "",
     nickname: "",
+    image_url: null,
+    is_active: true,
+    phone: "",
     email: "",
     location: "",
-    range_of_location: "",
+    range_of_location: "LEVEL_ONE",
   });
 
   const navigate = useNavigate();
@@ -54,7 +58,10 @@ const MyCarrot = () => {
   return (
     <div className={styles["mycarrot-wrapper"]}>
       <div className={styles["profile-wrapper"]}>
-        <ProfileBar myInfo={myInfo} />
+        <ProfileBar
+          nickname={myInfo.nickname}
+          division={toShortDivision(myInfo.location)}
+        />
         <HistoryButtons />
       </div>
       <div className={styles.settings}>
@@ -89,14 +96,6 @@ const MyCarrot = () => {
         >
           <img src={icon5} alt="모아보기" />
           <p>모아보기</p>
-        </button>
-        <button
-          onClick={() => {
-            console.log("당근 가계부");
-          }}
-        >
-          <img src={icon4} alt="moneybook" />
-          <p>당근 가계부</p>
         </button>
       </div>
     </div>
