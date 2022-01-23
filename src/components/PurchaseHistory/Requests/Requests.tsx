@@ -2,17 +2,18 @@ import styles from "./Requests.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { myRequestData, userType } from "../../../type/types";
+import { myRequestData } from "../../../type/types";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { srcPair } from "../PurchaseHistory";
 
 import bell from "../../../icons/bell.png";
 import requester from "../../../apis/requester";
+import { TUserInfo } from "../../../type/user";
 
 const Requests = (props: {
   requestList: myRequestData[];
-  setRequestUser: Dispatch<SetStateAction<userType | null>>;
+  setRequestUser: Dispatch<SetStateAction<TUserInfo | null>>;
   srcList: srcPair[];
 }) => {
   const navigate = useNavigate();

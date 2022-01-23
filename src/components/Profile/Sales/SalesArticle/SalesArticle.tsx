@@ -1,7 +1,7 @@
 import styles from "./SalesArticle.module.scss";
 import ChatIcon from "../../../../icons/chatting.png";
 import LikesIcon from "../../../../icons/blackHeart.png";
-import { myProductsData } from "../../../../type/product";
+import { productType } from "../../../../type/types";
 import {
   calculateTimeDifferenceForProfile,
   toShortDivision,
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { srcPair } from "../../../SalesHistory/SalesHistory";
 
 const SalesArticle = (props: {
-  article: myProductsData;
+  article: productType;
   srcList: srcPair[];
   mode: string;
 }) => {

@@ -1,21 +1,22 @@
 import styles from "./RequestPage.module.scss";
 import styles2 from "../Utilities/confirm.module.scss";
 import { useEffect, useState } from "react";
-import { otherRequestType, userType } from "../../type/types";
+import { otherRequestType } from "../../type/types";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import requester from "../../apis/requester";
 import BackArrow from "../../icons/leftArrow.png";
 import FixedPrice from "./FixedPrice/FixedPrice";
 import Suggestion from "./Suggestion/Suggestion";
+import { TUserInfo } from "../../type/user";
 
 const RequestPage = () => {
   const { id } = useParams() as { id: string };
   const [mode, setMode] = useState(1);
   const [fixedList, setFixedList] = useState<otherRequestType[]>([]);
   const [suggestedList, setSuggestedList] = useState<otherRequestType[]>([]);
-  const [contactUser, setContactUser] = useState<userType | null>(null);
+  const [contactUser, setContactUser] = useState<TUserInfo | null>(null);
   const [messageInfo, setMessageInfo] = useState<{
-    user: userType;
+    user: TUserInfo;
     message: string;
   } | null>(null);
   const [update, setUpdate] = useState(false);

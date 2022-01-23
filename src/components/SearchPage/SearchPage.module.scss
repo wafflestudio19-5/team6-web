@@ -72,12 +72,11 @@
     height: calc(100% - 85px);
     bottom: 10px;
     overflow-y: scroll;
-    /*
     -ms-overflow-style: none;
     scrollbar-width: none;
     &::-webkit-scrollbar {
       display: none;
-    }*/
+    }
     .lastElement {
       position: relative;
       .lastP{
