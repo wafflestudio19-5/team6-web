@@ -10,6 +10,7 @@ import useSearchProduct from "../../apis/Product/useSearchProduct";
 import { calculateTimeDifference } from "../Utilities/functions";
 import chatIcon from "../../icons/chat.png";
 import heartIcon from "../../icons/blackHeart.png";
+import noResults from "../../icons/Search/noResults.jpg";
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -91,131 +92,160 @@ const SearchPage = () => {
         {searched && (
           <>
             <div className={styles.content}>
-              {products.map((rawData, index) => {
-                if (products.length === index + 1)
-                  return (
-                    <div
-                      ref={lastElementRef}
-                      className={styles.articleWrapper}
-                      key={rawData.id}
-                      onClick={() => onClickArticle(rawData.id)}
-                    >
-                      <img
-                        className={styles.thumbnail}
-                        src={rawData.image}
-                        alt="대표 이미지"
-                      />
-                      <div className={styles.dataContainer}>
-                        <p className={styles.title}>{rawData.title}</p>
-                        <div className={styles.secondLine}>
-                          <p className={styles.region}>{rawData.location} ·</p>
-                          <p className={styles.time}>
-                            {calculateTimeDifference(
-                              rawData.created_at,
-                              rawData.last_bring_up_my_post
+              {!!products[0] ? (
+                products.map((rawData, index) => {
+                  if (products.length === index + 1)
+                    return (
+                      <div
+                        ref={lastElementRef}
+                        className={styles.articleWrapper}
+                        key={rawData.id}
+                        onClick={() => onClickArticle(rawData.id)}
+                      >
+                        <img
+                          className={styles.thumbnail}
+                          src={rawData.image}
+                          alt="대표 이미지"
+                        />
+                        <div className={styles.dataContainer}>
+                          <p className={styles.title}>{rawData.title}</p>
+                          <div className={styles.secondLine}>
+                            <p className={styles.region}>
+                              {rawData.location} ·
+                            </p>
+                            <p className={styles.time}>
+                              {calculateTimeDifference(
+                                rawData.created_at,
+                                rawData.last_bring_up_my_post
+                              )}
+                            </p>
+                          </div>
+                          <div className={styles.thirdLine}>
+                            {rawData.status === "RESERVED" && (
+                              <div className={styles.reservation}>예약중</div>
                             )}
-                          </p>
-                        </div>
-                        <div className={styles.thirdLine}>
-                          {rawData.status === "RESERVED" && (
-                            <div className={styles.reservation}>예약중</div>
-                          )}
-                          {rawData.status === "SOLD_OUT" && (
-                            <div className={styles.saleClosed}>거래완료</div>
-                          )}
-                          <p className={styles.price}>
-                            {rawData.price !== 0 &&
-                              rawData.price.toLocaleString("ko-KR") + "원"}
-                            {rawData.price === 0 && "나눔🧡"}
-                          </p>
-                        </div>
-                        <div className={styles.lastLine}>
-                          {rawData.chats !== 0 && (
-                            <div className={styles.chatContainer}>
-                              <img
-                                className={styles.chatImg}
-                                src={chatIcon}
-                                alt="채팅"
-                              />
-                              <p className={styles.chat}>{rawData.chats}</p>
-                            </div>
-                          )}
-                          {rawData.likes !== 0 && (
-                            <div className={styles.heartContainer}>
-                              <img
-                                className={styles.heartImg}
-                                src={heartIcon}
-                                alt="좋아요"
-                              />
-                              <p className={styles.heart}>{rawData.likes}</p>
-                            </div>
-                          )}
+                            {rawData.status === "SOLD_OUT" && (
+                              <div className={styles.saleClosed}>거래완료</div>
+                            )}
+                            <p className={styles.price}>
+                              {rawData.price !== 0 &&
+                                rawData.price.toLocaleString("ko-KR") + "원"}
+                              {rawData.price === 0 && "나눔🧡"}
+                            </p>
+                          </div>
+                          <div className={styles.lastLine}>
+                            {rawData.chats !== 0 && (
+                              <div className={styles.chatContainer}>
+                                <img
+                                  className={styles.chatImg}
+                                  src={chatIcon}
+                                  alt="채팅"
+                                />
+                                <p className={styles.chat}>{rawData.chats}</p>
+                              </div>
+                            )}
+                            {rawData.likes !== 0 && (
+                              <div className={styles.heartContainer}>
+                                <img
+                                  className={styles.heartImg}
+                                  src={heartIcon}
+                                  alt="좋아요"
+                                />
+                                <p className={styles.heart}>{rawData.likes}</p>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                else
-                  return (
-                    <div
-                      className={styles.articleWrapper}
-                      key={rawData.id}
-                      onClick={() => onClickArticle(rawData.id)}
-                    >
-                      <img
-                        className={styles.thumbnail}
-                        src={rawData.image}
-                        alt="대표 이미지"
-                      />
-                      <div className={styles.dataContainer}>
-                        <p className={styles.title}>{rawData.title}</p>
-                        <div className={styles.secondLine}>
-                          <p className={styles.region}>{rawData.location} ·</p>
-                          <p className={styles.time}>
-                            {calculateTimeDifference(
-                              rawData.created_at,
-                              rawData.last_bring_up_my_post
+                    );
+                  else
+                    return (
+                      <div
+                        className={styles.articleWrapper}
+                        key={rawData.id}
+                        onClick={() => onClickArticle(rawData.id)}
+                      >
+                        <img
+                          className={styles.thumbnail}
+                          src={rawData.image}
+                          alt="대표 이미지"
+                        />
+                        <div className={styles.dataContainer}>
+                          <p className={styles.title}>{rawData.title}</p>
+                          <div className={styles.secondLine}>
+                            <p className={styles.region}>
+                              {rawData.location} ·
+                            </p>
+                            <p className={styles.time}>
+                              {calculateTimeDifference(
+                                rawData.created_at,
+                                rawData.last_bring_up_my_post
+                              )}
+                            </p>
+                          </div>
+                          <div className={styles.thirdLine}>
+                            {rawData.status === "RESERVED" && (
+                              <div className={styles.reservation}>예약중</div>
                             )}
-                          </p>
-                        </div>
-                        <div className={styles.thirdLine}>
-                          {rawData.status === "RESERVED" && (
-                            <div className={styles.reservation}>예약중</div>
-                          )}
-                          {rawData.status === "SOLD_OUT" && (
-                            <div className={styles.saleClosed}>거래완료</div>
-                          )}
-                          <p className={styles.price}>
-                            {rawData.price !== 0 &&
-                              rawData.price.toLocaleString("ko-KR") + "원"}
-                            {rawData.price === 0 && "나눔🧡"}
-                          </p>
-                        </div>
-                        <div className={styles.lastLine}>
-                          {rawData.chats !== 0 && (
-                            <div className={styles.chatContainer}>
-                              <img
-                                className={styles.chatImg}
-                                src={chatIcon}
-                                alt="채팅"
-                              />
-                              <p className={styles.chat}>{rawData.chats}</p>
-                            </div>
-                          )}
-                          {rawData.likes !== 0 && (
-                            <div className={styles.heartContainer}>
-                              <img
-                                className={styles.heartImg}
-                                src={heartIcon}
-                                alt="좋아요"
-                              />
-                              <p className={styles.heart}>{rawData.likes}</p>
-                            </div>
-                          )}
+                            {rawData.status === "SOLD_OUT" && (
+                              <div className={styles.saleClosed}>거래완료</div>
+                            )}
+                            <p className={styles.price}>
+                              {rawData.price !== 0 &&
+                                rawData.price.toLocaleString("ko-KR") + "원"}
+                              {rawData.price === 0 && "나눔🧡"}
+                            </p>
+                          </div>
+                          <div className={styles.lastLine}>
+                            {rawData.chats !== 0 && (
+                              <div className={styles.chatContainer}>
+                                <img
+                                  className={styles.chatImg}
+                                  src={chatIcon}
+                                  alt="채팅"
+                                />
+                                <p className={styles.chat}>{rawData.chats}</p>
+                              </div>
+                            )}
+                            {rawData.likes !== 0 && (
+                              <div className={styles.heartContainer}>
+                                <img
+                                  className={styles.heartImg}
+                                  src={heartIcon}
+                                  alt="좋아요"
+                                />
+                                <p className={styles.heart}>{rawData.likes}</p>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-              })}
+                    );
+                })
+              ) : (
+                <div className={styles.noResultWrapper}>
+                  <img src={noResults} className={styles.noResults} />
+                  <p className={styles.noResultsMessage}>
+                    앗! 낙성대동 근처에는
+                  </p>
+                  <p className={styles.noResultsMessage}>
+                    <span className={styles.noResultsKeyword}>{keyword}</span>의
+                    검색결과가 없어요.
+                  </p>
+                  <p className={styles.noResultsMessage}>
+                    검색어를 다시 확인해주세요!
+                  </p>
+                  <div className={styles.guideWrapper}>
+                    <h1 className={styles.guideHeader}>이렇게 해보세요.</h1>
+                    <ul className={styles.guideUl}>
+                      <li>키워드를 정확하게 입력하셨는지 확인해보세요.</li>
+                      <li>
+                        일반적인 키워드로 검색해보세요. (예: 빨간 가방 → 가방)
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              )}
             </div>
           </>
         )}
