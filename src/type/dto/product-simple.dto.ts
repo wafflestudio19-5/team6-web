@@ -1,0 +1,17 @@
+import { SalesStatus } from "../enum/sales-status";
+import { UserDto } from "./user.dto";
+
+export type ProductSimpleDto = {
+  chats: number;
+  created_at: string;
+  id: number;
+  image: string;
+  last_bring_up_my_post: string;
+  likes: number;
+  location: string;
+  price: number;
+  status: SalesStatus;
+  title: string;
+  updated_at: string;
+  user: UserDto;
+};
