@@ -17,6 +17,7 @@ import RequestPage from "./components/Requests/RequestPage";
 import Sales from "./components/Profile/Sales/Sales";
 import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/EditLocationLevel";
 import KakaoPage from "./KakaoLogin/KakaoPage";
+import SelectLocation from "./components/SelectLocation/SelectLocation";
 
 function App() {
   const token: string | null = localStorage.getItem("token");
@@ -26,6 +27,7 @@ function App() {
       <Toaster />
       <BrowserRouter>
         <Routes>
+          <Route path="/test" element={<SelectLocation />} />
           <Route path="/login" element={<Login />} />
           <Route path="/oauth/callback/kakao" element={<KakaoPage />} />
           <Route path="/signup" element={<SignUp />} />

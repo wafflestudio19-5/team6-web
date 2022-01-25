@@ -8,6 +8,7 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 import axios from "axios";
 import requester, { user } from "../../apis/requester";
 import { toast } from "react-hot-toast";
+import { CLIENT_ID } from "../../KakaoLogin/OAuth";
 
 declare global {
   interface Window {
@@ -85,7 +86,7 @@ const LocationPage = () => {
         `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${longitude}&y=${latitude}`,
         {
           headers: {
-            Authorization: "KakaoAK 68d70ae34f86a01071c5f8f5d972c593",
+            Authorization: `KakaoAK ${CLIENT_ID}`,
           },
         }
       );
