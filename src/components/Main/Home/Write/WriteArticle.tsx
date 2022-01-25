@@ -122,7 +122,7 @@ const WriteArticle = () => {
   const [value, setValue] = useState<string>("");
   const [imgPreview, setImgPreview] = useState<string[]>([camera]);
   const [imgFiles, setImgFiles] = useState<FileList | null>(null);
-  const [forAge, setForAge] = useState<number | null>(null);
+  const [forAge, setForAge] = useState<number[] | null>(null);
   const imgRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -300,23 +300,20 @@ const WriteArticle = () => {
     );
   });
 
-  const ageFormat = (forAge: number | null) => {
-    switch (forAge) {
-      case 1:
-        return "0~6개월";
-      case 2:
-        return "7~12개월";
-      case 3:
-        return "13~24개월";
-      case 4:
-        return "3~5세";
-      case 5:
-        return "6~8세";
-      case 6:
-        return "9세 이상";
-      default:
-        return "나이 선택";
-    }
+  const ageFormat = (forAge: number[] | null) => {
+    const ageFormatList = [];
+    if (forAge?.includes(1)) ageFormatList.push("0~6개월");
+    if (forAge?.includes(2)) ageFormatList.push("7~12개월");
+    if (forAge?.includes(3)) ageFormatList.push("13~24개월");
+    if (forAge?.includes(4)) ageFormatList.push("3~5세");
+    if (forAge?.includes(5)) ageFormatList.push("6~8세");
+    if (forAge?.includes(6)) ageFormatList.push("9세 이상");
+    return ageFormatList.map((age, index) => {
+      if (index === 0 && ageFormatList.length === 1) return age;
+      else if (index === 0 && ageFormatList.length !== 1) return age + ",";
+      else if (index === ageFormatList.length - 1) return " " + age;
+      else return " " + age + ",";
+    });
   };
   return (
     <>

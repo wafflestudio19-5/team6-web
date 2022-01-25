@@ -17,28 +17,6 @@ import requester from "../../../apis/requester";
 import Product from "../../../apis/Product/Product";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import useProduct from "../../../apis/Product/useProduct";
-type homeGoodsData = {
-  count: number;
-  results: homeGoods[];
-};
-
-type homeGoods = {
-  id: number;
-  user: {
-    name: string;
-    email: string;
-  };
-  image: any;
-  title: string;
-  price: number;
-  location: string;
-  likes: number;
-  chats: number;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  last_bring_up_my_post: string;
-};
 
 const HomeGoods = (props: {
   writeHandle: boolean;
@@ -86,7 +64,7 @@ const HomeGoods = (props: {
             >
               <img
                 className={styles.thumbnail}
-                src={rawData.image}
+                src={rawData.image_url}
                 alt="대표 이미지"
               />
               <div className={styles.dataContainer}>
@@ -169,7 +147,7 @@ const HomeGoods = (props: {
             >
               <img
                 className={styles.thumbnail}
-                src={rawData.image}
+                src={rawData.image_url}
                 alt="대표 이미지"
               />
               <div className={styles.dataContainer}>
@@ -230,7 +208,7 @@ const HomeGoods = (props: {
             >
               <img
                 className={styles.thumbnail}
-                src={rawData.image}
+                src={rawData.image_url}
                 alt="대표 이미지"
               />
               <div className={styles.dataContainer}>

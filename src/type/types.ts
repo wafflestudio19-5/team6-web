@@ -3,7 +3,7 @@ import { TUserInfo } from "./user";
 export type articleData = {
   id: number;
   user: TUserInfo;
-  images: string[];
+  image_urls: string[];
   title: string;
   content: string;
   price: number;
@@ -32,7 +32,7 @@ export type articleData = {
 export type productType = {
   id: number;
   user: TUserInfo;
-  image: string;
+  image_url: string;
   title: string;
   price: number;
   location: string;
@@ -65,8 +65,3 @@ export type otherRequestType = {
   updated_at: string;
   created_At: string;
 };
-
-export type rawProductsData = {
-  data: productType;
-  url: string;
-}[];

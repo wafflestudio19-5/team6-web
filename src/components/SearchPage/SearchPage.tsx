@@ -104,7 +104,7 @@ const SearchPage = () => {
                       >
                         <img
                           className={styles.thumbnail}
-                          src={rawData.image}
+                          src={rawData.image_url}
                           alt="대표 이미지"
                         />
                         <div className={styles.dataContainer}>
@@ -167,7 +167,7 @@ const SearchPage = () => {
                       >
                         <img
                           className={styles.thumbnail}
-                          src={rawData.image}
+                          src={rawData.image_url}
                           alt="대표 이미지"
                         />
                         <div className={styles.dataContainer}>

@@ -5,8 +5,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
 type TKidAgeForm = {
-  forAge: number | null;
-  setForAge: Dispatch<number | null>;
+  forAge: number[] | null;
+  setForAge: Dispatch<number[] | null>;
   setIsKidsModalOpen: Dispatch<boolean>;
 };
 
@@ -15,9 +15,10 @@ const SelectKidAge = ({
   setForAge,
   setIsKidsModalOpen,
 }: TKidAgeForm) => {
-  const ageHandle = (age: number | null) => {
-    if (forAge === age) setForAge(null);
-    else setForAge(age);
+  const ageHandle = (age: number) => {
+    if (forAge?.includes(age)) setForAge(forAge?.filter((e) => e !== age));
+    else if (!forAge) setForAge([age]);
+    else setForAge(forAge.concat(age));
   };
   return (
     <div className={confirmStyles.box}>
@@ -26,7 +27,7 @@ const SelectKidAge = ({
         <Checkbox
           icon={<RadioButtonUncheckedIcon />}
           checkedIcon={<CheckCircleIcon />}
-          checked={forAge === 1}
+          checked={forAge?.includes(1)}
           style={{
             color: "#ff8a3d",
             padding: "0px",
@@ -41,7 +42,7 @@ const SelectKidAge = ({
         <Checkbox
           icon={<RadioButtonUncheckedIcon />}
           checkedIcon={<CheckCircleIcon />}
-          checked={forAge === 2}
+          checked={forAge?.includes(2)}
           style={{
             color: "#ff8a3d",
             padding: "0px",
@@ -56,7 +57,7 @@ const SelectKidAge = ({
         <Checkbox
           icon={<RadioButtonUncheckedIcon />}
           checkedIcon={<CheckCircleIcon />}
-          checked={forAge === 3}
+          checked={forAge?.includes(3)}
           style={{
             color: "#ff8a3d",
             padding: "0px",
@@ -71,7 +72,7 @@ const SelectKidAge = ({
         <Checkbox
           icon={<RadioButtonUncheckedIcon />}
           checkedIcon={<CheckCircleIcon />}
-          checked={forAge === 4}
+          checked={forAge?.includes(4)}
           style={{
             color: "#ff8a3d",
             padding: "0px",
@@ -86,7 +87,7 @@ const SelectKidAge = ({
         <Checkbox
           icon={<RadioButtonUncheckedIcon />}
           checkedIcon={<CheckCircleIcon />}
-          checked={forAge === 5}
+          checked={forAge?.includes(5)}
           style={{
             color: "#ff8a3d",
             padding: "0px",
@@ -101,7 +102,7 @@ const SelectKidAge = ({
         <Checkbox
           icon={<RadioButtonUncheckedIcon />}
           checkedIcon={<CheckCircleIcon />}
-          checked={forAge === 6}
+          checked={forAge?.includes(6)}
           style={{
             color: "#ff8a3d",
             padding: "0px",

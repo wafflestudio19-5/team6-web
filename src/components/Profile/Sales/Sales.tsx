@@ -42,7 +42,7 @@ const Sales = () => {
       );
       res.data.content.forEach((article: productType) =>
         requester
-          .get(`/images/${article.image}/`)
+          .get(`/images/${article.image_url}/`)
           .then((res) => {
             setSrcList((srcList) => [
               ...srcList,

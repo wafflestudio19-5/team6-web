@@ -49,7 +49,7 @@ const PurchaseHistory = () => {
         );
         res.data.forEach((article: myRequestData) =>
           requester
-            .get(`/images/${article.product.image}/`)
+            .get(`/images/${article.product.image_url}/`)
             .then((res) => {
               setSrcList((srcList) => [
                 ...srcList,

@@ -32,7 +32,7 @@ export default {
     price: number;
     negotiable: boolean;
     category: number;
-    for_age: number | null;
+    for_age: number[] | null;
     range_of_location: number;
   }) {
     return requester({
@@ -50,7 +50,7 @@ export default {
       price: number;
       negotiable: boolean;
       category: number;
-      for_age: number | null;
+      for_age: number[] | null;
       range_of_location: number;
     }
   ) {
