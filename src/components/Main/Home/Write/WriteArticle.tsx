@@ -164,7 +164,7 @@ const WriteArticle = () => {
     else if (imgPreview.length === 1) {
       if (!loc.state) {
         const myPromise = Product.postProduct({
-          image_urls: null,
+          image_urls: [],
           title: title,
           content: value,
           price: parseInt(price.replace(/[^0-9]/g, "")),
@@ -180,7 +180,7 @@ const WriteArticle = () => {
         });
       } else {
         const myPromise = Product.patchProduct(loc.state.id, {
-          image_urls: null,
+          image_urls: [],
           title: title,
           content: value,
           price: parseInt(price.replace(/[^0-9]/g, "")),

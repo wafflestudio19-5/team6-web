@@ -26,7 +26,7 @@ export default {
     });
   },
   postProduct(data: {
-    image_urls: string[] | null;
+    image_urls: string[];
     title: string;
     content: string;
     price: number;
@@ -44,7 +44,7 @@ export default {
   patchProduct(
     id: string,
     data: {
-      image_urls: string[] | null;
+      image_urls: string[];
       title: string;
       content: string;
       price: number;
