@@ -9,10 +9,10 @@ export type ProductDto = {
   chats: number;
   content: string;
   created_at: string;
-  for_age: ForAge;
+  for_age: ForAge[];
   hit: number;
   id: number;
-  image_url: string[];
+  image_urls: string[];
   last_bring_up_my_post: string;
   likes: number;
   location: string;

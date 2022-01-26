@@ -6,16 +6,18 @@ import Notice from "../../../icons/Header/bell.png";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import requester from "../../../apis/requester";
-import { userType } from "../../../type/types";
+import { GetMeDto } from "../../../type/dto/for-api/get-me.dto";
 
 const HomeHeader = (props: {}) => {
   const [location, setLocation] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    requester.get("users/me/").then((res) => {
-      const splitResult = res.data.location.split(" ");
-      setLocation(splitResult[splitResult.length - 1]);
+    requester.get<GetMeDto>("users/me/").then((res) => {
+      if (res.data.active_location) {
+        const splitResult = res.data.active_location.split(" ");
+        setLocation(splitResult[splitResult.length - 1]);
+      }
     });
   }, []);
 

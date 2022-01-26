@@ -1,26 +1,33 @@
 import styles from "./Refused.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
-import requester from "../../../apis/requester";
-import { productType, myRequestData } from "../../../type/types";
 import { calculateTimeDifference } from "../../Utilities/functions";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { srcPair } from "../PurchaseHistory";
 
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { PurchaseOrdersWithoutUserDto } from "../../../type/dto/purchase-orders-without-user.dto";
+import requester from "../../../apis/requester";
+import { GetMyPurchaseOrdersDto } from "../../../type/dto/for-api/get-my-purchase-orders.dto";
 
-const Refused = (props: {
-  refusedList: myRequestData[];
-  srcList: srcPair[];
-}) => {
+const Refused = () => {
+  const [refusedList, setRefusedList] = useState<
+    PurchaseOrdersWithoutUserDto[]
+  >([]);
+
+  useEffect(() => {
+    requester
+      .get<GetMyPurchaseOrdersDto>(
+        "/users/me/purchase-orders/?pageNumber=0&pageSize=15&status=rejected"
+      )
+      .then((res) => {
+        setRefusedList(res.data.content);
+      });
+  }, []);
+
   const navigate = useNavigate();
 
   const changeToRequestPage = (id: number) => {
-    /*(now) 구매 요청 페이지 구현 후 연결
-    navigate(`/request/${id}`, {
-      state: { prev: "purchase-history" },
-    });
-     */
+    // 구매 요청 모달
   };
 
   const goToProductPage = (id: number) => {
@@ -29,7 +36,7 @@ const Refused = (props: {
     });
   };
 
-  const refusedComponents = props.refusedList.map((article) => {
+  const refusedComponents = refusedList.map((article) => {
     return (
       <div className={styles.articleWrapper}>
         <div
@@ -39,9 +46,7 @@ const Refused = (props: {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={
-              props.srcList.find((pair) => pair.id === article.product.id)?.src
-            }
+            src={article.product.image_url}
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
@@ -112,7 +117,7 @@ const Refused = (props: {
 
   return (
     <div className={styles.wrapper}>
-      {props.refusedList.length ? (
+      {refusedList.length ? (
         <>{refusedComponents}</>
       ) : (
         <p>거래반려된 게시물이 없어요.</p>

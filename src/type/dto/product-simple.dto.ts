@@ -5,7 +5,7 @@ export type ProductSimpleDto = {
   chats: number;
   created_at: string;
   id: number;
-  image: string;
+  image_url: string;
   last_bring_up_my_post: string;
   likes: number;
   location: string;

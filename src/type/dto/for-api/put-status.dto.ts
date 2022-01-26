@@ -1,5 +1,5 @@
-import { StatusAction } from "../../enum/status-action";
+import { ProductStatusAction } from "../../enum/product-status-action";
 
 export type PutStatusDto = {
-  action: StatusAction;
+  action: ProductStatusAction;
 };

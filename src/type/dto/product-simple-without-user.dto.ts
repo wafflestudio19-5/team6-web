@@ -1,5 +1,4 @@
 import { SalesStatus } from "../enum/sales-status";
-import { UserDto } from "./user.dto";
 
 export type ProductSimpleWithoutUserDto = {
   chats: number;

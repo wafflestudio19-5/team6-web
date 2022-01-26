@@ -5,7 +5,7 @@ export type PostProductRequestDto = {
   category: Category;
   content: string;
   for_age: ForAge;
-  image_url: string[];
+  image_urls: string[];
   negotiable: boolean;
   price: number;
   range_of_location: number;
