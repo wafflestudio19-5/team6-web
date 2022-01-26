@@ -127,6 +127,7 @@ const WriteArticle = () => {
 
   useEffect(() => {
     if (!!loc.state) {
+      setImgPreview(imgPreview.concat(loc.state.image_urls));
       setTitle(loc.state.title);
       setCategory(categoryEncode(loc.state.category));
       setPrice("₩ " + loc.state.price.toLocaleString("ko-KR"));
@@ -161,9 +162,9 @@ const WriteArticle = () => {
         position: "bottom-center",
       });
     else if (imgPreview.length === 1) {
-      if (!loc.state)
-        Product.postProduct({
-          images: [0],
+      if (!loc.state) {
+        const myPromise = Product.postProduct({
+          image_urls: null,
           title: title,
           content: value,
           price: parseInt(price.replace(/[^0-9]/g, "")),
@@ -172,9 +173,14 @@ const WriteArticle = () => {
           for_age: forAge,
           range_of_location: 0, // temporary
         }).then((res) => navigate("/main"));
-      else
-        Product.patchProduct(loc.state.id, {
-          images: [loc.state.image], // temporary
+        toast.promise(myPromise, {
+          loading: "Uploading...",
+          success: "Successfully Uploaded!",
+          error: "Failed",
+        });
+      } else {
+        const myPromise = Product.patchProduct(loc.state.id, {
+          image_urls: null,
           title: title,
           content: value,
           price: parseInt(price.replace(/[^0-9]/g, "")),
@@ -183,7 +189,14 @@ const WriteArticle = () => {
           for_age: forAge,
           range_of_location: 0, // temporary
         }).then((res) => navigate("/main"));
+        toast.promise(myPromise, {
+          loading: "Uploading...",
+          success: "Successfully Uploaded!",
+          error: "Failed",
+        });
+      }
     } else {
+      /*
       const formData = new FormData();
       // @ts-ignore
       if (imgFiles) {
@@ -197,32 +210,43 @@ const WriteArticle = () => {
               (e: { created_at: string; id: number; updated_at: string }) => {
                 return e.id;
               }
-            );
-            if (!loc.state)
-              Product.postProduct({
-                images: imageIdList,
-                title: title,
-                content: value,
-                price: parseInt(price.replace(/[^0-9]/g, "")),
-                negotiable: negotiable,
-                category: category,
-                for_age: forAge,
-                range_of_location: 0,
-              }).then((res) => navigate("/main"));
-            else
-              Product.patchProduct(loc.state.id, {
-                images: imageIdList,
-                title: title,
-                content: value,
-                price: parseInt(price.replace(/[^0-9]/g, "")),
-                negotiable: negotiable,
-                category: category,
-                for_age: null,
-                range_of_location: 0,
-              }).then((res) => navigate("/main"));
-          })
-          .catch((e) => toast.error(e.response.data.error_message));
+            ); */
+      if (!loc.state) {
+        const myPromise = Product.postProduct({
+          image_urls: imgPreview.filter((e, index) => index !== 0),
+          title: title,
+          content: value,
+          price: parseInt(price.replace(/[^0-9]/g, "")),
+          negotiable: negotiable,
+          category: category,
+          for_age: forAge,
+          range_of_location: 3,
+        }).then((res) => navigate("/main"));
+        toast.promise(myPromise, {
+          loading: "Uploading...",
+          success: "Successfully Uploaded!",
+          error: "Failed",
+        });
+      } else {
+        const myPromise = Product.patchProduct(loc.state.id, {
+          image_urls: imgPreview.filter((e, index) => index !== 0),
+          title: title,
+          content: value,
+          price: parseInt(price.replace(/[^0-9]/g, "")),
+          negotiable: negotiable,
+          category: category,
+          for_age: null,
+          range_of_location: 3,
+        }).then((res) => navigate("/main"));
+        toast.promise(myPromise, {
+          loading: "Uploading...",
+          success: "Successfully Uploaded!",
+          error: "Failed",
+        });
       }
+      /*
+          })
+          .catch((e) => toast.error(e.response.data.error_message)); */
     }
   };
   const handleCheck = () => {
@@ -255,6 +279,7 @@ const WriteArticle = () => {
     }
     if (nowImgUrlList.length <= 11) setImgPreview(nowImgUrlList);
     else console.log("이미지는 최대 10개까지 첨부할 수 있어요.");
+    console.log(nowImgUrlList);
   };
 
   const deleteImg = (image: string) => {

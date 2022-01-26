@@ -224,6 +224,7 @@ const Article = () => {
     if (select === "patch") {
       navigate("/write", {
         state: {
+          image_urls: currentArticle?.image_urls,
           title: currentArticle?.title,
           category: categoryFormat(currentArticle?.category),
           price: currentArticle?.price,
