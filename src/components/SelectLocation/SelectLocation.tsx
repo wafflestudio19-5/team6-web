@@ -11,8 +11,22 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CLIENT_ID } from "../../KakaoLogin/OAuth";
 import RegionList from "./RegionList/RegionList";
+import { user } from "../../apis/requester";
+import { toast } from "react-hot-toast";
+
+type TSignupForm = {
+  username: string;
+  nickname: string;
+  password: string;
+  passwordConfirm: string;
+  phone: string;
+  email: string;
+  location: string;
+};
 
 const SelectLocation = () => {
+  const [prev, setPrev] = useState<string>("");
+  const [signupForm, setSignupForm] = useState<TSignupForm>();
   const [searchingRegion, setSearchingRegion] = useState<string>("");
   const [searchingList, setSearchingList] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,6 +39,17 @@ const SelectLocation = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (location.state) {
+      setPrev(location.state.prev);
+      location.state.prev === "signup" &&
+        setSignupForm(location.state.signupForm);
+      location.state.prev === "edit" &&
+        !localStorage.getItem("token") &&
+        navigate("/login");
+      location.state = null;
+    } else {
+      navigate("/login");
+    }
     if (regionQuery !== null) {
       if (regionQuery !== "") {
         const regionList = regionData.filter(
@@ -46,6 +71,43 @@ const SelectLocation = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
+  };
+
+  const handleToGoBack = () => {
+    prev === "signup"
+      ? navigate("/signup", {
+          state: { inputs: signupForm },
+        })
+      : navigate("/main", {
+          state: { page: "user" },
+        });
+  };
+
+  const handleToSignUp = (region: string) => {
+    user
+      .post("/users/", {
+        ...signupForm,
+        name: signupForm?.username,
+        location: region,
+        range_of_location: "LEVEL_ONE",
+      })
+      .then(() => {
+        user
+          .post("/users/signin/", {
+            name: signupForm?.username,
+            password: signupForm?.password,
+          })
+          .then((res) => {
+            localStorage.setItem("token", res.data.access_token);
+            navigate("/main");
+          })
+          .catch((error) => {
+            toast.error("로그인 오류");
+          });
+      })
+      .catch((error) => {
+        toast.error("회원가입 실패");
+      });
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -120,9 +182,9 @@ const SelectLocation = () => {
   return (
     <div className={styles.wrapper}>
       <header>
-        <Link to="/main" className={styles.back}>
+        <button className={styles.back} onClick={handleToGoBack}>
           <img src={BackArrow} alt="뒤로" />
-        </Link>
+        </button>
         <form onSubmit={onSubmit}>
           <input
             ref={inputRef}
@@ -152,13 +214,19 @@ const SelectLocation = () => {
           ) : (
             <>
               <p className={styles.text}>현재 위치 조회 결과</p>
-              <RegionList searchingList={searchingList} />
+              <RegionList
+                searchingList={searchingList}
+                handleToSignUp={handleToSignUp}
+              />
             </>
           ))}
         {searchState === "REGIONS_EXIST" && (
           <>
             <p className={styles.text}>{`'${searchingRegion}' 검색결과`}</p>
-            <RegionList searchingList={searchingList} />
+            <RegionList
+              searchingList={searchingList}
+              handleToSignUp={handleToSignUp}
+            />
           </>
         )}
         {searchState === "NOT_EXIST" && (

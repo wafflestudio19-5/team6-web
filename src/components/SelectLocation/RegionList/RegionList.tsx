@@ -1,16 +1,19 @@
 import styles from "./RegionList.module.scss";
 
-const RegionList = ({ searchingList }: { searchingList: string[] }) => {
-  const onClick = (region: string) => {
-    console.log(region);
-  };
+const RegionList = ({
+  searchingList,
+  handleToSignUp,
+}: {
+  searchingList: string[];
+  handleToSignUp: (region: string) => void;
+}) => {
   return (
     <div className={styles["region-wrapper"]}>
       {searchingList.map((region, index) => (
         <button
           key={index}
           onClick={() => {
-            onClick(region);
+            handleToSignUp(region);
           }}
         >
           <p>{region}</p>
