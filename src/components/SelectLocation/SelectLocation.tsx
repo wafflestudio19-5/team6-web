@@ -114,11 +114,11 @@ const SelectLocation = () => {
     const regex = /^[\s\uFEFF\xA0]+/gi;
     const searchWord = e.target.value.replace(regex, ""); // 맨 앞 띄어쓰기만 제거
     if (searchWord === "") {
-      navigate(`/test?region=${searchWord}`);
+      navigate(`/select-location?region=${searchWord}`);
       setSearchState("NO_INPUT");
       setSearchingList([]);
     } else {
-      navigate(`/test?region=${searchWord}`);
+      navigate(`/select-location?region=${searchWord}`);
       const regionList = regionData.filter(
         (region) => region.match(searchWord) !== null
       );
@@ -131,7 +131,7 @@ const SelectLocation = () => {
   };
 
   const clearInput = () => {
-    navigate(`/test?region=`);
+    navigate(`/select-location?region=`);
     setSearchState("NO_INPUT");
     setSearchingRegion("");
     setSearchingList([]);

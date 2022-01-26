@@ -24,11 +24,17 @@
       width: 40px;
       left: 5px;
       background: white;
+      cursor: pointer;
+
+      &:hover {
+        background-color: lavenderblush;
+        transition: 0.3s;
+      }
 
       img {
         position: relative;
-        top: 9px;
-        left: 9px;
+        top: 3px;
+        left: 1px;
         width: 22px;
       }
     }

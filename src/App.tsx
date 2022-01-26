@@ -27,7 +27,7 @@ function App() {
       <Toaster />
       <BrowserRouter>
         <Routes>
-          <Route path="/test" element={<SelectLocation />} />
+          <Route path="/select-location" element={<SelectLocation />} />
           <Route path="/login" element={<Login />} />
           <Route path="/oauth/callback/kakao" element={<KakaoPage />} />
           <Route path="/signup" element={<SignUp />} />
