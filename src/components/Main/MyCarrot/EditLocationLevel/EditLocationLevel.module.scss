@@ -114,10 +114,10 @@
         position: relative;
         width: 22px;
         top: 3px;
-        left: calc(100% - 63px);
+        left: calc(100% - 70px);
 
         @media screen and (max-width: 400px) {
-          left: calc(100% - 58px);
+          left: calc(100% - 62px);
         }
 
         &:hover {
