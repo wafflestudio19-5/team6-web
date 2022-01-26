@@ -6,18 +6,24 @@ import MannerTemperature from "./MannerTemperature/MannerTemperature";
 import ProfileButtons from "./ProfileButtons/ProfileButtons";
 import requester from "../../apis/requester";
 import { useEffect, useState } from "react";
-import { TUserInfo } from "../../type/user";
+import { TUserInfoV2 } from "../../type/user";
+import { toast } from "react-hot-toast";
 
 const Profile = () => {
-  const [myInfo, setMyInfo] = useState<TUserInfo>({
+  const [products, setProducts] = useState<number>(0);
+  const [myInfo, setMyInfo] = useState<TUserInfoV2>({
+    active_location: "",
+    active_location_verified: false,
+    active_range_of_location: "LEVEL_ONE",
+    inactive_location: "",
+    inactive_location_verified: false,
+    inactive_range_of_location: "LEVEL_ONE",
     name: "",
     nickname: "",
-    image_url: null,
+    image_url: "",
     is_active: true,
     phone: "",
     email: "",
-    location: "",
-    range_of_location: "LEVEL_ONE",
   });
   const navigate = useNavigate();
 
@@ -25,13 +31,23 @@ const Profile = () => {
     getInfo();
   }, []);
 
-  const getInfo = async () => {
-    try {
-      const res = await requester.get("/users/me/");
-      setMyInfo(res.data);
-    } catch (error) {
-      console.log("getMe error");
-    }
+  const getInfo = () => {
+    requester
+      .get("/users/me/")
+      .then((res) => {
+        setMyInfo(res.data);
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+    requester
+      .get("/users/1/products/?pageNumber=0&pageSize=10&status=all")
+      .then((res) => {
+        setProducts(res.data.total_elements);
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   };
 
   const handleToEditProfilePage = () => {
@@ -62,7 +78,7 @@ const Profile = () => {
           프로필 수정
         </button>
         <MannerTemperature />
-        <ProfileButtons />
+        <ProfileButtons products={products} />
       </div>
     </div>
   );

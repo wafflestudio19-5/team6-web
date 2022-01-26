@@ -46,7 +46,6 @@ const SelectLocation = () => {
       location.state.prev === "edit" &&
         !localStorage.getItem("token") &&
         navigate("/login");
-      location.state = null;
     } else {
       navigate("/login");
     }
@@ -78,7 +77,7 @@ const SelectLocation = () => {
       ? navigate("/signup", {
           state: { inputs: signupForm },
         })
-      : navigate("/main", {
+      : navigate("/set-location", {
           state: { page: "user" },
         });
   };
@@ -110,11 +109,15 @@ const SelectLocation = () => {
       });
   };
 
+  const handleToAddLocation = (region: string) => {
+    console.log(region);
+  };
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const regex = /^[\s\uFEFF\xA0]+/gi;
     const searchWord = e.target.value.replace(regex, ""); // 맨 앞 띄어쓰기만 제거
     if (searchWord === "") {
-      navigate(`/select-location?region=${searchWord}`);
+      navigate(`/select-location?region=${searchWord}`, { replace: true });
       setSearchState("NO_INPUT");
       setSearchingList([]);
     } else {
@@ -131,7 +134,7 @@ const SelectLocation = () => {
   };
 
   const clearInput = () => {
-    navigate(`/select-location?region=`);
+    navigate(`/select-location?region=`, { replace: true });
     setSearchState("NO_INPUT");
     setSearchingRegion("");
     setSearchingList([]);
@@ -216,7 +219,9 @@ const SelectLocation = () => {
               <p className={styles.text}>현재 위치 조회 결과</p>
               <RegionList
                 searchingList={searchingList}
-                handleToSignUp={handleToSignUp}
+                handleCallback={
+                  prev === "signup" ? handleToSignUp : handleToAddLocation
+                }
               />
             </>
           ))}
@@ -225,7 +230,9 @@ const SelectLocation = () => {
             <p className={styles.text}>{`'${searchingRegion}' 검색결과`}</p>
             <RegionList
               searchingList={searchingList}
-              handleToSignUp={handleToSignUp}
+              handleCallback={
+                prev === "signup" ? handleToSignUp : handleToAddLocation
+              }
             />
           </>
         )}

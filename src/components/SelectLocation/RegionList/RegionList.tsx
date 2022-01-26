@@ -2,10 +2,10 @@ import styles from "./RegionList.module.scss";
 
 const RegionList = ({
   searchingList,
-  handleToSignUp,
+  handleCallback,
 }: {
   searchingList: string[];
-  handleToSignUp: (region: string) => void;
+  handleCallback: (region: string) => void;
 }) => {
   return (
     <div className={styles["region-wrapper"]}>
@@ -13,7 +13,7 @@ const RegionList = ({
         <button
           key={index}
           onClick={() => {
-            handleToSignUp(region);
+            handleCallback(region);
           }}
         >
           <p>{region}</p>

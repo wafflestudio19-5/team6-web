@@ -10,19 +10,23 @@ import HistoryButtons from "./HistoryButtons/HistoryButtons";
 import { useNavigate } from "react-router-dom";
 import requester from "../../../apis/requester";
 import { useEffect, useState } from "react";
-import { TUserInfo } from "../../../type/user";
+import { TUserInfo, TUserInfoV2 } from "../../../type/user";
 import { toShortDivision } from "../../Utilities/functions";
 
 const MyCarrot = () => {
-  const [myInfo, setMyInfo] = useState<TUserInfo>({
+  const [myInfo, setMyInfo] = useState<TUserInfoV2>({
+    active_location: "",
+    active_location_verified: false,
+    active_range_of_location: "LEVEL_ONE",
+    inactive_location: "",
+    inactive_location_verified: false,
+    inactive_range_of_location: "LEVEL_ONE",
     name: "",
     nickname: "",
-    image_url: null,
+    image_url: "",
     is_active: true,
     phone: "",
     email: "",
-    location: "",
-    range_of_location: "LEVEL_ONE",
   });
 
   const navigate = useNavigate();
@@ -35,23 +39,17 @@ const MyCarrot = () => {
     try {
       const res = await requester.get("/users/me/");
       setMyInfo(res.data);
-      console.log(res.data);
     } catch (error) {
       console.log("getMe error");
     }
   };
 
   const LinkToEditLocationLevel = () => {
-    navigate("/set-location-level", {
-      state: {
-        level: myInfo.range_of_location,
-        localPosition: myInfo.location,
-      },
-    });
+    navigate("/set-location");
   };
 
   const LinkToEditLocation = () => {
-    navigate("/set-location", {
+    navigate("/verify-location", {
       state: { prev: "edit" },
     });
   };
@@ -60,7 +58,7 @@ const MyCarrot = () => {
       <div className={styles["profile-wrapper"]}>
         <ProfileBar
           nickname={myInfo.nickname}
-          division={toShortDivision(myInfo.location)}
+          division={toShortDivision(myInfo.active_location)}
         />
         <HistoryButtons />
       </div>

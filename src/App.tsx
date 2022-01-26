@@ -27,10 +27,10 @@ function App() {
       <Toaster />
       <BrowserRouter>
         <Routes>
-          <Route path="/select-location" element={<SelectLocation />} />
           <Route path="/login" element={<Login />} />
           <Route path="/oauth/callback/kakao" element={<KakaoPage />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/select-location" element={<SelectLocation />} />
           <Route path="/main" element={<Main />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/edit" element={<EditProfile />} />
@@ -39,8 +39,8 @@ function App() {
           <Route path="/purchase-history" element={<PurchaseHistory />} />
           <Route path="/article/:id" element={<Article />} />
           <Route path="/write" element={<WriteArticle />} />
-          <Route path="/set-location" element={<LocationPage />} />
-          <Route path="/set-location-level" element={<EditLocationLevel />} />
+          <Route path="/verify-location" element={<LocationPage />} />
+          <Route path="/set-location" element={<EditLocationLevel />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/request/:id" element={<RequestPage />} />
           <Route

@@ -1,7 +1,8 @@
 import styles from "./EditLocationLevel.module.scss";
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BackArrowIcon from "../../../../icons/leftArrow.png";
+import CancelIcon from "../../../../icons/MyCarrot/white-cancel.png";
 import LevelZero from "../../../../icons/MyCarrot/level_zero.png";
 import LevelOne from "../../../../icons/MyCarrot/level_one.png";
 import LevelTwo from "../../../../icons/MyCarrot/level_two.png";
@@ -12,6 +13,11 @@ import requester from "../../../../apis/requester";
 import Button from "@mui/material/Button";
 import { toast } from "react-hot-toast";
 
+type TRegion = {
+  region: string;
+  is_active: boolean;
+};
+
 type TNumberOfRegions = {
   zero: number;
   one: number;
@@ -20,10 +26,13 @@ type TNumberOfRegions = {
 };
 
 const EditLocationLevel = () => {
-  const [reflected, setReflected] = useState<boolean>(false);
   const [level, setLevel] = useState<number>(1);
   const [prevLevel, setPrevLevel] = useState<string>("LEVEL_ONE");
   const [localPosition, setLocalPosition] = useState<string>("");
+  const [rightRegion, setRightRegion] = useState<TRegion>({
+    region: "",
+    is_active: false,
+  });
   const [adjacentRegions, setAdjacentRegions] = useState<TNumberOfRegions>({
     zero: 0,
     one: 0,
@@ -32,21 +41,25 @@ const EditLocationLevel = () => {
   });
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
-    if (location.state) {
-      setReflected(true);
-      if (!reflected) {
-        setLevel(toNumber(location.state.level));
-        setPrevLevel(location.state.level);
-        setLocalPosition(location.state.localPosition);
-        getAdjacentRegion(location.state.localPosition);
-      }
-    } else {
-      navigate("/main");
-    }
+    getMyInfo();
   }, []);
+
+  const getMyInfo = () => {
+    requester
+      .get("/users/me/")
+      .then((res) => {
+        setLevel(toNumber(res.data.active_range_of_location));
+        setPrevLevel(res.data.active_range_of_location);
+        setLocalPosition(res.data.active_location);
+        getAdjacentRegion(res.data.active_location);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  };
 
   const toNumber = (level: string) => {
     if (level === "LEVEL_ZERO") return 0;
@@ -69,18 +82,26 @@ const EditLocationLevel = () => {
     else return adjacentRegions.three;
   };
 
-  const getAdjacentRegion = async (localPosition: string) => {
-    try {
-      const res = await requester.get(`/location/?name=${localPosition}`);
-      setAdjacentRegions({
-        zero: res.data.level_zero_count,
-        one: res.data.level_one_count,
-        two: res.data.level_two_count,
-        three: res.data.level_three_count,
+  const getAdjacentRegion = (localPosition: string) => {
+    requester
+      .get(`/location/?name=${localPosition}`)
+      .then((res) => {
+        setAdjacentRegions({
+          zero: res.data.level_zero_count,
+          one: res.data.level_one_count,
+          two: res.data.level_two_count,
+          three: res.data.level_three_count,
+        });
+      })
+      .catch(() => {
+        console.log("get adjacent regions error");
       });
-    } catch (error) {
-      console.log("get adjacent regions error");
-    }
+  };
+
+  const LinkToSelectLocation = () => {
+    navigate("/select-location", {
+      state: { prev: "edit" },
+    });
   };
 
   const handleSliderChange = (event: any, newValue: any) => {
@@ -109,9 +130,25 @@ const EditLocationLevel = () => {
         <Link to={"/main"} state={{ page: "user" }} className={styles.back}>
           <img src={BackArrowIcon} alt="뒤로" />
         </Link>
-        <p>거래범위 설정</p>
+        <p>내 동네 설정</p>
       </header>
       <div className={styles["body-wrapper"]}>
+        <p className={styles["extra-text-one"]}>동네 선택</p>
+        <p className={styles["extra-text-two"]}>
+          지역은 최소 1개 이상 최대 2개까지 설정 가능해요.
+        </p>
+        <button
+          className={`${styles["location-button"]} ${styles["left-button"]}`}
+        >
+          <span>{toShortDivision(localPosition)}</span>
+          <img src={CancelIcon} alt="삭제" />
+        </button>
+        <button
+          className={`${styles["add-button"]} ${styles["right-button"]}`}
+          onClick={LinkToSelectLocation}
+        >
+          +
+        </button>
         <p className={styles["first-text"]}>{`${toShortDivision(
           localPosition
         )}과 근처 동네 ${numberOfRegionsByLevel(level)}개`}</p>
@@ -137,22 +174,38 @@ const EditLocationLevel = () => {
         </div>
 
         <img
-          className={`${level === 0 ? styles.show : ""}`}
+          className={`${
+            level === 0
+              ? `${styles["level-image"]} ${styles.show}`
+              : styles["level-image"]
+          }`}
           src={LevelZero}
           alt="레벨 0"
         />
         <img
-          className={`${level === 1 ? styles.show : ""}`}
+          className={`${
+            level === 1
+              ? `${styles["level-image"]} ${styles.show}`
+              : styles["level-image"]
+          }`}
           src={LevelOne}
           alt="레벨 1"
         />
         <img
-          className={`${level === 2 ? styles.show : ""}`}
+          className={`${
+            level === 2
+              ? `${styles["level-image"]} ${styles.show}`
+              : styles["level-image"]
+          }`}
           src={LevelTwo}
           alt="레벨 2"
         />
         <img
-          className={`${level === 3 ? styles.show : ""}`}
+          className={`${
+            level === 3
+              ? `${styles["level-image"]} ${styles.show}`
+              : styles["level-image"]
+          }`}
           src={LevelThree}
           alt="레벨 3"
         />
