@@ -12,15 +12,27 @@ import { Navigate, useLocation } from "react-router-dom";
 import * as React from "react";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
+import requester from "../../apis/requester";
+import { toast } from "react-hot-toast";
+import { useUserDispatch } from "../../context/user-context";
 
 const Main = () => {
   const [write, setWrite] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState("home");
+  const setUser = useUserDispatch();
 
   const loc = useLocation();
 
   useEffect(() => {
+    requester
+      .get("/users/me/")
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
     loc.state && setPage(loc.state.page);
     loc.state = null;
   }, []);

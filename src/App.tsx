@@ -20,39 +20,45 @@ import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/Edit
 import KakaoPage from "./KakaoLogin/KakaoPage";
 import SelectLocation from "./components/SelectLocation/SelectLocation";
 import Hearts from "./components/Hearts/Hearts";
+import { UserDto } from "./type/dto/user.dto";
+
+import { UserDispatchContext, UserStateContext } from "./context/user-context";
 
 function App() {
+  const [user, setUser] = useState<UserDto | undefined>(undefined);
   const token: string | null = localStorage.getItem("token");
 
   return (
-    <>
-      <Toaster />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/oauth/callback/kakao" element={<KakaoPage />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/select-location" element={<SelectLocation />} />
-          <Route path="/main" element={<Main />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/edit" element={<EditProfile />} />
-          <Route path="/profile/sales" element={<Sales />} />
-          <Route path="/sales-history" element={<SalesHistory />} />
-          <Route path="/purchase-history" element={<PurchaseHistory />} />
-          <Route path="/hearts" element={<Hearts />} />
-          <Route path="/article/:id" element={<Article />} />
-          <Route path="/write" element={<WriteArticle />} />
-          <Route path="/verify-location" element={<LocationPage />} />
-          <Route path="/set-location" element={<EditLocationLevel />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/request/:id" element={<RequestPage />} />
-          <Route
-            path="/*"
-            element={<Navigate replace to={token ? "/main" : "/login"} />}
-          />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <UserDispatchContext.Provider value={setUser}>
+      <UserStateContext.Provider value={user}>
+        <Toaster />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/oauth/callback/kakao" element={<KakaoPage />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/select-location" element={<SelectLocation />} />
+            <Route path="/main" element={<Main />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/edit" element={<EditProfile />} />
+            <Route path="/profile/sales" element={<Sales />} />
+            <Route path="/sales-history" element={<SalesHistory />} />
+            <Route path="/purchase-history" element={<PurchaseHistory />} />
+            <Route path="/hearts" element={<Hearts />} />
+            <Route path="/article/:id" element={<Article />} />
+            <Route path="/write" element={<WriteArticle />} />
+            <Route path="/verify-location" element={<LocationPage />} />
+            <Route path="/set-location" element={<EditLocationLevel />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/request/:id" element={<RequestPage />} />
+            <Route
+              path="/*"
+              element={<Navigate replace to={token ? "/main" : "/login"} />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </UserStateContext.Provider>
+    </UserDispatchContext.Provider>
   );
 }
 

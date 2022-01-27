@@ -7,19 +7,11 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import requester from "../../../apis/requester";
 import { GetMeDto } from "../../../type/dto/for-api/get-me.dto";
+import { useUserState } from "../../../context/user-context";
 
 const HomeHeader = (props: {}) => {
-  const [location, setLocation] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    requester.get<GetMeDto>("users/me/").then((res) => {
-      if (res.data.active_location) {
-        const splitResult = res.data.active_location.split(" ");
-        setLocation(splitResult[splitResult.length - 1]);
-      }
-    });
-  }, []);
+  const user = useUserState();
 
   const handleLocation = () => {
     console.log("위치 재지정하는 팝업");
@@ -36,10 +28,21 @@ const HomeHeader = (props: {}) => {
   const handleNotice = () => {
     console.log("알림창으로 push");
   };
+
+  if (!user) {
+    return <div className={styles.wrapper} />;
+  }
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.locationBox} onClick={handleLocation}>
-        <p className={styles.location}>{location}</p>
+        <p className={styles.location}>
+          {user.active_location
+            ? user.active_location.split(" ")[
+                user.active_location.split(" ").length - 1
+              ]
+            : "동네 정보 없음"}
+        </p>
         <img className={styles.locationArrow} src={DownArrow} alt="화살표" />
       </div>
       <div className={styles.headerImages}>
