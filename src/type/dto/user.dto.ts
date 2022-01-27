@@ -6,11 +6,11 @@ export type UserDto = {
   name: string;
   nickname: string;
   phone: string;
-  active_location?: string;
-  active_range_of_location?: RangeOfLocation;
-  active_location_verified: boolean;
-  inactive_location?: string;
-  inactive_range_of_location?: RangeOfLocation;
-  inactive_location_verified: boolean;
-  is_active: boolean;
+  first_location?: string;
+  first_range_of_location?: RangeOfLocation;
+  first_location_verified: boolean;
+  second_location?: string;
+  second_range_of_location?: RangeOfLocation;
+  second_location_verified: boolean;
+  is_first: boolean;
 };

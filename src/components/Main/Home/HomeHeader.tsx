@@ -37,9 +37,9 @@ const HomeHeader = (props: {}) => {
     <div className={styles.wrapper}>
       <div className={styles.locationBox} onClick={handleLocation}>
         <p className={styles.location}>
-          {user.active_location
-            ? user.active_location.split(" ")[
-                user.active_location.split(" ").length - 1
+          {user.first_location
+            ? user.first_location.split(" ")[
+                user.first_location.split(" ").length - 1
               ]
             : "동네 정보 없음"}
         </p>
