@@ -5,34 +5,22 @@ import User1 from "../../icons/Footer/user-selected.png";
 import User2 from "../../icons/Footer/user-unselected.png";
 import Set1 from "../../icons/Footer/settings-selected.png";
 import Set2 from "../../icons/Footer/settings-unselected.png";
+import * as React from "react";
 import { useEffect, useState } from "react";
 import HomeGoods from "./Home/HomeGoods";
 import HomeHeader from "./Home/HomeHeader";
 import { Navigate, useLocation } from "react-router-dom";
-import * as React from "react";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
-import requester from "../../apis/requester";
-import { toast } from "react-hot-toast";
-import { useUserDispatch } from "../../context/user-context";
 
 const Main = () => {
   const [write, setWrite] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState("home");
-  const setUser = useUserDispatch();
 
   const loc = useLocation();
 
   useEffect(() => {
-    requester
-      .get("/users/me/")
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
     loc.state && setPage(loc.state.page);
     loc.state = null;
   }, []);

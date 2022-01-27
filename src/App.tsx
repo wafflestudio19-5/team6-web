@@ -11,7 +11,7 @@ import WriteArticle from "./components/Main/Home/Write/WriteArticle";
 import LocationPage from "./components/LocationPage/LocationPage";
 import EditProfile from "./components/Profile/EditProfile/EditProfile";
 import SearchPage from "./components/SearchPage/SearchPage";
-import { Toaster } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import PurchaseHistory from "./components/PurchaseHistory/PurchaseHistory";
 import RequestPage from "./components/Requests/RequestPage";
 import Sales from "./components/Profile/Sales/Sales";
@@ -23,11 +23,21 @@ import Hearts from "./components/Hearts/Hearts";
 import { UserDto } from "./type/dto/user.dto";
 
 import { UserDispatchContext, UserStateContext } from "./context/user-context";
+import requester from "./apis/requester";
 
 function App() {
   const [user, setUser] = useState<UserDto | undefined>(undefined);
   const token: string | null = localStorage.getItem("token");
-
+  useEffect(() => {
+    requester
+      .get("/users/me/")
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  }, []);
   return (
     <UserDispatchContext.Provider value={setUser}>
       <UserStateContext.Provider value={user}>
