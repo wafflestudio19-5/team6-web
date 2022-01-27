@@ -13,6 +13,7 @@ import * as React from "react";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
 import User from "../../apis/User/User";
+import { toShortDivision } from "../Utilities/functions";
 
 const Main = () => {
   const [location, setLocation] = useState<string>("Loading..");
@@ -27,10 +28,8 @@ const Main = () => {
     loc.state && setPage(loc.state.page);
     loc.state = null;
     User.getMe().then((res) => {
-      const dong = res.data.active_location.split(" ");
-      setLocation(dong[dong.length - 1]);
-      const inactiveDong = res.data.inactive_location.split(" ");
-      setInactiveLocation(inactiveDong[inactiveDong.length - 1]);
+      setLocation(toShortDivision(res.data.active_location));
+      setInactiveLocation(toShortDivision(res.data.inactive_location));
     });
   });
 

@@ -5,6 +5,7 @@ import Category from "../../../icons/Header/category.png";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import User from "../../../apis/User/User";
+import { toShortDivision } from "../../Utilities/functions";
 import { toast } from "react-hot-toast";
 
 const HomeHeader = (props: {
@@ -31,16 +32,8 @@ const HomeHeader = (props: {
     if (!isActive) {
       setChangeLoc(false);
       User.patchMyLocation("alter").then((res) => {
-        const activeDong =
-          res.data.active_location.split(" ")[
-            res.data.active_location.length - 1
-          ];
-        const inactiveDong =
-          res.data.inactive_location.split(" ")[
-            res.data.inactive_location.length - 1
-          ];
-        props.setActiveLocation(activeDong);
-        props.setInactiveLocation(inactiveDong);
+        props.setActiveLocation(toShortDivision(res.data.active_location));
+        props.setInactiveLocation(toShortDivision(res.data.inactive_location));
         window.location.replace("/main");
       });
     }
