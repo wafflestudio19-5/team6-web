@@ -5,15 +5,17 @@ import BackArrowIcon from "../../../icons/leftArrow.png";
 import CameraIcon from "../../../icons/MyCarrot/camera.png";
 import WarningIcon from "../../../icons/MyCarrot/warning.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import requester from "../../../apis/requester";
 import { toast } from "react-hot-toast";
 
 const EditProfile = () => {
   const [prev, setPrev] = useState<string | null>(null);
-  const [nickname, setNickname] = useState<string>("");
+  const [image, setImage] = useState<string>(DefaultImageIcon);
+  const [nickname, setNickname] = useState<string>("  ");
   const [prevNickname, setPrevNickname] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const imgRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,6 +33,7 @@ const EditProfile = () => {
       const res = await requester.get("/users/me/");
       setNickname(res.data.nickname);
       setPrevNickname(res.data.nickname);
+      setImage(res.data.image_url);
     } catch (error) {
       console.log("getMe error");
     }
@@ -56,6 +59,14 @@ const EditProfile = () => {
       });
   };
 
+  const handleImg = (e: React.MouseEvent) => {
+    imgRef.current?.click();
+  };
+
+  const handleToUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setModalOpen(false);
+  };
+
   return (
     <div className={styles.wrapper}>
       <header>
@@ -70,7 +81,7 @@ const EditProfile = () => {
       </header>
       <div className={styles["body-wrapper"]}>
         <div className={styles["image-frame"]}>
-          <img src={DefaultImageIcon} alt="profile image" />
+          <img src={image ? image : DefaultImageIcon} alt="profile image" />
         </div>
         <button
           onClick={() => {
@@ -80,10 +91,17 @@ const EditProfile = () => {
           <img src={CameraIcon} alt="update" />
         </button>
         <input name="nickname" value={nickname} onChange={onChange} />
+        <input
+          className={styles["image-input"]}
+          type="file"
+          accept="image/*"
+          ref={imgRef}
+          onChange={handleToUpload}
+        />
         {!regNickname.test(nickname) && (
           <div className={styles.warning}>
             <img src={WarningIcon} alt="warning" />
-            <p>닉네임은 3~14자의 한글, 영문, 숫자만 가능해요.</p>
+            <p>띄어쓰기 없이 3~14자의 한글, 영문, 숫자만 가능해요.</p>
           </div>
         )}
       </div>
@@ -103,7 +121,9 @@ const EditProfile = () => {
           modalOpen ? styles.show : ""
         }`}
       >
-        <button className={styles.select}>앨범에서 선택</button>
+        <button className={styles.select} onClick={handleImg}>
+          앨범에서 선택
+        </button>
         <button className={styles.remove}>프로필 사진 삭제</button>
       </div>
       <div

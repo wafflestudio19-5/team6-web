@@ -43,14 +43,13 @@
   }
 
   .body-wrapper {
-    .first-text {
+    .extra-text-one {
       position: relative;
-      top: 20px;
+      top: 15px;
       text-align: center;
       font-weight: 600;
     }
-
-    .second-text {
+    .extra-text-two {
       position: relative;
       top: 12px;
       text-align: center;
@@ -59,9 +58,106 @@
       font-weight: 400;
     }
 
+    .add-button {
+      position: absolute;
+      width: 185px;
+      height: 40px;
+      top: 150px;
+      border: 1px solid #aaaaaa;
+      border-radius: 5px;
+      box-sizing: border-box;
+      background-color: white;
+      cursor: pointer;
+      font-size: 25px;
+      font-weight: 100;
+      color: #777777;
+
+      &:hover {
+        background-color: lavenderblush;
+        transition-duration: 0.3s;
+      }
+
+      @media screen and (max-width: 400px) {
+        width: calc(40% - 10px);
+      }
+    }
+
+    .location-button {
+      position: absolute;
+      width: 185px;
+      height: 40px;
+      top: 150px;
+      border: none;
+      border-radius: 5px;
+      background-color: rgba(255, 143, 69, 255);
+
+      @media screen and (max-width: 400px) {
+        width: calc(40% - 10px);
+      }
+
+      span {
+        position: absolute;
+        top: 13px;
+        left: 15px;
+        color: white;
+        font-size: 15px;
+        font-weight: 700;
+
+        @media screen and (max-width: 400px) {
+          left: 12px;
+          font-size: 13px;
+        }
+      }
+
+      img {
+        position: absolute;
+        width: 22px;
+        top: 9px;
+        right: 10px;
+
+        @media screen and (max-width: 400px) {
+          right: 8px;
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .left-button {
+      left: calc(50% - 200px);
+
+      @media screen and (max-width: 400px) {
+        left: 10%;
+      }
+    }
+    .right-button {
+      left: calc(50% + 15px);
+
+      @media screen and (max-width: 400px) {
+        left: calc(50% + 10px);
+      }
+    }
+
+    .first-text {
+      position: relative;
+      top: 150px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .second-text {
+      position: relative;
+      top: 142px;
+      text-align: center;
+      color: #777777;
+      font-size: 13px;
+      font-weight: 400;
+    }
+
     .slider-wrapper {
       position: relative;
-      top: 25px;
+      top: 140px;
       left: 30px;
       width: calc(100% - 60px);
       height: 40px;
@@ -69,7 +165,7 @@
 
     .span-wrapper {
       position: relative;
-      top: 15px;
+      top: 130px;
       width: calc(100% - 60px);
       span {
         position: relative;
@@ -92,15 +188,15 @@
       }
     }
 
-    img {
+    .level-image {
       width: 400px;
       position: absolute;
-      top: 240px;
+      top: 440px;
       left: calc(50% - 200px);
       visibility: hidden;
 
       @media screen and (max-width: 400px) {
-        top: 230px;
+        top: 430px;
         width: 80%;
         left: 10%;
       }

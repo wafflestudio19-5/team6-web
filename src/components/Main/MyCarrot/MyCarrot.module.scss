@@ -24,10 +24,10 @@
     flex-direction: column;
     margin-top: 8px;
     width: 100%;
-    @media screen and (max-height: 792px) {
-      height: 450px;
+    @media screen and (max-height: 717px) {
+      height: 375px;
     }
-    @media screen and (min-height: 792px) {
+    @media screen and (min-height: 717px) {
       height: calc(100% - 238px);
     }
 

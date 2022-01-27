@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TUserInfo } from "../../../../type/user";
 import { toShortDivision } from "../../../Utilities/functions";
 
-const ProfileBar = (props: { myInfo: TUserInfo }) => {
+const ProfileBar = (props: { nickname: string; division: string }) => {
   const navigate = useNavigate();
 
   const handleToEditProfilePage = () => {
@@ -19,9 +19,9 @@ const ProfileBar = (props: { myInfo: TUserInfo }) => {
         <div className={styles.imageframe}>
           <img className={styles.image} src={Test} alt="profile image" />
         </div>
-        <p className={styles.nickname}>{props.myInfo.nickname}</p>
+        <p className={styles.nickname}>{props.nickname}</p>
         <p className={styles["id-location"]}>
-          {toShortDivision(props.myInfo.location)}
+          {toShortDivision(props.division)}
         </p>
         <img className={styles.rightarrow} src={ArrowIcon} alt="right arrow" />
       </Link>

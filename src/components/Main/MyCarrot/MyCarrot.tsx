@@ -10,18 +10,23 @@ import HistoryButtons from "./HistoryButtons/HistoryButtons";
 import { useNavigate } from "react-router-dom";
 import requester from "../../../apis/requester";
 import { useEffect, useState } from "react";
-import { TUserInfo } from "../../../type/user";
+import { TUserInfo, TUserInfoV2 } from "../../../type/user";
+import { toShortDivision } from "../../Utilities/functions";
 
 const MyCarrot = () => {
-  const [myInfo, setMyInfo] = useState<TUserInfo>({
+  const [myInfo, setMyInfo] = useState<TUserInfoV2>({
+    active_location: "",
+    active_location_verified: false,
+    active_range_of_location: "LEVEL_ONE",
+    inactive_location: "",
+    inactive_location_verified: false,
+    inactive_range_of_location: "LEVEL_ONE",
     name: "",
     nickname: "",
-    email: "",
-    location: "",
-    range_of_location: "",
     image_url: "",
     is_active: true,
     phone: "",
+    email: "",
   });
 
   const navigate = useNavigate();
@@ -34,30 +39,27 @@ const MyCarrot = () => {
     try {
       const res = await requester.get("/users/me/");
       setMyInfo(res.data);
-      console.log(res.data);
     } catch (error) {
       console.log("getMe error");
     }
   };
 
   const LinkToEditLocationLevel = () => {
-    navigate("/set-location-level", {
-      state: {
-        level: myInfo.range_of_location,
-        localPosition: myInfo.location,
-      },
-    });
+    navigate("/set-location");
   };
 
   const LinkToEditLocation = () => {
-    navigate("/set-location", {
+    navigate("/verify-location", {
       state: { prev: "edit" },
     });
   };
   return (
     <div className={styles["mycarrot-wrapper"]}>
       <div className={styles["profile-wrapper"]}>
-        <ProfileBar myInfo={myInfo} />
+        <ProfileBar
+          nickname={myInfo.nickname}
+          division={toShortDivision(myInfo.active_location)}
+        />
         <HistoryButtons />
       </div>
       <div className={styles.settings}>
@@ -92,14 +94,6 @@ const MyCarrot = () => {
         >
           <img src={icon5} alt="모아보기" />
           <p>모아보기</p>
-        </button>
-        <button
-          onClick={() => {
-            console.log("당근 가계부");
-          }}
-        >
-          <img src={icon4} alt="moneybook" />
-          <p>당근 가계부</p>
         </button>
       </div>
     </div>
