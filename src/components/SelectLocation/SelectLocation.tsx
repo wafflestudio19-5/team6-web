@@ -12,6 +12,7 @@ import axios from "axios";
 import { CLIENT_ID } from "../../KakaoLogin/OAuth";
 import RegionList from "./RegionList/RegionList";
 import { user } from "../../apis/requester";
+import requester from "../../apis/requester";
 import { toast } from "react-hot-toast";
 
 type TSignupForm = {
@@ -24,9 +25,19 @@ type TSignupForm = {
   location: string;
 };
 
+type TRequiredInformation = {
+  phone: string;
+  email: string;
+};
+
 const SelectLocation = () => {
   const [prev, setPrev] = useState<string>("");
   const [signupForm, setSignupForm] = useState<TSignupForm>();
+  const [requiredInformation, setRequiredInformation] =
+    useState<TRequiredInformation>({
+      phone: "",
+      email: "",
+    });
   const [searchingRegion, setSearchingRegion] = useState<string>("");
   const [searchingList, setSearchingList] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,6 +54,11 @@ const SelectLocation = () => {
       setPrev(location.state.prev);
       location.state.prev === "signup" &&
         setSignupForm(location.state.signupForm);
+      location.state.prev === "first-social-login" &&
+        setRequiredInformation({
+          phone: location.state.phone,
+          email: location.state.email,
+        });
       location.state.prev === "edit" &&
         !localStorage.getItem("token") &&
         navigate("/login");
@@ -80,6 +96,27 @@ const SelectLocation = () => {
       : navigate("/set-location", {
           state: { page: "user" },
         });
+  };
+
+  const handleToFirstSocialLogin = (region: string) => {
+    requester
+      .patch("/users/me/", {
+        ...requiredInformation,
+      })
+      .then(() => {
+        requester
+          .put("/users/me/location/", {
+            location: region,
+            range_of_location: "LEVEL_ONE",
+          })
+          .then(() => navigate("/main?page=home"))
+          .catch((error) => {
+            toast.error(error);
+          });
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   };
 
   const handleToSignUp = (region: string) => {
@@ -158,12 +195,13 @@ const SelectLocation = () => {
               }
             )
             .then((res) => {
-              setSearchingList(
-                regionData.filter(
-                  (region) =>
-                    region.match(res.data.documents[1].address_name) !== null
-                )
-              );
+              searchState === "GET-LOCATION" &&
+                setSearchingList(
+                  regionData.filter(
+                    (region) =>
+                      region.match(res.data.documents[1].address_name) !== null
+                  )
+                );
               setLoading(false);
             })
             .catch(() => {
@@ -220,7 +258,11 @@ const SelectLocation = () => {
               <RegionList
                 searchingList={searchingList}
                 handleCallback={
-                  prev === "signup" ? handleToSignUp : handleToAddLocation
+                  prev === "signup"
+                    ? handleToSignUp
+                    : prev === "edit"
+                    ? handleToAddLocation
+                    : handleToFirstSocialLogin
                 }
               />
             </>
@@ -231,7 +273,11 @@ const SelectLocation = () => {
             <RegionList
               searchingList={searchingList}
               handleCallback={
-                prev === "signup" ? handleToSignUp : handleToAddLocation
+                prev === "signup"
+                  ? handleToSignUp
+                  : prev === "edit"
+                  ? handleToAddLocation
+                  : handleToFirstSocialLogin
               }
             />
           </>

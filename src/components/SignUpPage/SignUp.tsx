@@ -8,6 +8,9 @@ import CheckIcon from "./CheckIcon/CheckIcon";
 import Button from "@mui/material/Button";
 import { user } from "../../apis/requester";
 import { toast } from "react-hot-toast";
+import { formatPhoneNumber } from "../Utilities/functions";
+import { KAKAO_AUTH_URL } from "../../KakaoLogin/OAuth";
+import kakaoLogo from "../../icons/kakao-logo.png";
 
 type TSignupForm = {
   username: string;
@@ -55,26 +58,6 @@ const SignUp = () => {
   const regEmail =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
-  /* phone input을 xxx-xxxx-xxxx 형태로 format */
-  const formatPhoneNumber = (value: string) => {
-    if (!value) return value;
-    // 숫자가 아닌 부분 지워서 숫자로만 이루어진 문자열로 바꾼다.
-    const phoneNumber = value.replace(/[^\d]/g, "");
-    const phoneNumberLength = phoneNumber.length;
-
-    /* 입력한 숫자 개수가 3개 이하일 경우 */
-    if (phoneNumberLength < 4) return phoneNumber;
-    /* 입력한 숫자 개수가 4개 이상 7개 이하일 경우 */
-    if (phoneNumberLength < 8) {
-      return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
-    }
-    /* 입력한 숫자 개수 7개 이상일 경우, 11개 입력한 경우 그 이상 입력 안 됨. */
-    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(
-      3,
-      7
-    )}-${phoneNumber.slice(7, 11)}`;
-  };
-
   const handleChange: ChangeEventHandler<
     HTMLInputElement | HTMLSelectElement
   > = (e) => {
@@ -121,14 +104,13 @@ const SignUp = () => {
         <img src={carrotLogo} className={styles.daangnlogo} alt="logo" />
         <section className={styles["social-login-wrapper"]}>
           <h2>동네 주민들과 따뜻한 거래를 나누려면 가입하세요.</h2>
-          <button
-            onClick={() => {
-              console.log("소셜 로그인");
-            }}
+          <a
+            className={`${styles["social-login-button"]} ${styles.kakao}`}
+            href={KAKAO_AUTH_URL}
           >
-            <img src={kakaologo} alt="logo" />
+            <img src={kakaoLogo} alt="logo" />
             <span>카카오 로그인</span>
-          </button>
+          </a>
           <div className={styles["hr-sect"]}>또는</div>
         </section>
         <form onSubmit={handleSubmit}>
@@ -217,7 +199,7 @@ const SignUp = () => {
             {inputs.phone.length !== 0 ? (
               <CheckIcon
                 config={regPhone.test(inputs.phone)}
-                configMessage={"올바른 휴대전화번호 형식이 아닙니다."}
+                configMessage={"올바른 휴대폰 번호 형식이 아닙니다."}
               />
             ) : null}
           </div>

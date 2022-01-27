@@ -33,9 +33,9 @@ const KakaoPage = () => {
   };
 
   return (
-    <>
+    <div className={styles.wrapper}>
       <img className={styles.spinner} src={Spinner} alt="로딩중" />
-    </>
+    </div>
   );
 };
 
