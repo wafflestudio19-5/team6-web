@@ -28,7 +28,7 @@ const EditProfile = () => {
   const regNickname = /^[가-힣A-Za-z0-9]{3,14}$/;
 
   useEffect(() => {
-    location.state.prev && setPrev(location.state.prev);
+    location.state?.prev && setPrev(location.state.prev);
     getInfo();
   }, []);
 
@@ -215,9 +215,7 @@ const EditProfile = () => {
       />
       {confirmOpen && (
         <div className={confStyles.box}>
-          <div className={confStyles.contents}>
-            프로필 수정을 취소하시겠습니까?
-          </div>
+          <div className={styles.contents}>프로필 수정을 취소하시겠습니까?</div>
           <div
             className={confStyles.confirmButton}
             onClick={handleToCancelEditing}
