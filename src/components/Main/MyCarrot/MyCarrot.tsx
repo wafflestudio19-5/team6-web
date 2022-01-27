@@ -19,6 +19,9 @@ const MyCarrot = () => {
     email: "",
     location: "",
     range_of_location: "",
+    image_url: "",
+    is_active: true,
+    phone: "",
   });
 
   const navigate = useNavigate();

@@ -26,13 +26,13 @@ export default {
     });
   },
   postProduct(data: {
-    images: number[] | null;
+    image_urls: string[];
     title: string;
     content: string;
     price: number;
     negotiable: boolean;
     category: number;
-    for_age: number | null;
+    for_age: number[] | null;
     range_of_location: number;
   }) {
     return requester({
@@ -44,13 +44,13 @@ export default {
   patchProduct(
     id: string,
     data: {
-      images: number[];
+      image_urls: string[];
       title: string;
       content: string;
       price: number;
       negotiable: boolean;
       category: number;
-      for_age: number | null;
+      for_age: number[] | null;
       range_of_location: number;
     }
   ) {

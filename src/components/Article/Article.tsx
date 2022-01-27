@@ -39,36 +39,8 @@ import { toast } from "react-hot-toast";
 import requester from "../../apis/requester";
 import { calculateTimeDifference } from "../Utilities/functions";
 import confirmModal from "../Main/Home/Write/Confirm/ConfirmModal";
+import { articleData } from "../../type/types";
 
-type articleData = {
-  id: number;
-  user: {
-    name: string;
-    email: string;
-  };
-  image: number[];
-  title: string;
-  content: string;
-  price: number;
-  negotiable: boolean;
-  location: string;
-  category: string;
-  hit: number;
-  likes: number;
-  chats: number;
-  price_suggestions: number;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  last_bring_up_my_post: string;
-  for_age:
-    | "ZERO_TO_SIX_MONTH"
-    | "SEVEN_TO_TWELVE_MONTH"
-    | "OVER_ONE_TO_TWO"
-    | "THREE_TO_FIVE"
-    | "SIX_TO_EIGHT"
-    | "OVER_NINE";
-};
 const settings = {
   dots: true,
   infinite: true,
@@ -112,21 +84,19 @@ const Article = () => {
         });
       }
       setStatus(res.data.status);
-      res.data.images?.map((image: number) => {
-        requester(`/images/${image}/`).then((res) =>
-          setCarouselImg((prevState: any) => {
-            const tempState = prevState.concat(
-              <div>
-                <img
-                  className={styles.carouselImg}
-                  src={res.data.url}
-                  alt={"상품 이미지"}
-                />
-              </div>
-            );
-            return tempState;
-          })
-        );
+      res.data.image_urls?.map((image: string) => {
+        setCarouselImg((prevState: any) => {
+          const tempState = prevState.concat(
+            <div>
+              <img
+                className={styles.carouselImg}
+                src={image}
+                alt={"상품 이미지"}
+              />
+            </div>
+          );
+          return tempState;
+        });
       });
     });
   }, [id]);
@@ -210,30 +180,32 @@ const Article = () => {
     }
   };
   const kidsAgeFormat = (
-    Age:
+    ages: (
       | "ZERO_TO_SIX_MONTH"
       | "SEVEN_TO_TWELVE_MONTH"
       | "OVER_ONE_TO_TWO"
       | "THREE_TO_FIVE"
       | "SIX_TO_EIGHT"
       | "OVER_NINE"
+    )[]
   ) => {
-    switch (Age) {
-      case "ZERO_TO_SIX_MONTH":
-        return "0~6개월";
-      case "SEVEN_TO_TWELVE_MONTH":
-        return "7~12개월";
-      case "OVER_ONE_TO_TWO":
-        return "13~24개월";
-      case "THREE_TO_FIVE":
-        return "3~5세";
-      case "SIX_TO_EIGHT":
-        return "6~8세";
-      case "OVER_NINE":
-        return "9세 이상";
-      default:
-        return null;
-    }
+    const kidsAgeFormattedList: any = [];
+    if (ages.includes("ZERO_TO_SIX_MONTH"))
+      kidsAgeFormattedList.push("0~6개월");
+    if (ages.includes("SEVEN_TO_TWELVE_MONTH"))
+      kidsAgeFormattedList.push("7~12개월");
+    if (ages.includes("OVER_ONE_TO_TWO"))
+      kidsAgeFormattedList.push("13~24개월");
+    if (ages.includes("THREE_TO_FIVE")) kidsAgeFormattedList.push("3~5세");
+    if (ages.includes("SIX_TO_EIGHT")) kidsAgeFormattedList.push("6~8세");
+    if (ages.includes("OVER_NINE")) kidsAgeFormattedList.push("9세 이상");
+    return kidsAgeFormattedList.map((age: string, index: number) => {
+      if (index === 0 && kidsAgeFormattedList.length === 1) return age;
+      else if (index === 0 && kidsAgeFormattedList.length !== 1)
+        return age + ",";
+      else if (index === kidsAgeFormattedList.length - 1) return " " + age;
+      else return " " + age + ",";
+    });
   };
   const handleStatus = (e: SelectChangeEvent) => {
     if (e.target.value === "RESERVED") {
@@ -255,6 +227,7 @@ const Article = () => {
     if (select === "patch") {
       navigate("/write", {
         state: {
+          image_urls: currentArticle?.image_urls,
           title: currentArticle?.title,
           category: categoryFormat(currentArticle?.category),
           price: currentArticle?.price,

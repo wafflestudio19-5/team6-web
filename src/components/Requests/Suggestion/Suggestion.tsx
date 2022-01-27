@@ -1,16 +1,17 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { otherRequestType, userType } from "../../../type/types";
+import { otherRequestType } from "../../../type/types";
 import { srcPair } from "../../SalesHistory/SalesHistory";
 import requester from "../../../apis/requester";
 import styles from "../Suggestion/Suggestion.module.scss";
 import profile from "../../../icons/MyCarrot/test-profile.png";
 import { calculateTimeDifference } from "../../Utilities/functions";
+import { TUserInfo } from "../../../type/user";
 
 type Props = {
   suggestedList: otherRequestType[];
-  setContactUser: Dispatch<SetStateAction<userType | null>>;
+  setContactUser: Dispatch<SetStateAction<TUserInfo | null>>;
   setMessageInfo: Dispatch<
-    SetStateAction<{ user: userType; message: string } | null>
+    SetStateAction<{ user: TUserInfo; message: string } | null>
   >;
   setUpdate: Dispatch<SetStateAction<boolean>>;
 };

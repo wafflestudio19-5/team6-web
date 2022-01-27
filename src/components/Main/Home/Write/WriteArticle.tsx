@@ -122,11 +122,12 @@ const WriteArticle = () => {
   const [value, setValue] = useState<string>("");
   const [imgPreview, setImgPreview] = useState<string[]>([camera]);
   const [imgFiles, setImgFiles] = useState<FileList | null>(null);
-  const [forAge, setForAge] = useState<number | null>(null);
+  const [forAge, setForAge] = useState<number[] | null>(null);
   const imgRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!!loc.state) {
+      setImgPreview(imgPreview.concat(loc.state.image_urls));
       setTitle(loc.state.title);
       setCategory(categoryEncode(loc.state.category));
       setPrice("₩ " + loc.state.price.toLocaleString("ko-KR"));
@@ -161,9 +162,9 @@ const WriteArticle = () => {
         position: "bottom-center",
       });
     else if (imgPreview.length === 1) {
-      if (!loc.state)
-        Product.postProduct({
-          images: [0],
+      if (!loc.state) {
+        const myPromise = Product.postProduct({
+          image_urls: [],
           title: title,
           content: value,
           price: parseInt(price.replace(/[^0-9]/g, "")),
@@ -172,9 +173,14 @@ const WriteArticle = () => {
           for_age: forAge,
           range_of_location: 0, // temporary
         }).then((res) => navigate("/main"));
-      else
-        Product.patchProduct(loc.state.id, {
-          images: [loc.state.image], // temporary
+        toast.promise(myPromise, {
+          loading: "Uploading...",
+          success: "Successfully Uploaded!",
+          error: "Failed",
+        });
+      } else {
+        const myPromise = Product.patchProduct(loc.state.id, {
+          image_urls: [],
           title: title,
           content: value,
           price: parseInt(price.replace(/[^0-9]/g, "")),
@@ -183,7 +189,14 @@ const WriteArticle = () => {
           for_age: forAge,
           range_of_location: 0, // temporary
         }).then((res) => navigate("/main"));
+        toast.promise(myPromise, {
+          loading: "Uploading...",
+          success: "Successfully Uploaded!",
+          error: "Failed",
+        });
+      }
     } else {
+      /*
       const formData = new FormData();
       // @ts-ignore
       if (imgFiles) {
@@ -197,32 +210,43 @@ const WriteArticle = () => {
               (e: { created_at: string; id: number; updated_at: string }) => {
                 return e.id;
               }
-            );
-            if (!loc.state)
-              Product.postProduct({
-                images: imageIdList,
-                title: title,
-                content: value,
-                price: parseInt(price.replace(/[^0-9]/g, "")),
-                negotiable: negotiable,
-                category: category,
-                for_age: forAge,
-                range_of_location: 0,
-              }).then((res) => navigate("/main"));
-            else
-              Product.patchProduct(loc.state.id, {
-                images: imageIdList,
-                title: title,
-                content: value,
-                price: parseInt(price.replace(/[^0-9]/g, "")),
-                negotiable: negotiable,
-                category: category,
-                for_age: null,
-                range_of_location: 0,
-              }).then((res) => navigate("/main"));
-          })
-          .catch((e) => toast.error(e.response.data.error_message));
+            ); */
+      if (!loc.state) {
+        const myPromise = Product.postProduct({
+          image_urls: imgPreview.filter((e, index) => index !== 0),
+          title: title,
+          content: value,
+          price: parseInt(price.replace(/[^0-9]/g, "")),
+          negotiable: negotiable,
+          category: category,
+          for_age: forAge,
+          range_of_location: 3,
+        }).then((res) => navigate("/main"));
+        toast.promise(myPromise, {
+          loading: "Uploading...",
+          success: "Successfully Uploaded!",
+          error: "Failed",
+        });
+      } else {
+        const myPromise = Product.patchProduct(loc.state.id, {
+          image_urls: imgPreview.filter((e, index) => index !== 0),
+          title: title,
+          content: value,
+          price: parseInt(price.replace(/[^0-9]/g, "")),
+          negotiable: negotiable,
+          category: category,
+          for_age: null,
+          range_of_location: 3,
+        }).then((res) => navigate("/main"));
+        toast.promise(myPromise, {
+          loading: "Uploading...",
+          success: "Successfully Uploaded!",
+          error: "Failed",
+        });
       }
+      /*
+          })
+          .catch((e) => toast.error(e.response.data.error_message)); */
     }
   };
   const handleCheck = () => {
@@ -255,6 +279,7 @@ const WriteArticle = () => {
     }
     if (nowImgUrlList.length <= 11) setImgPreview(nowImgUrlList);
     else console.log("이미지는 최대 10개까지 첨부할 수 있어요.");
+    console.log(nowImgUrlList);
   };
 
   const deleteImg = (image: string) => {
@@ -300,23 +325,20 @@ const WriteArticle = () => {
     );
   });
 
-  const ageFormat = (forAge: number | null) => {
-    switch (forAge) {
-      case 1:
-        return "0~6개월";
-      case 2:
-        return "7~12개월";
-      case 3:
-        return "13~24개월";
-      case 4:
-        return "3~5세";
-      case 5:
-        return "6~8세";
-      case 6:
-        return "9세 이상";
-      default:
-        return "나이 선택";
-    }
+  const ageFormat = (forAge: number[] | null) => {
+    const ageFormatList = [];
+    if (forAge?.includes(1)) ageFormatList.push("0~6개월");
+    if (forAge?.includes(2)) ageFormatList.push("7~12개월");
+    if (forAge?.includes(3)) ageFormatList.push("13~24개월");
+    if (forAge?.includes(4)) ageFormatList.push("3~5세");
+    if (forAge?.includes(5)) ageFormatList.push("6~8세");
+    if (forAge?.includes(6)) ageFormatList.push("9세 이상");
+    return ageFormatList.map((age, index) => {
+      if (index === 0 && ageFormatList.length === 1) return age;
+      else if (index === 0 && ageFormatList.length !== 1) return age + ",";
+      else if (index === ageFormatList.length - 1) return " " + age;
+      else return " " + age + ",";
+    });
   };
   return (
     <>
