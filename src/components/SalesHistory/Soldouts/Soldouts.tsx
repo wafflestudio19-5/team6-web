@@ -2,28 +2,39 @@ import styles from "./Soldouts.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
-import { productType } from "../../../type/types";
 import requester from "../../../apis/requester";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { srcPair } from "../SalesHistory";
-
 import { useNavigate } from "react-router-dom";
+import { ProductSimpleWithoutUserDto } from "../../../type/dto/product-simple-without-user.dto";
+import { GetMyProductsDto } from "../../../type/dto/for-api/get-my-products.dto";
+import { ActionTarget } from "../SalesHistory";
 
 const Soldouts = (props: {
-  soldoutList: productType[];
   setSoldoutActions: Dispatch<SetStateAction<boolean>>;
-  setActionTarget: Dispatch<SetStateAction<number>>;
-  srcList: srcPair[];
+  setActionTarget: Dispatch<SetStateAction<ActionTarget>>;
 }) => {
+  const [soldoutList, setSoldoutList] = useState<ProductSimpleWithoutUserDto[]>(
+    []
+  );
+  useEffect(() => {
+    requester
+      .get<GetMyProductsDto>(
+        "/users/me/products/?pageNumber=0&pageSize=15&status=sold-out"
+      )
+      .then((res) => {
+        setSoldoutList(res.data.content);
+      });
+  }, []);
+
   const navigate = useNavigate();
 
-  const goToProductPage = (data: productType) => {
+  const goToProductPage = (data: ProductSimpleWithoutUserDto) => {
     navigate(`/article/${data.id}`, {
       state: { prev: "sales-history" },
     });
   };
-  const changeToVisible = (data: productType) => {
+  const changeToVisible = (data: ProductSimpleWithoutUserDto) => {
     requester
       .put(`/products/${data.id}/status/`, { action: "show" })
       .catch((e) => console.log(e));
@@ -31,10 +42,14 @@ const Soldouts = (props: {
 
   const handleAction = (id: number) => {
     props.setSoldoutActions(true);
-    props.setActionTarget(id);
+    props.setActionTarget({
+      id: id,
+      dispatch: setSoldoutList,
+      list: soldoutList,
+    });
   };
 
-  const soldoutComponents = props.soldoutList.map((article) => {
+  const soldoutComponents = soldoutList.map((article) => {
     return (
       <div className={styles.articleWrapper}>
         <div
@@ -44,7 +59,7 @@ const Soldouts = (props: {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={props.srcList.find((pair) => pair.id === article.id)?.src}
+            src={article.image_url}
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
@@ -114,7 +129,7 @@ const Soldouts = (props: {
 
   return (
     <div className={styles.wrapper}>
-      {props.soldoutList.length ? (
+      {soldoutList.length ? (
         <>{soldoutComponents}</>
       ) : (
         <p>거래완료된 게시물이 없어요.</p>

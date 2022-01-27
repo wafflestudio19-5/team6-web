@@ -16,9 +16,11 @@ import PurchaseHistory from "./components/PurchaseHistory/PurchaseHistory";
 import RequestPage from "./components/Requests/RequestPage";
 import Sales from "./components/Profile/Sales/Sales";
 import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/EditLocationLevel";
+
 import KakaoPage from "./KakaoLogin/KakaoPage";
 import SelectLocation from "./components/SelectLocation/SelectLocation";
 import GetInformation from "./components/GetInformation/GetInformation";
+import Hearts from "./components/Hearts/Hearts";
 
 function App() {
   const token: string | null = localStorage.getItem("token");
@@ -39,6 +41,7 @@ function App() {
           <Route path="/profile/sales" element={<Sales />} />
           <Route path="/sales-history" element={<SalesHistory />} />
           <Route path="/purchase-history" element={<PurchaseHistory />} />
+          <Route path="/hearts" element={<Hearts />} />
           <Route path="/article/:id" element={<Article />} />
           <Route path="/write" element={<WriteArticle />} />
           <Route path="/verify-location" element={<LocationPage />} />

@@ -9,6 +9,7 @@ import requester from "../../apis/requester";
 import { myRequestData } from "../../type/types";
 import { TUserInfo } from "../../type/user";
 import styles2 from "../Utilities/confirm.module.scss";
+import { UserDto } from "../../type/dto/user.dto";
 
 export type srcPair = {
   id: number;
@@ -17,53 +18,9 @@ export type srcPair = {
 
 const PurchaseHistory = () => {
   const [mode, setMode] = useState(1);
-  const [requestList, setRequestList] = useState<myRequestData[]>([]);
-  const [purchasedList, setPurchasedList] = useState<myRequestData[]>([]);
-  const [refusedList, setRefusedList] = useState<myRequestData[]>([]);
-  const [requestUser, setRequestUser] = useState<TUserInfo | null>(null);
+  const [requestUser, setRequestUser] = useState<UserDto | null>(null);
   const [update, setUpdate] = useState(false);
   const [srcList, setSrcList] = useState<srcPair[]>([]);
-  useEffect(() => {
-    requester
-      .get(`/users/me/purchase-requests/`)
-      .then((res) => {
-        console.log(res.data);
-        setRequestList(
-          res.data.filter(
-            (data: myRequestData) =>
-              data.accepted !== false && data.product.status !== "SOLD_OUT"
-          )
-        );
-        setPurchasedList(
-          res.data.filter(
-            (data: myRequestData) =>
-              data.accepted && data.product.status === "SOLD_OUT"
-          )
-        );
-        setRefusedList(
-          res.data.filter(
-            (data: myRequestData) =>
-              data.accepted === false ||
-              (data.accepted === null && data.product.status === "SOLD_OUT")
-          )
-        );
-        res.data.forEach((article: myRequestData) =>
-          requester
-            .get(`/images/${article.product.image_url}/`)
-            .then((res) => {
-              setSrcList((srcList) => [
-                ...srcList,
-                {
-                  id: article.product.id,
-                  src: res.data.url,
-                },
-              ]);
-            })
-            .catch((e) => console.log(e))
-        );
-      })
-      .catch((e) => console.log(e.response));
-  }, [update]);
 
   return (
     <div className={styles["sales-history-wrapper"]}>
@@ -126,17 +83,9 @@ const PurchaseHistory = () => {
         거래반려
       </button>
       <section className={styles["body-wrapper"]}>
-        {mode === 1 && (
-          <Requests
-            requestList={requestList}
-            setRequestUser={setRequestUser}
-            srcList={srcList}
-          />
-        )}
-        {mode === 2 && (
-          <Purchased purchasedList={purchasedList} srcList={srcList} />
-        )}
-        {mode === 3 && <Refused refusedList={refusedList} srcList={srcList} />}
+        {mode === 1 && <Requests setRequestUser={setRequestUser} />}
+        {mode === 2 && <Purchased />}
+        {mode === 3 && <Refused />}
       </section>
     </div>
   );
