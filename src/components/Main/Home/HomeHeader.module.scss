@@ -1,33 +1,43 @@
-.locationBox {
-  padding: 2px;
+.wrapper {
   display: flex;
-  margin-right: calc(100% - 200px);
+  justify-content: space-between;
+  width: 100%;
 
-  .location {
-    margin: 0;
-    padding-top: 4px;
-    padding-left: 15px;
-    font-size: 20px;
-    font-weight: bold;
+  .locationBox {
+    padding: 2px;
+    display: flex;
+
+    .location {
+      margin: 0;
+      padding-top: 4px;
+      padding-left: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .locationArrow {
+      position: relative;
+      height: 15px;
+
+      top: 50%;
+      transform: translate(0, -50%);
+
+      padding-left: 5px;
+
+      &:hover{
+        background-color: lavenderblush;
+      }
+    }
   }
 
-  .locationArrow {
-    position: relative;
-    height: 15px;
-
-    top: 50%;
-    transform: translate(0, -50%);
-
-    padding-left: 5px;
+  .headerImages {
+    .headerImg {
+      position: relative;
+      top: 50%;
+      transform: translate(0, -50%);
+      height: 25px;
+      margin-right: 10px;
+    }
   }
-}
 
-.headerImg {
-  position: relative;
-  top: 50%;
-  transform: translate(0, -50%);
-
-  height: 25px;
-
-  margin-right: 10px;
 }
