@@ -101,11 +101,25 @@
 
     p {
       text-align: center;
+
+      @media screen and (max-width: 325px) {
+        font-size: 11px;
+      }
+      @media screen and (min-width: 325px) and (max-width: 417px) {
+        font-size: 13px;
+      }
     }
     .needed {
       text-align: left;
       padding-left: 40px;
       font-size: 13px;
+
+      @media screen and (max-width: 325px) {
+        font-size: 11px;
+      }
+      @media screen and (min-width: 325px) and (max-width: 417px) {
+        font-size: 12px;
+      }
     }
   }
 }
