@@ -1,17 +1,9 @@
 import styles from "./Account.module.scss";
 import styles2 from "../../Utilities/confirm.module.scss";
 import backArrow from "../../../icons/leftArrow.png";
-import {
-  ChangeEventHandler,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEventHandler, Dispatch, SetStateAction, useState } from "react";
 import requester from "../../../apis/requester";
 import { formatPhoneNumber, regEmail, regPhone } from "../../SignUpPage/SignUp";
-import { GetMeDto } from "../../../type/dto/for-api/get-me.dto";
-import { UserDto } from "../../../type/dto/user.dto";
 import { toast } from "react-hot-toast";
 import { useUserDispatch, useUserState } from "../../../context/user-context";
 

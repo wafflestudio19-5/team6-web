@@ -13,5 +13,5 @@ export type UserDto = {
   second_location?: string;
   second_range_of_location?: RangeOfLocation;
   second_location_verified: boolean;
-  is_first: boolean;
+  is_active: boolean;
 };
