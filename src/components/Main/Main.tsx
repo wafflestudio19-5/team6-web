@@ -24,7 +24,7 @@ const Main = () => {
   useEffect(() => {
     loc.state && setPage(loc.state.page);
     loc.state = null;
-  });
+  }, []);
 
   const changeToHome = () => {
     setPage("home");

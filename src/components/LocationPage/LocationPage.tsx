@@ -8,6 +8,8 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 import axios from "axios";
 import requester, { user } from "../../apis/requester";
 import { toast } from "react-hot-toast";
+import { CLIENT_ID } from "../../KakaoLogin/OAuth";
+import { toShortDivision } from "../Utilities/functions";
 
 declare global {
   interface Window {
@@ -15,47 +17,37 @@ declare global {
   }
 }
 
-type TSignupForm = {
-  username: string;
-  nickname: string;
-  password: string;
-  passwordConfirm: string;
-  phone: string;
-  email: string;
-  location: string;
-};
-
 const LocationPage = () => {
   const [lat, setLat] = useState<number>(37.460103);
   const [lon, setLon] = useState<number>(126.951873);
   const [prev, setPrev] = useState<string>("");
-  const [signupForm, setSignupForm] = useState<TSignupForm>();
   const [loading, setLoading] = useState<boolean>(false);
   const [localPosition, setLocalPosition] = useState<string>("");
-  const [specificPosition, setSpecificPosition] = useState<string>("");
+  const [currentPosition, setCurrentPosition] = useState<string>("");
 
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state) {
-      setPrev(location.state.prev);
-      location.state.prev === "signup" &&
-        setSignupForm(location.state.signupForm);
-      location.state.prev === "edit" &&
-        !localStorage.getItem("token") &&
-        navigate("/login");
-      location.state = null;
-    } else {
-      navigate("/login");
-    }
+    setPrev(location.state.prev);
+    getMyInfo();
     getLocation();
   }, []);
 
+  const getMyInfo = () => {
+    requester
+      .get("/users/me/")
+      .then((res) => {
+        setLocalPosition(res.data.active_location);
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  };
+
   const getLocation = () => {
     setLoading(true);
-    setLocalPosition("");
-    setSpecificPosition("");
+    setCurrentPosition("");
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         function (position) {
@@ -74,7 +66,7 @@ const LocationPage = () => {
         }
       );
     } else {
-      alert("GPS를 지원하지 않습니다");
+      toast.error("GPS를 지원하지 않습니다");
       return;
     }
   };
@@ -85,60 +77,40 @@ const LocationPage = () => {
         `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${longitude}&y=${latitude}`,
         {
           headers: {
-            Authorization: "KakaoAK 68d70ae34f86a01071c5f8f5d972c593",
+            Authorization: `KakaoAK ${CLIENT_ID}`,
           },
         }
       );
-      setLocalPosition(res.data.documents[1].address_name);
-      setSpecificPosition(res.data.documents[1].region_3depth_name);
+      setCurrentPosition(res.data.documents[1].address_name);
     } catch (error) {
       console.log("에러");
     }
   };
 
   const handleToGoBack = () => {
-    prev === "signup"
-      ? navigate("/signup", {
-          state: { inputs: signupForm },
-        })
-      : navigate("/main", {
+    prev !== ""
+      ? navigate("/main", {
           state: { page: "user" },
-        });
+        })
+      : navigate(-1);
   };
 
-  const handleToSignUp = async () => {
-    try {
-      console.log(localPosition);
-      const res1 = await user.post("/users/", {
-        ...signupForm,
-        name: signupForm?.username,
-        location: localPosition,
-        range_of_location: "LEVEL_ONE",
-      });
-      const res2 = await user.post("/users/signin/", {
-        name: signupForm?.username,
-        password: signupForm?.password,
-      });
-      localStorage.setItem("token", res2.data.access_token);
-      navigate("/main");
-    } catch (error) {
-      console.log("회원가입 실패");
-    }
-  };
-
-  const handleToEditLocation = () => {
-    requester
-      .patch("/users/me/", {
-        location: localPosition,
-      })
-      .then(() => {
-        toast("내 동네가 변경되었습니다.");
+  const handleToVerifyLocation = () => {
+    requester({
+      url: "/users/me/location/",
+      method: "PATCH",
+      data: "verify",
+      headers: { "Content-Type": "text/plain" },
+    })
+      .then((res) => {
+        console.log(res.data);
+        toast("동네인증이 완료되었습니다.");
         navigate("/main", {
           state: { page: "user" },
         });
       })
       .catch(() => {
-        console.log("edit location error");
+        console.log("verify location error");
       });
   };
 
@@ -148,7 +120,7 @@ const LocationPage = () => {
         <button className={styles.back} onClick={handleToGoBack}>
           <img src={BackArrow} alt="뒤로" />
         </button>
-        <p>동네 설정하기</p>
+        <p>동네 인증하기</p>
       </header>
       <div className={styles.mapwrapper}>
         <Map
@@ -172,21 +144,38 @@ const LocationPage = () => {
       <button className={styles.currentLocation} onClick={getLocation}>
         <img src={currentLocationIcon} alt="현재 위치" />
       </button>
-      <div className={styles.subwrapper}>
-        {!!localPosition ? (
-          <p className={styles.locationtext}>
-            현재 위치가 <b>'{localPosition}'</b> 내에 있습니다.
-          </p>
-        ) : (
+      <p
+        className={`${styles.warning} ${
+          !loading && localPosition !== currentPosition && styles.show
+        }`}
+      >
+        잠깐만요! 현재 위치가 <b>{toShortDivision(currentPosition)}이에요.</b>
+      </p>
+      <div
+        className={`${styles.subwrapper} ${
+          !loading && localPosition !== currentPosition && styles.lower
+        }`}
+      >
+        {loading && (
           <p className={styles.locationtext}>현재 위치를 찾는 중입니다.</p>
         )}
+        {!loading &&
+          (localPosition === currentPosition ? (
+            <p className={styles.locationtext}>
+              현재 위치가 내 동네로 설정한 <b>'{localPosition}'</b> 내에 있어요.
+            </p>
+          ) : (
+            <p className={styles.locationtext}>
+              현재 내 동네로 설정되어 있는 <b>'{localPosition}'</b>에서만
+              동네인증을 할 수 있어요. 현재 위치를 확인해주세요.
+            </p>
+          ))}
         <button
           className={styles.signup}
-          disabled={!localPosition}
-          onClick={prev === "signup" ? handleToSignUp : handleToEditLocation}
+          disabled={localPosition !== currentPosition}
+          onClick={handleToVerifyLocation}
         >
-          <b>{!!specificPosition ? specificPosition : "이 동네"}</b>에서
-          {prev === "signup" ? " 회원가입" : " 거래하기"}
+          <b>동네인증 완료하기</b>
         </button>
       </div>
     </div>
