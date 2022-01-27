@@ -19,6 +19,7 @@ import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/Edit
 
 import KakaoPage from "./KakaoLogin/KakaoPage";
 import SelectLocation from "./components/SelectLocation/SelectLocation";
+import Hearts from "./components/Hearts/Hearts";
 
 function App() {
   const token: string | null = localStorage.getItem("token");
