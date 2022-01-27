@@ -106,23 +106,3 @@ export const toShortDivision = (division: string) => {
     return "";
   }
 };
-
-/* phone input을 xxx-xxxx-xxxx 형태로 format */
-export const formatPhoneNumber = (value: string) => {
-  if (!value) return value;
-  // 숫자가 아닌 부분 지워서 숫자로만 이루어진 문자열로 바꾼다.
-  const phoneNumber = value.replace(/[^\d]/g, "");
-  const phoneNumberLength = phoneNumber.length;
-
-  /* 입력한 숫자 개수가 3개 이하일 경우 */
-  if (phoneNumberLength < 4) return phoneNumber;
-  /* 입력한 숫자 개수가 4개 이상 7개 이하일 경우 */
-  if (phoneNumberLength < 8) {
-    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
-  }
-  /* 입력한 숫자 개수 7개 이상일 경우, 11개 입력한 경우 그 이상 입력 안 됨. */
-  return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(
-    3,
-    7
-  )}-${phoneNumber.slice(7, 11)}`;
-};

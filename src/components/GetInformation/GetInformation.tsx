@@ -2,7 +2,7 @@ import styles from "./GetInformation.module.scss";
 import carrotLogo from "../../icons/daangn-logo.svg";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { formatPhoneNumber } from "../Utilities/functions";
+import { formatPhoneNumber } from "../SignUpPage/SignUp";
 import CheckIcon from "../SignUpPage/CheckIcon/CheckIcon";
 import { useLocation, useNavigate } from "react-router-dom";
 

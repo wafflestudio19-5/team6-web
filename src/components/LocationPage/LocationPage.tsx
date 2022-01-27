@@ -38,7 +38,7 @@ const LocationPage = () => {
     requester
       .get("/users/me/")
       .then((res) => {
-        setLocalPosition(res.data.active_location);
+        setLocalPosition(res.data.first_location);
       })
       .catch((error) => {
         toast.error(error);

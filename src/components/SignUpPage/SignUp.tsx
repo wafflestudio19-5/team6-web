@@ -8,7 +8,6 @@ import CheckIcon from "./CheckIcon/CheckIcon";
 import Button from "@mui/material/Button";
 import { user } from "../../apis/requester";
 import { toast } from "react-hot-toast";
-import { formatPhoneNumber } from "../Utilities/functions";
 import { KAKAO_AUTH_URL } from "../../KakaoLogin/OAuth";
 import kakaoLogo from "../../icons/kakao-logo.png";
 
