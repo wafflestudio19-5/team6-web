@@ -25,11 +25,10 @@
       width: 40px;
       left: 5px;
       background: white;
+      cursor: pointer;
 
       img {
         position: relative;
-        top: 9px;
-        left: 9px;
         width: 22px;
       }
     }
@@ -132,6 +131,10 @@
         color: #ff344c;
         font-size: 10px;
       }
+    }
+
+    .image-input {
+      visibility: hidden;
     }
   }
 

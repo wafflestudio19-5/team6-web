@@ -3,10 +3,17 @@ import ArrowIcon from "../../../../icons/MyCarrot/right-arrow.png";
 import EditIcon from "../../../../icons/MyCarrot/edit.png";
 import Test from "../../../../icons/MyCarrot/default-profile-image.png";
 import { Link, useNavigate } from "react-router-dom";
-import { TUserInfo } from "../../../../type/user";
 import { toShortDivision } from "../../../Utilities/functions";
 
-const ProfileBar = (props: { nickname: string; division: string }) => {
+const ProfileBar = ({
+  image,
+  nickname,
+  division,
+}: {
+  image: string;
+  nickname: string;
+  division: string;
+}) => {
   const navigate = useNavigate();
 
   const handleToEditProfilePage = () => {
@@ -17,12 +24,14 @@ const ProfileBar = (props: { nickname: string; division: string }) => {
     <div>
       <Link to="/profile" className={styles["profile-button"]}>
         <div className={styles.imageframe}>
-          <img className={styles.image} src={Test} alt="profile image" />
+          <img
+            className={styles.image}
+            src={image ? image : Test}
+            alt="profile image"
+          />
         </div>
-        <p className={styles.nickname}>{props.nickname}</p>
-        <p className={styles["id-location"]}>
-          {toShortDivision(props.division)}
-        </p>
+        <p className={styles.nickname}>{nickname}</p>
+        <p className={styles["id-location"]}>{toShortDivision(division)}</p>
         <img className={styles.rightarrow} src={ArrowIcon} alt="right arrow" />
       </Link>
       <button className={styles.editbutton} onClick={handleToEditProfilePage}>

@@ -14,13 +14,15 @@ import { TUserInfo, TUserInfoV2 } from "../../../type/user";
 import { toShortDivision } from "../../Utilities/functions";
 
 const MyCarrot = () => {
+  const [activeLocation, setActiveLocation] = useState<string>("");
   const [myInfo, setMyInfo] = useState<TUserInfoV2>({
-    active_location: "",
-    active_location_verified: false,
-    active_range_of_location: "LEVEL_ONE",
-    inactive_location: "",
-    inactive_location_verified: false,
-    inactive_range_of_location: "LEVEL_ONE",
+    first_location: "",
+    first_location_verified: false,
+    first_range_of_location: "LEVEL_ONE",
+    is_first_location_active: true,
+    second_location: "",
+    second_location_verified: false,
+    second_range_of_location: "LEVEL_ONE",
     name: "",
     nickname: "",
     image_url: "",
@@ -39,6 +41,9 @@ const MyCarrot = () => {
     try {
       const res = await requester.get("/users/me/");
       setMyInfo(res.data);
+      res.data.is_first_location_active
+        ? setActiveLocation(res.data.first_location)
+        : setActiveLocation(res.data.second_location);
     } catch (error) {
       console.log("getMe error");
     }
@@ -57,8 +62,9 @@ const MyCarrot = () => {
     <div className={styles["mycarrot-wrapper"]}>
       <div className={styles["profile-wrapper"]}>
         <ProfileBar
+          image={myInfo.image_url}
           nickname={myInfo.nickname}
-          division={toShortDivision(myInfo.active_location)}
+          division={toShortDivision(activeLocation)}
         />
         <HistoryButtons />
       </div>
@@ -86,14 +92,6 @@ const MyCarrot = () => {
         >
           <img src={icon6} alt="toggle switch" />
           <p>관심 카테고리 설정</p>
-        </button>
-        <button
-          onClick={() => {
-            console.log("모아보기");
-          }}
-        >
-          <img src={icon5} alt="모아보기" />
-          <p>모아보기</p>
         </button>
       </div>
     </div>

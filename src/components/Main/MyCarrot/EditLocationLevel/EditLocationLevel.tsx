@@ -52,8 +52,8 @@ const EditLocationLevel = () => {
       .then((res) => {
         setLevel(toNumber(res.data.active_range_of_location));
         setPrevLevel(res.data.active_range_of_location);
-        setLocalPosition(res.data.active_location);
-        getAdjacentRegion(res.data.active_location);
+        setLocalPosition(res.data.first_location);
+        getAdjacentRegion(res.data.first_location);
         console.log(res.data);
       })
       .catch((error) => {

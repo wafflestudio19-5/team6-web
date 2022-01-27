@@ -12,12 +12,13 @@ import { toast } from "react-hot-toast";
 const Profile = () => {
   const [products, setProducts] = useState<number>(0);
   const [myInfo, setMyInfo] = useState<TUserInfoV2>({
-    active_location: "",
-    active_location_verified: false,
-    active_range_of_location: "LEVEL_ONE",
-    inactive_location: "",
-    inactive_location_verified: false,
-    inactive_range_of_location: "LEVEL_ONE",
+    first_location: "",
+    first_location_verified: false,
+    first_range_of_location: "LEVEL_ONE",
+    is_first_location_active: true,
+    second_location: "",
+    second_location_verified: false,
+    second_range_of_location: "LEVEL_ONE",
     name: "",
     nickname: "",
     image_url: "",
@@ -36,14 +37,16 @@ const Profile = () => {
       .get("/users/me/")
       .then((res) => {
         setMyInfo(res.data);
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
-    requester
-      .get("/users/1/products/?pageNumber=0&pageSize=10&status=all")
-      .then((res) => {
-        setProducts(res.data.total_elements);
+        requester
+          .get(
+            `/users/${res.data.name}/products/?pageNumber=0&pageSize=10&status=all`
+          )
+          .then((res) => {
+            setProducts(res.data.total_elements);
+          })
+          .catch((error) => {
+            toast.error(error);
+          });
       })
       .catch((error) => {
         toast.error(error);

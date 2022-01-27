@@ -10,14 +10,15 @@ export type TUserInfo = {
 };
 
 export type TUserInfoV2 = {
-  active_location: string;
-  active_location_verified: boolean;
-  active_range_of_location: string;
+  first_location: string;
+  first_location_verified: boolean;
+  first_range_of_location: string;
+  is_first_location_active: boolean;
   email: string;
   image_url: string;
-  inactive_location: string;
-  inactive_location_verified: boolean;
-  inactive_range_of_location: string;
+  second_location: string;
+  second_location_verified: boolean;
+  second_range_of_location: string;
   is_active: boolean;
   name: string;
   nickname: string;
