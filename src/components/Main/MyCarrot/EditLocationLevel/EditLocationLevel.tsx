@@ -115,9 +115,7 @@ const EditLocationLevel = () => {
       })
       .then(() => {
         toast("거래 범위가 변경되었습니다.");
-        navigate("/main", {
-          state: { page: "user" },
-        });
+        navigate("/main?page=user");
       })
       .catch(() => {
         console.log("edit range_of_location error");
@@ -127,7 +125,7 @@ const EditLocationLevel = () => {
   return (
     <div className={styles.wrapper}>
       <header>
-        <Link to={"/main"} state={{ page: "user" }} className={styles.back}>
+        <Link to={"/main?page=user"} className={styles.back}>
           <img src={BackArrowIcon} alt="뒤로" />
         </Link>
         <p>내 동네 설정</p>

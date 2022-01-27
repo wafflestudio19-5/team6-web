@@ -98,7 +98,7 @@ const SelectLocation = () => {
           })
           .then((res) => {
             localStorage.setItem("token", res.data.access_token);
-            navigate("/main");
+            navigate("/main?page=home");
           })
           .catch((error) => {
             toast.error("로그인 오류");
@@ -121,7 +121,7 @@ const SelectLocation = () => {
       setSearchState("NO_INPUT");
       setSearchingList([]);
     } else {
-      navigate(`/select-location?region=${searchWord}`);
+      navigate(`/select-location?region=${searchWord}`, { replace: true });
       const regionList = regionData.filter(
         (region) => region.match(searchWord) !== null
       );

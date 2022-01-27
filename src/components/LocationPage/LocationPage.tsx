@@ -88,11 +88,7 @@ const LocationPage = () => {
   };
 
   const handleToGoBack = () => {
-    prev !== ""
-      ? navigate("/main", {
-          state: { page: "user" },
-        })
-      : navigate(-1);
+    prev !== "" ? navigate("/main?page=user") : navigate(-1);
   };
 
   const handleToVerifyLocation = () => {

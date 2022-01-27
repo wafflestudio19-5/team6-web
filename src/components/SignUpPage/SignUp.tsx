@@ -244,6 +244,7 @@ const SignUp = () => {
             className={styles["set-location"]}
             disabled={
               !regId.test(inputs.username) ||
+              !regNickname.test(inputs.nickname) ||
               !regPassword.test(inputs.password) ||
               inputs.password !== inputs.passwordConfirm ||
               !regPhone.test(inputs.phone) ||

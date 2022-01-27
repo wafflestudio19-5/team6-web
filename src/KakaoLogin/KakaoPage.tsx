@@ -1,20 +1,29 @@
+import styles from "./KakaoPage.module.scss";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../icons/SelectLocation/spinner-circle.gif";
+import { useEffect } from "react";
 
 const KakaoPage = () => {
   const navigate = useNavigate();
   const code = new URL(window.location.href).searchParams.get("code");
 
-  const kakaoLogin = (auth: string | null) => {
+  useEffect(() => {
+    socialLogin(code);
+  }, []);
+
+  const socialLogin = (auth: string | null) => {
     axios({
       method: "GET",
-      url: `http://{host+port}/oauth/kakao/?code=${auth}`,
+      url: `https://carrotserver.shop/oauth/kakao/?code=${auth}`,
     })
       .then((res) => {
         console.log(res);
         const ACCESS_TOKEN = res.data.access_token;
         localStorage.setItem("token", ACCESS_TOKEN);
-        navigate("/main");
+        navigate("/main?page=home", {
+          state: { kakao_status: res.data.kakao_status },
+        });
       })
       .catch((error) => {
         console.log("소셜로그인 에러", error);
@@ -23,14 +32,10 @@ const KakaoPage = () => {
       });
   };
 
-  const onClick = () => {
-    kakaoLogin(code);
-  };
-
   return (
-    <div>
-      <button onClick={onClick}>코드 읽어봐</button>
-    </div>
+    <>
+      <img className={styles.spinner} src={Spinner} alt="로딩중" />
+    </>
   );
 };
 

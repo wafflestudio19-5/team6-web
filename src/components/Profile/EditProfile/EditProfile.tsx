@@ -88,9 +88,7 @@ const EditProfile = () => {
       })
       .then(() => {
         toast("프로필이 변경되었습니다.");
-        navigate(`${prev === "main" ? "/main" : "/profile"}`, {
-          state: prev === "main" ? { page: "user" } : null,
-        });
+        navigate(`${prev === "main" ? "/main?page=user" : "/profile"}`);
       })
       .catch(() => {
         console.log("edit nickname error");
@@ -119,9 +117,7 @@ const EditProfile = () => {
     if (image !== prevImage) {
       setConfirmOpen(true);
     } else {
-      prev === "main"
-        ? navigate("/main", { state: { page: "user" } })
-        : navigate(-1);
+      prev === "main" ? navigate("/main?page=user") : navigate(-1);
     }
   };
 
@@ -130,17 +126,13 @@ const EditProfile = () => {
       requester
         .delete(`/images/${imageID}/`)
         .then(() => {
-          prev === "main"
-            ? navigate("/main", { state: { page: "user" } })
-            : navigate(-1);
+          prev === "main" ? navigate("/main?page=user") : navigate(-1);
         })
         .catch(() => {
           toast.error("이미지 삭제 오류");
         });
     } else {
-      prev === "main"
-        ? navigate("/main", { state: { page: "user" } })
-        : navigate(-1);
+      prev === "main" ? navigate("/main?page=user") : navigate(-1);
     }
   };
 

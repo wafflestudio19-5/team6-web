@@ -21,8 +21,6 @@ const Sales = () => {
   const modeQuery = params.get("mode");
 
   useEffect(() => {
-    /*location.state && setMode(location.state.mode);
-    location.state = null;*/
     modeQuery && setMode(modeQuery);
     getMySales();
   }, []);
@@ -79,7 +77,7 @@ const Sales = () => {
               : `${styles.entire} ${styles.tab}`
           }
           onClick={() => {
-            navigate("/profile/sales?mode=entire");
+            navigate("/profile/sales?mode=entire", { replace: true });
             setMode("entire");
           }}
         >
@@ -92,7 +90,7 @@ const Sales = () => {
               : `${styles["on-sale"]} ${styles.tab}`
           }
           onClick={() => {
-            navigate("/profile/sales?mode=on-sale");
+            navigate("/profile/sales?mode=on-sale", { replace: true });
             setMode("on-sale");
           }}
         >
@@ -105,7 +103,7 @@ const Sales = () => {
               : `${styles.sold} ${styles.tab}`
           }
           onClick={() => {
-            navigate("/profile/sales?mode=sold");
+            navigate("/profile/sales?mode=sold", { replace: true });
             setMode("sold");
           }}
         >

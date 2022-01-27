@@ -8,7 +8,7 @@ import Set2 from "../../icons/Footer/settings-unselected.png";
 import { useEffect, useState } from "react";
 import HomeGoods from "./Home/HomeGoods";
 import HomeHeader from "./Home/HomeHeader";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import * as React from "react";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
@@ -19,22 +19,29 @@ const Main = () => {
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState("home");
 
+  const navigate = useNavigate();
   const loc = useLocation();
+  const params = new URLSearchParams(loc.search);
+  const pageQuery = params.get("page");
 
   useEffect(() => {
-    loc.state && setPage(loc.state.page);
-    loc.state = null;
+    /*loc.state && setPage(loc.state.page);
+    loc.state = null;*/
+    pageQuery && setPage(pageQuery);
   }, []);
 
   const changeToHome = () => {
+    navigate("/main?page=home", { replace: true });
     setPage("home");
   };
 
   const changeToUser = () => {
+    navigate("/main?page=user", { replace: true });
     setPage("user");
   };
 
   const changeToSettings = () => {
+    navigate("/main?page=settings", { replace: true });
     setPage("settings");
   };
 
