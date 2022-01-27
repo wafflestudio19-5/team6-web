@@ -12,9 +12,11 @@ import { Navigate, useLocation } from "react-router-dom";
 import * as React from "react";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
+import User from "../../apis/User/User";
 
 const Main = () => {
-  const [location, setLocation] = useState("301동");
+  const [location, setLocation] = useState<string>("Loading..");
+  const [inactiveLocation, setInactiveLocation] = useState("");
   const [write, setWrite] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState("home");
@@ -24,6 +26,12 @@ const Main = () => {
   useEffect(() => {
     loc.state && setPage(loc.state.page);
     loc.state = null;
+    User.getMe().then((res) => {
+      const dong = res.data.active_location.split(" ");
+      setLocation(dong[dong.length - 1]);
+      const inactiveDong = res.data.inactive_location.split(" ");
+      setInactiveLocation(inactiveDong[inactiveDong.length - 1]);
+    });
   });
 
   const changeToHome = () => {
@@ -50,7 +58,12 @@ const Main = () => {
       <div className={styles.wrapper}>
         <div className={styles.header}>
           {page === "home" && (
-            <HomeHeader location={location} setLocation={setLocation} />
+            <HomeHeader
+              activeLocation={location}
+              setActiveLocation={setLocation}
+              inactiveLocation={inactiveLocation}
+              setInactiveLocation={setInactiveLocation}
+            />
           )}
           {page === "user" && <p>나의 당근</p>}
           {page === "settings" && <p>앱 설정</p>}

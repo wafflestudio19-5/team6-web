@@ -395,7 +395,6 @@ const Article = () => {
             />
             <h1 className={styles.userName}>{currentArticle?.user.name}</h1>
             <p className={styles.userRegion}>{currentArticle?.location}</p>
-            <h1 className={styles.mannerTemp}>{""}°C</h1>
           </div>
           {isSeller && (
             <div className={styles.statusSelect}>
