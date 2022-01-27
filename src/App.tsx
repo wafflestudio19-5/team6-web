@@ -19,7 +19,7 @@ import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/Edit
 
 import KakaoPage from "./KakaoLogin/KakaoPage";
 import SelectLocation from "./components/SelectLocation/SelectLocation";
-import Hearts from "./components/Hearts/Hearts";
+import Likes from "./components/Likes/Likes";
 import { UserDto } from "./type/dto/user.dto";
 
 import { UserDispatchContext, UserStateContext } from "./context/user-context";
@@ -54,7 +54,7 @@ function App() {
             <Route path="/profile/sales" element={<Sales />} />
             <Route path="/sales-history" element={<SalesHistory />} />
             <Route path="/purchase-history" element={<PurchaseHistory />} />
-            <Route path="/hearts" element={<Hearts />} />
+            <Route path="/likes" element={<Likes />} />
             <Route path="/article/:id" element={<Article />} />
             <Route path="/write" element={<WriteArticle />} />
             <Route path="/verify-location" element={<LocationPage />} />
