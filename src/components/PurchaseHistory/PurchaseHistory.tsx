@@ -6,7 +6,8 @@ import Requests from "./Requests/Requests";
 import Refused from "./Refused/Refused";
 import Purchased from "./Purchased/Purchased";
 import requester from "../../apis/requester";
-import { myRequestData, userType } from "../../type/types";
+import { myRequestData } from "../../type/types";
+import { TUserInfo } from "../../type/user";
 import styles2 from "../Utilities/confirm.module.scss";
 
 export type srcPair = {
@@ -19,7 +20,7 @@ const PurchaseHistory = () => {
   const [requestList, setRequestList] = useState<myRequestData[]>([]);
   const [purchasedList, setPurchasedList] = useState<myRequestData[]>([]);
   const [refusedList, setRefusedList] = useState<myRequestData[]>([]);
-  const [requestUser, setRequestUser] = useState<userType | null>(null);
+  const [requestUser, setRequestUser] = useState<TUserInfo | null>(null);
   const [update, setUpdate] = useState(false);
   const [srcList, setSrcList] = useState<srcPair[]>([]);
   useEffect(() => {
@@ -48,7 +49,7 @@ const PurchaseHistory = () => {
         );
         res.data.forEach((article: myRequestData) =>
           requester
-            .get(`/images/${article.product.image}/`)
+            .get(`/images/${article.product.image_url}/`)
             .then((res) => {
               setSrcList((srcList) => [
                 ...srcList,

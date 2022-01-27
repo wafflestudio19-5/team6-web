@@ -1,8 +1,7 @@
 import { useEffect, useState, Dispatch } from "react";
-import requester from "../requester";
 import Product from "./Product";
-import { myProductsContent, rawProductsData } from "../../type/product";
 import Image from "../Image/Image";
+import { productType } from "../../type/types";
 
 type TSearchProduct = {
   pageNumber: number;
@@ -23,7 +22,7 @@ export default function useProduct({
   pageNumber,
   searched,
 }: TSearchProduct) {
-  const [products, setProducts] = useState<rawProductsData>([]);
+  const [products, setProducts] = useState<productType[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(false);
 
   useEffect(() => {
@@ -35,24 +34,8 @@ export default function useProduct({
       maxPrice,
       rangeOfLocation
     ).then((res) => {
-      res.data.content.forEach((article: myProductsContent) => {
-        Image.getImage(article.image)
-          .then((res) => {
-            const tempState = {
-              data: article,
-              url: res.data.url,
-            };
-            setProducts((prevState) => {
-              return prevState.concat(tempState);
-            });
-          })
-          .catch((e) => {
-            const tempState = {
-              data: article,
-              url: "",
-            };
-            setProducts((prevState) => prevState.concat(tempState));
-          });
+      setProducts((prevState) => {
+        return prevState.concat(res.data.content);
       });
       setHasMore(!res.data.last);
     });

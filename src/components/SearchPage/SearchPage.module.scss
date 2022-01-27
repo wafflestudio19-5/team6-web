@@ -72,12 +72,11 @@
     height: calc(100% - 85px);
     bottom: 10px;
     overflow-y: scroll;
-    /*
     -ms-overflow-style: none;
     scrollbar-width: none;
     &::-webkit-scrollbar {
       display: none;
-    }*/
+    }
     .lastElement {
       position: relative;
       .lastP{
@@ -206,7 +205,42 @@
         }
       }
     }
-
+    .noResultWrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .noResults {
+        position: relative;
+        top: 150px;
+      }
+      .noResultsMessage {
+        position: relative;
+        margin: 3px;
+        top: 150px;
+      }
+      .noResultsKeyword {
+        position: relative;
+        color: #ff8f45;
+      }
+      .guideWrapper {
+        position: relative;
+        top: 200px;
+        margin: 15px;
+        padding: 10px;
+        width: calc(100% - 50px);
+        height: 100px;
+        background-color: #f1f3f5;
+        .guideHeader {
+          position: relative;
+          font-size: 14px;
+          left: 10px;
+        }
+        .guideUl {
+          font-size: 14px;
+        }
+      }
+    }
   }
 
 }

@@ -2,10 +2,10 @@ import styles from "./Settings.module.scss";
 import backArrow from "../../../icons/leftArrow.png";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import requester from "../../../apis/requester";
-import { userType } from "../../../type/types";
+import { TUserInfo } from "../../../type/user";
 
 const Account = (props: { setAccount: Dispatch<SetStateAction<boolean>> }) => {
-  const [user, setUser] = useState<userType | null>(null);
+  const [user, setUser] = useState<TUserInfo | null>(null);
   useEffect(() => {
     requester.get("/users/me/").then((res) => {
       setUser(res.data);

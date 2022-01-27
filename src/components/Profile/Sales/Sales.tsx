@@ -4,16 +4,16 @@ import BackArrowIcon from "../../../icons/leftArrow.png";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import SalesArticle from "./SalesArticle/SalesArticle";
-import { myProductsData } from "../../../type/product";
+import { productType } from "../../../type/types";
 import requester from "../../../apis/requester";
 import { srcPair } from "../../SalesHistory/SalesHistory";
 
 const Sales = () => {
   const [mode, setMode] = useState<string>("");
   const [srcList, setSrcList] = useState<srcPair[]>([]);
-  const [salesList, setSalesList] = useState<myProductsData[] | null>(null);
-  const [onSaleList, setOnSaleList] = useState<myProductsData[] | null>(null);
-  const [soldList, setSoldList] = useState<myProductsData[] | null>(null);
+  const [salesList, setSalesList] = useState<productType[] | null>(null);
+  const [onSaleList, setOnSaleList] = useState<productType[] | null>(null);
+  const [soldList, setSoldList] = useState<productType[] | null>(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,18 +35,18 @@ const Sales = () => {
       setSalesList(res.data.content);
       setOnSaleList(
         res.data.content.filter(
-          (data: myProductsData) =>
+          (data: productType) =>
             data.status === "FOR_SALE" || data.status === "RESERVED"
         )
       );
       setSoldList(
         res.data.content.filter(
-          (data: myProductsData) => data.status === "SOLD_OUT"
+          (data: productType) => data.status === "SOLD_OUT"
         )
       );
-      res.data.content.forEach((article: myProductsData) =>
+      res.data.content.forEach((article: productType) =>
         requester
-          .get(`/images/${article.image}/`)
+          .get(`/images/${article.image_url}/`)
           .then((res) => {
             setSrcList((srcList) => [
               ...srcList,
