@@ -10,28 +10,12 @@ import { srcPair } from "../PurchaseHistory";
 import bell from "../../../icons/bell.png";
 import requester from "../../../apis/requester";
 import { TUserInfo } from "../../../type/user";
-import { PurchaseOrdersWithoutUserDto } from "../../../type/dto/purchase-orders-without-user.dto";
-import { GetMyPurchaseOrdersDto } from "../../../type/dto/for-api/get-my-purchase-orders.dto";
-import { RequestStatus } from "../../../type/enum/request-status";
-import { UserDto } from "../../../type/dto/user.dto";
 
 const Requests = (props: {
-  setRequestUser: Dispatch<SetStateAction<UserDto | null>>;
+  requestList: myRequestData[];
+  setRequestUser: Dispatch<SetStateAction<TUserInfo | null>>;
+  srcList: srcPair[];
 }) => {
-  const [requestList, setRequestList] = useState<
-    PurchaseOrdersWithoutUserDto[]
-  >([]);
-
-  useEffect(() => {
-    requester
-      .get<GetMyPurchaseOrdersDto>(
-        "/users/me/purchase-orders/?pageNumber=0&pageSize=15&status=pending"
-      )
-      .then((res) => {
-        setRequestList(res.data.content);
-      });
-  }, []);
-
   const navigate = useNavigate();
 
   const goToProductPage = (id: number) => {
@@ -41,18 +25,22 @@ const Requests = (props: {
   };
 
   const changeToRequestPage = (id: number) => {
-    // 구매 요청 모달
+    /* (now) 구매 요청 페이지 구현 후 연결
+    navigate(`/request/${id}`, {
+      state: { prev: "purchase-history" },
+    });
+     */
   };
 
-  const cancelRequest = (data: PurchaseOrdersWithoutUserDto) => {
+  const cancelRequest = (data: myRequestData) => {
     // (next) api doesn't return the request id
   };
 
-  const handleAction = (data: PurchaseOrdersWithoutUserDto) => {
+  const handleAction = (data: myRequestData) => {
     props.setRequestUser(data.product.user);
   };
 
-  const requestComponents = requestList.map((article) => {
+  const requestComponents = props.requestList.map((article) => {
     return (
       <div className={styles.articleWrapper}>
         <div
@@ -62,13 +50,15 @@ const Requests = (props: {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={article.product.image_url}
+            src={
+              props.srcList.find((pair) => pair.id === article.product.id)?.src
+            }
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
             <div className={styles.firstLine}>
               <p className={styles.title}>{article.product.title}</p>
-              {article.status === RequestStatus.CONFIRMED && (
+              {article.accepted && (
                 <img
                   className={styles.bell}
                   src={bell}
@@ -141,7 +131,7 @@ const Requests = (props: {
 
   return (
     <div className={styles.wrapper}>
-      {requestList.length ? (
+      {props.requestList.length ? (
         <>{requestComponents}</>
       ) : (
         <p>거래 요청중인 게시물이 없어요.</p>

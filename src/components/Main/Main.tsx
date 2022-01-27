@@ -14,6 +14,7 @@ import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
 
 const Main = () => {
+  const [location, setLocation] = useState("301동");
   const [write, setWrite] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState("home");
@@ -37,6 +38,10 @@ const Main = () => {
     setPage("settings");
   };
 
+  if (location === "") {
+    return <div />;
+  }
+
   return (
     <>
       {localStorage.getItem("token") === null && (
@@ -44,7 +49,9 @@ const Main = () => {
       )}
       <div className={styles.wrapper}>
         <div className={styles.header}>
-          {page === "home" && <HomeHeader />}
+          {page === "home" && (
+            <HomeHeader location={location} setLocation={setLocation} />
+          )}
           {page === "user" && <p>나의 당근</p>}
           {page === "settings" && <p>앱 설정</p>}
         </div>

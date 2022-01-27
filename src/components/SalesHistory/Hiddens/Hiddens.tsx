@@ -6,33 +6,20 @@ import requester from "../../../apis/requester";
 import { productType } from "../../../type/types";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { ActionTarget, srcPair } from "../SalesHistory";
+import { srcPair } from "../SalesHistory";
 
 import { useNavigate } from "react-router-dom";
-import { ProductSimpleWithoutUserDto } from "../../../type/dto/product-simple-without-user.dto";
-import { GetMyProductsDto } from "../../../type/dto/for-api/get-my-products.dto";
 
 const Hiddens = (props: {
+  hiddenList: productType[];
   setUpdate: Dispatch<SetStateAction<boolean>>;
   setHiddenActions: Dispatch<SetStateAction<boolean>>;
-  setActionTarget: Dispatch<SetStateAction<ActionTarget>>;
+  setActionTarget: Dispatch<SetStateAction<number>>;
+  srcList: srcPair[];
 }) => {
-  const [hiddenList, setHiddenList] = useState<ProductSimpleWithoutUserDto[]>(
-    []
-  );
-  useEffect(() => {
-    requester
-      .get<GetMyProductsDto>(
-        "/users/me/products/?pageNumber=0&pageSize=15&status=hidden"
-      )
-      .then((res) => {
-        setHiddenList(res.data.content);
-      });
-  }, []);
-
   const navigate = useNavigate();
 
-  const changeToVisible = (data: ProductSimpleWithoutUserDto) => {
+  const changeToVisible = (data: productType) => {
     requester
       .put(`/products/${data.id}/status/`, { action: "show" })
       .then((res) => {
@@ -41,21 +28,17 @@ const Hiddens = (props: {
       .catch((e) => console.log(e));
   };
 
-  const goToProductPage = (data: ProductSimpleWithoutUserDto) => {
+  const goToProductPage = (data: productType) => {
     navigate(`/article/${data.id}`, {
       state: { prev: "sales-history" },
     });
   };
   const handleAction = (id: number) => {
     props.setHiddenActions(true);
-    props.setActionTarget({
-      id: id,
-      list: hiddenList,
-      dispatch: setHiddenList,
-    });
+    props.setActionTarget(id);
   };
 
-  const hiddenComponents = hiddenList.map((article) => {
+  const hiddenComponents = props.hiddenList.map((article) => {
     return (
       <div className={styles.articleWrapper}>
         <div
@@ -65,7 +48,7 @@ const Hiddens = (props: {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={article.image_url}
+            src={props.srcList.find((pair) => pair.id === article.id)?.src}
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
@@ -135,7 +118,7 @@ const Hiddens = (props: {
 
   return (
     <div className={styles.wrapper}>
-      {hiddenList.length ? (
+      {props.hiddenList.length ? (
         <>{hiddenComponents}</>
       ) : (
         <p>숨기기한 게시물이 없어요.</p>

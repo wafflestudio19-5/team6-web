@@ -1,29 +1,19 @@
 import styles from "./Purchased.module.scss";
 import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
+import moreActions from "../../../icons/more.png";
 import requester from "../../../apis/requester";
+import { myRequestData } from "../../../type/types";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { srcPair } from "../PurchaseHistory";
 
 import { useNavigate } from "react-router-dom";
-import { PurchaseOrdersWithoutUserDto } from "../../../type/dto/purchase-orders-without-user.dto";
-import { GetMyPurchaseOrdersDto } from "../../../type/dto/for-api/get-my-purchase-orders.dto";
 
-const Purchased = () => {
-  const [purchasedList, setPurchasedList] = useState<
-    PurchaseOrdersWithoutUserDto[]
-  >([]);
-
-  useEffect(() => {
-    requester
-      .get<GetMyPurchaseOrdersDto>(
-        "/users/me/purchase-orders/?pageNumber=0&pageSize=15&status=accepted"
-      )
-      .then((res) => {
-        setPurchasedList(res.data.content);
-      });
-  }, []);
-
+const Purchased = (props: {
+  purchasedList: myRequestData[];
+  srcList: srcPair[];
+}) => {
   const navigate = useNavigate();
 
   const goToProductPage = (id: number) => {
@@ -32,7 +22,11 @@ const Purchased = () => {
     });
   };
 
-  const soldoutComponents = purchasedList.map((article) => {
+  const changeToReview = (data: myRequestData) => {
+    // (next) 거래 후기 페이지로 연결
+  };
+
+  const soldoutComponents = props.purchasedList.map((article) => {
     return (
       <div className={styles.articleWrapper}>
         <div
@@ -42,7 +36,9 @@ const Purchased = () => {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={article.product.image_url}
+            src={
+              props.srcList.find((pair) => pair.id === article.product.id)?.src
+            }
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
@@ -92,6 +88,14 @@ const Purchased = () => {
         </div>
         <div className={styles.lower}>
           <div className={styles.line} />
+          <div className={styles.buttons}>
+            <div
+              className={styles.button}
+              onClick={() => changeToReview(article)}
+            >
+              거래 후기 작성하기
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -99,7 +103,7 @@ const Purchased = () => {
 
   return (
     <div className={styles.wrapper}>
-      {purchasedList.length ? (
+      {props.purchasedList.length ? (
         <>{soldoutComponents}</>
       ) : (
         <p>거래완료된 게시물이 없어요.</p>

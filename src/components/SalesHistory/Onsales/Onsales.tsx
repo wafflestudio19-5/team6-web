@@ -4,99 +4,56 @@ import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import moreActions from "../../../icons/more.png";
+import { productType } from "../../../type/types";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeDifference } from "../../Utilities/functions";
-import { ActionTarget, srcPair } from "../SalesHistory";
-import { ProductSimpleWithoutUserDto } from "../../../type/dto/product-simple-without-user.dto";
-import { GetMyProductsDto } from "../../../type/dto/for-api/get-my-products.dto";
-import { SalesStatus } from "../../../type/enum/sales-status";
-import { ProductStatusAction } from "../../../type/enum/product-status-action";
+import { srcPair } from "../SalesHistory";
 
 const Onsales = (props: {
+  onsaleList: productType[];
   setUpdate: Dispatch<SetStateAction<boolean>>;
   setOnsaleActions: Dispatch<SetStateAction<boolean>>;
-  setActionTarget: Dispatch<SetStateAction<ActionTarget>>;
+  setActionTarget: Dispatch<SetStateAction<number>>;
+  srcList: srcPair[];
 }) => {
-  const [onsaleList, setOnsaleList] = useState<ProductSimpleWithoutUserDto[]>(
-    []
-  );
-  useEffect(() => {
-    requester
-      .get<GetMyProductsDto>(
-        "/users/me/products/?pageNumber=0&pageSize=15&status=for-sale"
-      )
-      .then((res) => {
-        setOnsaleList(res.data.content);
-      });
-  }, []);
-
   const navigate = useNavigate();
 
-  const changeToReserved = (data: ProductSimpleWithoutUserDto) => {
+  const changeToReserved = (data: productType) => {
     requester
-      .put(`/products/${data.id}/status/`, {
-        action: ProductStatusAction.RESERVED,
-      })
+      .put(`/products/${data.id}/status/`, { action: "reserved" })
       .then((res) => {
         props.setUpdate((update) => !update);
-        setOnsaleList(
-          onsaleList.map((product) => {
-            if (product.id !== data.id) {
-              return product;
-            } else {
-              return { ...product, status: SalesStatus.RESERVED };
-            }
-          })
-        );
       })
       .catch((e) => console.log(e));
   };
-  const changeToOnsale = (data: ProductSimpleWithoutUserDto) => {
+  const changeToOnsale = (data: productType) => {
     requester
-      .put(`/products/${data.id}/status/`, {
-        action: ProductStatusAction.FOR_SALE,
-      })
+      .put(`/products/${data.id}/status/`, { action: "for sale" })
       .then((res) => {
         props.setUpdate((update) => !update);
-        setOnsaleList(
-          onsaleList.map((product) => {
-            if (product.id !== data.id) {
-              return product;
-            } else {
-              return { ...product, status: SalesStatus.FOR_SALE };
-            }
-          })
-        );
       })
       .catch((e) => console.log(e));
   };
-  const changeToSoldout = (data: ProductSimpleWithoutUserDto) => {
+  const changeToSoldout = (data: productType) => {
     // (next) make it possible to select the buyer
     requester
-      .put(`/products/${data.id}/status/`, {
-        action: ProductStatusAction.SOLD_OUT,
-      })
+      .put(`/products/${data.id}/status/`, { action: "sold out" })
       .then((res) => {
         props.setUpdate((update) => !update);
-        setOnsaleList(onsaleList.filter((product) => product.id !== data.id));
       })
       .catch((e) => console.log(e));
   };
-  const goToProductPage = (data: ProductSimpleWithoutUserDto) => {
+  const goToProductPage = (data: productType) => {
     navigate(`/article/${data.id}`, {
       state: { prev: "sales-history" },
     });
   };
   const handleAction = (id: number) => {
     props.setOnsaleActions(true);
-    props.setActionTarget({
-      id: id,
-      list: onsaleList,
-      dispatch: setOnsaleList,
-    });
+    props.setActionTarget(id);
   };
 
-  const onsaleComponents = onsaleList.map((article) => {
+  const onsaleComponents = props.onsaleList.map((article) => {
     return (
       <div className={styles.articleWrapper}>
         <div
@@ -106,7 +63,7 @@ const Onsales = (props: {
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={article.image_url}
+            src={props.srcList.find((pair) => pair.id === article.id)?.src}
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
@@ -128,7 +85,7 @@ const Onsales = (props: {
               </p>
             </div>
             <div className={styles.thirdLine}>
-              {article.status === SalesStatus.RESERVED && (
+              {article.status === "RESERVED" && (
                 <div className={styles.reservation}>예약중</div>
               )}
               <p className={styles.price}>
@@ -162,7 +119,7 @@ const Onsales = (props: {
         <div className={styles.lower}>
           <div className={styles.line} />
           <div className={styles.buttons}>
-            {article.status === SalesStatus.FOR_SALE ? (
+            {article.status === "FOR_SALE" ? (
               <div
                 className={styles.button}
                 onClick={() => changeToReserved(article)}
@@ -192,7 +149,7 @@ const Onsales = (props: {
 
   return (
     <div className={styles.wrapper}>
-      {onsaleList.length ? (
+      {props.onsaleList.length ? (
         <>{onsaleComponents}</>
       ) : (
         <p>판매중인 게시물이 없어요.</p>
