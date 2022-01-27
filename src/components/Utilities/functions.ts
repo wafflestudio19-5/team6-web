@@ -99,6 +99,10 @@ export const calculateTimeDifferenceForProfile = (
 
 // 행정동 주소 <~~동>만 걸러내는 함수
 export const toShortDivision = (division: string) => {
-  const splitDivision = division.split(" ");
-  return splitDivision[splitDivision.length - 1];
+  if (division) {
+    const splitDivision = division.split(" ");
+    return splitDivision[splitDivision.length - 1];
+  } else {
+    return "";
+  }
 };
