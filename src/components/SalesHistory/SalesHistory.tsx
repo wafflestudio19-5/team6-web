@@ -1,79 +1,51 @@
 import styles from "./SalesHistory.module.scss";
 import { Link } from "react-router-dom";
 import BackArrow from "../../icons/leftArrow.png";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Onsales from "./Onsales/Onsales";
 import Hiddens from "./Hiddens/Hiddens";
 import Soldouts from "./Soldouts/Soldouts";
 import { productType } from "../../type/types";
 import { toast } from "react-hot-toast";
 import requester from "../../apis/requester";
+import { ProductSimpleWithoutUserDto } from "../../type/dto/product-simple-without-user.dto";
+import { ProductStatusAction } from "../../type/enum/product-status-action";
 
 export type srcPair = {
   id: number;
   src: string;
 };
 
+export type ActionTarget =
+  | {
+      id: number;
+      list: ProductSimpleWithoutUserDto[];
+      dispatch: Dispatch<SetStateAction<ProductSimpleWithoutUserDto[]>>;
+    }
+  | undefined;
+
 const SalesHistory = () => {
   const [mode, setMode] = useState(1);
-  const [onsaleList, setOnsaleList] = useState<productType[]>([]);
-  const [soldoutList, setSoldoutList] = useState<productType[]>([]);
-  const [hiddenList, setHiddenList] = useState<productType[]>([]);
   const [onsaleActions, setOnsaleActions] = useState(false);
   const [soldoutActions, setSoldoutActions] = useState(false);
   const [hiddenActions, setHiddenActions] = useState(false);
   const [update, setUpdate] = useState(false);
-  const [actionTarget, setActionTarget] = useState(0);
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
-  useEffect(() => {
-    requester
-      .get(`/users/me/products/?pageNumber=0&pageSize=30`)
-      .then((res) => {
-        setOnsaleList(
-          res.data.content.filter(
-            (data: productType) =>
-              data.status === "FOR_SALE" || data.status === "RESERVED"
-          )
-        );
-        setSoldoutList(
-          res.data.content.filter(
-            (data: productType) => data.status === "SOLD_OUT"
-          )
-        );
-        setHiddenList(
-          res.data.content.filter(
-            (data: productType) => data.status === "HIDDEN"
-          )
-        );
-        res.data.content.forEach((article: productType) => {
-          requester
-            .get(`/images/${article.image_url}/`)
-            .then((res) => {
-              setSrcList((srcList) => [
-                ...srcList,
-                {
-                  id: article.id,
-                  src: res.data.url,
-                },
-              ]);
-            })
-            .catch((e) => console.log("??", e));
-        });
-      })
-      .catch((e) => console.log(e.response));
-  }, [update]);
+  const [actionTarget, setActionTarget] = useState<ActionTarget>(undefined);
 
-  const changeToModification = (id: number) => {
+  const changeToModification = (id: number | undefined) => {
     // (next) 게시글 수정 페이지로
   };
 
   const handleHiding = () => {
     requester
-      .put(`/products/${actionTarget}/status/`, { action: "hide" })
-      .then((res) => {
-        setUpdate((update) => !update);
+      .put(`/products/${actionTarget}/status/`, {
+        action: ProductStatusAction.HIDE,
       })
+      .then((res) => {})
       .catch((e) => console.log(e));
+    actionTarget?.dispatch(
+      actionTarget?.list.filter((product) => product.id !== actionTarget?.id)
+    );
     setOnsaleActions(false);
     setSoldoutActions(false);
     setHiddenActions(false);
@@ -83,12 +55,16 @@ const SalesHistory = () => {
     requester
       .delete(`/products/${actionTarget}/`)
       .then((res) => {
-        setUpdate((update) => !update);
+        actionTarget?.dispatch(
+          actionTarget?.list.filter(
+            (product) => product.id !== actionTarget?.id
+          )
+        );
+        setOnsaleActions(false);
+        setSoldoutActions(false);
+        setHiddenActions(false);
       })
       .catch((e) => console.log(e));
-    setOnsaleActions(false);
-    setSoldoutActions(false);
-    setHiddenActions(false);
   };
 
   const handleBump = () => {
@@ -138,7 +114,7 @@ const SalesHistory = () => {
             <div className={styles.upperBox}>
               <div
                 className={styles.blueText}
-                onClick={() => changeToModification(actionTarget)}
+                onClick={() => changeToModification(actionTarget?.id)}
               >
                 게시글 수정
               </div>
@@ -271,28 +247,22 @@ const SalesHistory = () => {
       <section className={styles["body-wrapper"]}>
         {mode === 1 && (
           <Onsales
-            onsaleList={onsaleList}
             setUpdate={setUpdate}
             setOnsaleActions={setOnsaleActions}
             setActionTarget={setActionTarget}
-            srcList={srcList}
           />
         )}
         {mode === 2 && (
           <Soldouts
-            soldoutList={soldoutList}
             setSoldoutActions={setSoldoutActions}
             setActionTarget={setActionTarget}
-            srcList={srcList}
           />
         )}
         {mode === 3 && (
           <Hiddens
-            hiddenList={hiddenList}
             setUpdate={setUpdate}
             setHiddenActions={setHiddenActions}
             setActionTarget={setActionTarget}
-            srcList={srcList}
           />
         )}
       </section>

@@ -68,9 +68,9 @@ const Article = () => {
   const [carouselImg, setCarouselImg] = useState<any>([]);
   const [requestModal, setRequestModal] = useState(false);
   const [inputs, setInputs] = useState<{
-    suggested_price: number | undefined;
+    suggested_price: string;
     message: string;
-  }>({ suggested_price: undefined, message: "" });
+  }>({ suggested_price: "", message: "" });
   const [suggest, setSuggest] = useState(false);
 
   useEffect(() => {
@@ -266,7 +266,7 @@ const Article = () => {
   };
   const handleRequest = () => {
     if (currentArticle) {
-      setInputs({ ...inputs, suggested_price: currentArticle.price });
+      setInputs({ ...inputs, suggested_price: `${currentArticle.price}` });
     }
     setSuggest(false);
     setRequestModal(true);
@@ -274,28 +274,20 @@ const Article = () => {
   const handlePriceChange: ChangeEventHandler<
     HTMLInputElement | HTMLSelectElement
   > = (e) => {
-    if (e.target.name === "price") {
-      if (e.target.value) {
-        setInputs({
-          ...inputs,
-          suggested_price: parseInt(e.target.value),
-        });
-      } else {
-        setInputs({
-          ...inputs,
-          suggested_price: undefined,
-        });
-      }
+    const numRegex = /^[0-9]+$/;
+    if (e.target.value === "" || numRegex.test(e.target.value)) {
+      setInputs({
+        ...inputs,
+        suggested_price: e.target.value,
+      });
     }
   };
 
   const handleMessageChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.target.name === "message") {
-      setInputs({
-        ...inputs,
-        message: e.target.value,
-      });
-    }
+    setInputs({
+      ...inputs,
+      message: e.target.value,
+    });
   };
   const handleConfirm = () => {
     if (currentArticle) {
@@ -367,7 +359,7 @@ const Article = () => {
               className={styles.priceProposal}
               onClick={() => {
                 setSuggest(true);
-                setInputs({ suggested_price: undefined, message: "" });
+                setInputs({ suggested_price: "", message: "" });
                 setRequestModal(true);
               }}
             >
@@ -552,7 +544,9 @@ const Article = () => {
                   onChange={handlePriceChange}
                 />
                 <p className={styles2.priceText}>
-                  {inputs.suggested_price?.toLocaleString("ko-KR")}원
+                  {inputs.suggested_price.length > 0 &&
+                    parseInt(inputs.suggested_price).toLocaleString("ko-KR")}
+                  원
                 </p>
                 <textarea
                   name="message"

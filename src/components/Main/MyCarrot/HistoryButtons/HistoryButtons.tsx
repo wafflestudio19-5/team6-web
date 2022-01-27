@@ -34,7 +34,7 @@ const HistoryButtons = () => {
       <button
         className={styles.watchlist}
         onClick={() => {
-          console.log("관심목록");
+          navigate("/hearts");
         }}
       >
         <div className={styles.background}>
