@@ -24,9 +24,8 @@
 
     .clickArea {
       position: absolute;
-      width: calc(100% - 100px);
+      width: 100%;
       height: calc(100% - 36px);
-      left: 110px;
       z-index: 3;
     }
 

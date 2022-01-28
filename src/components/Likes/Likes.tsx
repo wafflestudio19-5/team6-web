@@ -1,99 +1,138 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Likes.module.scss";
 import BackArrow from "../../icons/leftArrow.png";
 import { useEffect, useState } from "react";
 import requester from "../../apis/requester";
 import { GetMyLikesDto } from "../../type/dto/for-api/get-my-likes.dto";
-import { ProductDto } from "../../type/dto/product.dto";
-import moreActions from "../../icons/more.png";
-import {calculateTimeDifference} from "../Utilities/functions";
-import {SalesStatus} from "../../type/enum/sales-status";
+import { calculateTimeDifference } from "../Utilities/functions";
+import { SalesStatus } from "../../type/enum/sales-status";
 import chatIcon from "../../icons/chat.png";
 import heartIcon from "../../icons/blackHeart.png";
+import { ProductSimpleDto } from "../../type/dto/product-simple.dto";
+import { ProductSimpleWithoutUserDto } from "../../type/dto/product-simple-without-user.dto";
+import redHeartIcon from "../../icons/redHeart.png";
+import blackHeartIcon from "../../icons/blackHeart.png";
 
 const Likes = () => {
-  const [hearts, setHearts] = useState<ProductDto[]>([]);
+  const [likes, setLikes] = useState<
+    { product: ProductSimpleDto; liked: boolean }[]
+  >([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     requester
-      .get<GetMyLikesDto>("users/me/likes/?pageNumber=1&pageSize=15")
+      .get<GetMyLikesDto>("/users/me/likes/?pageNumber=0&pageSize=15")
       .then((res) => {
-        setHearts(res.data.content);
+        setLikes(
+          res.data.content.map((product) => ({ product: product, liked: true }))
+        );
       });
   }, []);
 
-  const likeComponents = onsaleList.map((article) => {
+  const goToProductPage = (data: ProductSimpleWithoutUserDto) => {
+    navigate(`/article/${data.id}`, {
+      state: { prev: "likes" },
+    });
+  };
+
+  const handleLike = async (id: number) => {
+    await requester.post(`/products/${id}/likes/`);
+    setLikes(
+      likes.map((article) => ({ product: article.product, liked: true }))
+    );
+  };
+
+  const handleUnlike = async (id: number) => {
+    await requester.delete(`/products/${id}/likes/`);
+    setLikes(
+      likes.map((article) => ({ product: article.product, liked: false }))
+    );
+  };
+
+  const likeComponents = likes.map((article) => {
     return (
       <div className={styles.articleWrapper}>
         <div
           className={styles.clickArea}
-          onClick={() => goToProductPage(article)}
+          onClick={() => goToProductPage(article.product)}
         />
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
-            src={article.image_url}
+            src={article.product.image_url}
             alt="대표 이미지"
           />
           <div className={styles.dataContainer}>
             <div className={styles.firstLine}>
-              <p className={styles.title}>{article.title}</p>
-              <img
-                className={styles.moreActions}
-                src={moreActions}
-                onClick={() => handleAction(article.id)}
-              />
+              <p className={styles.title}>{article.product.title}</p>
+              {article.liked ? (
+                <img
+                  className={styles.like}
+                  src={redHeartIcon}
+                  onClick={() => handleUnlike(article.product.id)}
+                />
+              ) : (
+                <img
+                  className={styles.like}
+                  src={blackHeartIcon}
+                  onClick={() => handleLike(article.product.id)}
+                />
+              )}
             </div>
             <div className={styles.secondLine}>
-              <p className={styles.region}>{article.location} ·</p>
+              <p className={styles.region}>{article.product.location} ·</p>
               <p className={styles.time}>
                 {calculateTimeDifference(
-                  article.created_at,
-                  article.last_bring_up_my_post
+                  article.product.created_at,
+                  article.product.last_bring_up_my_post
                 )}
               </p>
             </div>
             <div className={styles.thirdLine}>
-              {article.status === SalesStatus.RESERVED && (
+              {article.product.status === SalesStatus.RESERVED && (
                 <div className={styles.reservation}>예약중</div>
               )}
               <p className={styles.price}>
-                {article.price.toLocaleString("ko-KR")}원
+                {article.product.price.toLocaleString("ko-KR")}원
               </p>
             </div>
             <div className={styles.lastLine}>
-              {article.chats !== 0 && (
+              {article.product.chats !== 0 && (
                 <div className={styles.chatContainer}>
                   <img
                     className={styles.chatImg}
                     src={chatIcon}
                     alt="거래요청"
                   />
-                  <p className={styles.chat}>{article.chats}</p>
+                  <p className={styles.chat}>{article.product.chats}</p>
                 </div>
               )}
-              {article.likes !== 0 && (
+              {article.product.likes !== 0 && (
                 <div className={styles.heartContainer}>
                   <img
                     className={styles.heartImg}
                     src={heartIcon}
                     alt="좋아요"
                   />
-                  <p className={styles.heart}>{article.likes}</p>
+                  <p className={styles.heart}>{article.product.likes}</p>
                 </div>
               )}
             </div>
           </div>
         </div>
+      </div>
+    );
+  });
 
   return (
-    <div className={styles["hearts-wrapper"]}>
+    <div className={styles["likes-wrapper"]}>
       <header>
         <Link to="/main" state={{ page: "user" }} className={styles.back}>
           <img src={BackArrow} alt="뒤로" />
         </Link>
-        <p>판매내역</p>
+        <p>관심목록</p>
       </header>
-      <section className={styles["body-wrapper"]}></section>
+      <div className={styles.wrapper}>{likeComponents}</div>
     </div>
   );
 };

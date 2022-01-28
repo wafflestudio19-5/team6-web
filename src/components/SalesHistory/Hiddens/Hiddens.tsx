@@ -3,17 +3,15 @@ import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
 import requester from "../../../apis/requester";
-import { productType } from "../../../type/types";
 import { calculateTimeDifference } from "../../Utilities/functions";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { ActionTarget, srcPair } from "../SalesHistory";
+import { ActionTarget } from "../SalesHistory";
 
 import { useNavigate } from "react-router-dom";
 import { ProductSimpleWithoutUserDto } from "../../../type/dto/product-simple-without-user.dto";
 import { GetMyProductsDto } from "../../../type/dto/for-api/get-my-products.dto";
 
 const Hiddens = (props: {
-  setUpdate: Dispatch<SetStateAction<boolean>>;
   setHiddenActions: Dispatch<SetStateAction<boolean>>;
   setActionTarget: Dispatch<SetStateAction<ActionTarget>>;
 }) => {
@@ -36,7 +34,7 @@ const Hiddens = (props: {
     requester
       .put(`/products/${data.id}/status/`, { action: "show" })
       .then((res) => {
-        props.setUpdate((update) => !update);
+        setHiddenList(hiddenList.filter((product) => product.id !== data.id));
       })
       .catch((e) => console.log(e));
   };
