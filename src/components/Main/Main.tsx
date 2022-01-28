@@ -5,11 +5,11 @@ import User1 from "../../icons/Footer/user-selected.png";
 import User2 from "../../icons/Footer/user-unselected.png";
 import Set1 from "../../icons/Footer/settings-selected.png";
 import Set2 from "../../icons/Footer/settings-unselected.png";
+import * as React from "react";
 import { useEffect, useState } from "react";
 import HomeGoods from "./Home/HomeGoods";
 import HomeHeader from "./Home/HomeHeader";
 import { Navigate, useLocation } from "react-router-dom";
-import * as React from "react";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
 
