@@ -115,30 +115,41 @@ const Article = () => {
   const [suggest, setSuggest] = useState(false);
 
   useEffect(() => {
-    Product.getProduct(id).then((res) => {
-      if (res.data.id !== parseInt(id)) navigate("/main");
-      else {
-        setCurrentArticle(res.data);
-        User.getMe().then((r) => {
-          if (res.data.user.email === r.data.email) setIsSeller(true);
-          else setIsSeller(false);
+    Product.getProduct(id)
+      .then((res) => {
+        if (res.data.id !== parseInt(id)) navigate("/main");
+        else {
+          setCurrentArticle(res.data);
+          User.getMe().then((r) => {
+            if (res.data.user.email === r.data.email) setIsSeller(true);
+            else setIsSeller(false);
+          });
+        }
+        setStatus(res.data.status);
+        res.data.image_urls?.map((image: string) => {
+          setCarouselImg((prevState: any) => {
+            const tempState = prevState.concat(
+              <div>
+                <img
+                  className={styles.carouselImg}
+                  src={image}
+                  alt={"상품 이미지"}
+                />
+              </div>
+            );
+            return tempState;
+          });
         });
-      }
-      setStatus(res.data.status);
-      res.data.image_urls?.map((image: string) => {
-        setCarouselImg((prevState: any) => {
-          const tempState = prevState.concat(
-            <div>
-              <img
-                className={styles.carouselImg}
-                src={image}
-                alt={"상품 이미지"}
-              />
-            </div>
-          );
-          return tempState;
-        });
+      })
+      .catch((e: any) => {
+        console.log(e.response);
+        if (e.response.data.error_code === 3212) {
+          toast.error("접근할 수 없는 게시글입니다. (숨김, 삭제 등)");
+          navigate(-1);
+        }
       });
+    requester.get(`/users/me/likes/products/${id}`).then((res) => {
+      setIsHeartClicked(res.data);
     });
   }, [id]);
 
