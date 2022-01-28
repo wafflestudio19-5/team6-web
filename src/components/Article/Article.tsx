@@ -41,6 +41,7 @@ import requester from "../../apis/requester";
 import { calculateTimeDifference } from "../Utilities/functions";
 import confirmModal from "../Main/Home/Write/Confirm/ConfirmModal";
 import { articleData } from "../../type/types";
+import { useUserState } from "../../context/user-context";
 
 const settings = {
   dots: true,
@@ -113,6 +114,7 @@ const Article = () => {
     message: string;
   }>({ suggested_price: "", message: "" });
   const [suggest, setSuggest] = useState(false);
+  const user = useUserState();
 
   useEffect(() => {
     Product.getProduct(id)
@@ -279,11 +281,32 @@ const Article = () => {
     if (currentArticle?.chats) navigate(`/request/${id}`);
   };
   const handleRequest = () => {
-    if (currentArticle) {
-      setInputs({ ...inputs, suggested_price: `${currentArticle.price}` });
+    if (
+      !user ||
+      !(user.is_first_location_active && !user.first_location_verified) ||
+      !user.second_location_verified
+    ) {
+      toast.error("거래 요청을 하기 위해서는 지역 인증을 해야해요.");
+    } else {
+      if (currentArticle) {
+        setInputs({ ...inputs, suggested_price: `${currentArticle.price}` });
+      }
+      setSuggest(false);
+      setRequestModal(true);
     }
-    setSuggest(false);
-    setRequestModal(true);
+  };
+  const handleRequestSuggest = () => {
+    if (
+      !user ||
+      !(user.is_first_location_active && !user.first_location_verified) ||
+      !user.second_location_verified
+    ) {
+      toast.error("거래 요청을 하기 위해서는 지역 인증을 해야해요.");
+    } else {
+      setSuggest(true);
+      setInputs({ suggested_price: "", message: "" });
+      setRequestModal(true);
+    }
   };
   const handlePriceChange: ChangeEventHandler<
     HTMLInputElement | HTMLSelectElement
@@ -389,14 +412,7 @@ const Article = () => {
               가격제안 {currentArticle?.chats}명
             </p>
           ) : (
-            <p
-              className={styles.priceProposal}
-              onClick={() => {
-                setSuggest(true);
-                setInputs({ suggested_price: "", message: "" });
-                setRequestModal(true);
-              }}
-            >
+            <p className={styles.priceProposal} onClick={handleRequestSuggest}>
               가격 제안하기
             </p>
           )}
