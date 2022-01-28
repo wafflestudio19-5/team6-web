@@ -37,7 +37,7 @@ const Main = () => {
         setSecondVerified(res.data.second_location_verified);
       }
     });
-  }, []);
+  }, [loc.state?.location_changed]);
 
   const changeToHome = () => {
     setPage("home");
