@@ -19,6 +19,7 @@ import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/Edit
 
 import KakaoPage from "./KakaoLogin/KakaoPage";
 import SelectLocation from "./components/SelectLocation/SelectLocation";
+import GetInformation from "./components/GetInformation/GetInformation";
 import Hearts from "./components/Hearts/Hearts";
 import { UserDto } from "./type/dto/user.dto";
 
@@ -46,12 +47,13 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/oauth/callback/kakao" element={<KakaoPage />} />
+            <Route path="/required-information" element={<GetInformation />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/select-location" element={<SelectLocation />} />
             <Route path="/main" element={<Main />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:name" element={<Profile />} />
             <Route path="/profile/edit" element={<EditProfile />} />
-            <Route path="/profile/sales" element={<Sales />} />
+            <Route path="/profile/:name/sales" element={<Sales />} />
             <Route path="/sales-history" element={<SalesHistory />} />
             <Route path="/purchase-history" element={<PurchaseHistory />} />
             <Route path="/hearts" element={<Hearts />} />
