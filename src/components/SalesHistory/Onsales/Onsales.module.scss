@@ -3,6 +3,13 @@
   height: 100%;
 
   background: #f2f3f7;
+
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
   .articleWrapper {
     position: relative;
     width: 100%;
@@ -14,7 +21,7 @@
       position: absolute;
       width: 100%;
       height: calc(100% - 40px);
-      z-index: 2;
+      z-index: 0;
     }
 
     .upper {
@@ -52,6 +59,7 @@
             padding-left: 10px;
             color: black;
             font-size: 15px;
+            text-align: left;
           }
           .moreActions{
             position: relative;
@@ -203,8 +211,13 @@
   p {
     position: absolute;
     top: calc(50% - 5px);
-    left: calc(50% - 80px);
     margin: 0;
     color: silver;
   }
+
+  .emptyText{
+    width: 100%;
+    text-align: center;
+  }
+
 }

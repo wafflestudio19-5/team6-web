@@ -35,9 +35,6 @@ const SalesHistory = () => {
   const [hiddenActions, setHiddenActions] = useState(false);
   const [actionTarget, setActionTarget] = useState<ActionTarget>(undefined);
   const navigate = useNavigate();
-  const [isLast, setIsLast] = useState(false);
-  const [bottom, setBottom] = useState(false);
-  useEffect(() => {});
 
   const changeToModification = async () => {
     const response = await requester.get<GetProductDto>(
