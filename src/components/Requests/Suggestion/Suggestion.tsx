@@ -204,7 +204,7 @@ const Suggestion = ({ id, setRequest, setMessageInfo }: Props) => {
       {requests.length ? (
         <>{requestComponents}</>
       ) : (
-        <p>정가 구매 요청이 없어요.</p>
+        <p className={styles.emptyText}>정가 구매 요청이 없어요.</p>
       )}
     </div>
   );

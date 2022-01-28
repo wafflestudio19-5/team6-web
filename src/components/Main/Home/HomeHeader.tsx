@@ -3,13 +3,10 @@ import DownArrow from "../../../icons/Header/down-arrow.png";
 import Search from "../../../icons/Header/search.png";
 import Category from "../../../icons/Header/category.png";
 import Notice from "../../../icons/Header/bell.png";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import requester from "../../../apis/requester";
-import { GetMeDto } from "../../../type/dto/for-api/get-me.dto";
 import { useUserState } from "../../../context/user-context";
 
-const HomeHeader = (props: {}) => {
+const HomeHeader = () => {
   const navigate = useNavigate();
   const user = useUserState();
 
@@ -38,8 +35,14 @@ const HomeHeader = (props: {}) => {
       <div className={styles.locationBox} onClick={handleLocation}>
         <p className={styles.location}>
           {user.is_first_location_active
-            ? user.first_location?.split(" ")[
-                user.first_location?.split(" ").length - 1
+            ? user.first_location
+              ? user.first_location?.split(" ")[
+                  user.first_location?.split(" ").length - 1
+                ]
+              : "동네 정보 없음"
+            : user.second_location
+            ? user.second_location?.split(" ")[
+                user.second_location?.split(" ").length - 1
               ]
             : "동네 정보 없음"}
         </p>

@@ -165,7 +165,7 @@ const Purchased = (props: {
       {purchasedList.length ? (
         <>{soldoutComponents}</>
       ) : (
-        <p>거래완료된 게시물이 없어요.</p>
+        <p className={styles.emptyText}>거래완료된 게시물이 없어요.</p>
       )}
       {modal && (
         <div className={styles2.box}>

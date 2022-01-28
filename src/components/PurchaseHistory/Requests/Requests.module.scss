@@ -29,7 +29,6 @@
 
       .thumbnail {
         position: relative;
-        height: 100px;
         width: 100px;
         aspect-ratio: 1;
         object-fit: cover;
@@ -212,6 +211,11 @@
     top: calc(50% - 5px);
     margin: 0;
     color: silver;
+  }
+
+  .emptyText{
+    width: 100%;
+    text-align: center;
   }
 }
 

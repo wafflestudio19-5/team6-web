@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Likes.module.scss";
 import BackArrow from "../../icons/leftArrow.png";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import requester from "../../apis/requester";
 import { GetMyLikesDto } from "../../type/dto/for-api/get-my-likes.dto";
 import { calculateTimeDifference } from "../Utilities/functions";
@@ -12,6 +12,7 @@ import { ProductSimpleDto } from "../../type/dto/product-simple.dto";
 import { ProductSimpleWithoutUserDto } from "../../type/dto/product-simple-without-user.dto";
 import redHeartIcon from "../../icons/redHeart.png";
 import blackHeartIcon from "../../icons/blackHeart.png";
+import { GetMyPurchaseOrdersDto } from "../../type/dto/for-api/get-my-purchase-orders.dto";
 
 const Likes = () => {
   const [likes, setLikes] = useState<
@@ -19,6 +20,51 @@ const Likes = () => {
   >([]);
   const navigate = useNavigate();
 
+  const [isLast, setIsLast] = useState(false);
+  const [bottom, setBottom] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const getNewProducts = async () => {
+    try {
+      const response = await requester.get<GetMyLikesDto>(
+        `/users/me/likes/?pageNumber=${pageCount}&pageSize=15`
+      );
+      setIsLast(response.data.last);
+      setPageCount(pageCount + 1);
+      setLikes(
+        likes.concat(
+          response.data.content.map((like) => ({ product: like, liked: true }))
+        )
+      );
+    } catch (e) {
+      return undefined;
+    }
+  };
+  useEffect(() => {
+    (async () => {
+      await getNewProducts();
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (!isLast && bottom) {
+      (async () => {
+        await getNewProducts();
+      })();
+    }
+  }, [bottom]);
+
+  const handleScroll = useCallback(() => {
+    if (!isLast && listRef.current) {
+      const { clientHeight, scrollHeight, scrollTop } = listRef.current;
+      if (Math.round(scrollTop + clientHeight) >= scrollHeight - 200) {
+        if (!bottom) {
+          setBottom(true);
+        }
+      }
+    }
+  }, []);
   useEffect(() => {
     requester
       .get<GetMyLikesDto>("/users/me/likes/?pageNumber=0&pageSize=15")
@@ -132,7 +178,13 @@ const Likes = () => {
         </Link>
         <p>관심목록</p>
       </header>
-      <div className={styles.wrapper}>{likeComponents}</div>
+      <div className={styles.wrapper}>
+        {likes.length ? (
+          <>{likeComponents}</>
+        ) : (
+          <p className={styles.emptyText}>관심 목록이 비었어요.</p>
+        )}
+      </div>
     </div>
   );
 };

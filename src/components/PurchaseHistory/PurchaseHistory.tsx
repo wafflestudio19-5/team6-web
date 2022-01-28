@@ -44,7 +44,7 @@ const PurchaseHistory = () => {
         </>
       )}
       <header>
-        <Link to="/main" state={{ page: "user" }} className={styles.back}>
+        <Link to="/main&page=user" className={styles.back}>
           <img src={BackArrow} alt="뒤로" />
         </Link>
         <p>구매내역</p>

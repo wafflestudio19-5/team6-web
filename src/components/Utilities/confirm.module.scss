@@ -17,9 +17,13 @@
     width: 100%;
     display: flex;
 
+    &:hover{
+      background: lavenderblush;
+      transition: 0.3s;
+    }
+
     .thumbnail {
       position: relative;
-      height: 70px;
       width: 70px;
       aspect-ratio: 1;
       object-fit: cover;

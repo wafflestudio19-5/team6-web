@@ -23,6 +23,7 @@ import blackHeartIcon from "../../icons/blackHeart.png";
 import Slider from "react-slick";
 import character from "../../icons/Search/noResults.jpg";
 
+import ic_profile from "../../icons/MyCarrot/default-profile-image.png";
 import "./slickTheme.scss";
 import "./slick.scss";
 
@@ -42,6 +43,7 @@ import { calculateTimeDifference } from "../Utilities/functions";
 import confirmModal from "../Main/Home/Write/Confirm/ConfirmModal";
 import { articleData } from "../../type/types";
 import { useUserState } from "../../context/user-context";
+import { SalesStatus } from "../../type/enum/sales-status";
 
 const settings = {
   dots: true,
@@ -182,10 +184,14 @@ const Article = () => {
         setIsHeartClicked(false);
       } catch (e) {}
     } else {
-      try {
-        await requester.post(`/products/${id}/likes/`);
-        setIsHeartClicked(true);
-      } catch (e) {}
+      if (currentArticle?.status === SalesStatus.SOLD_OUT) {
+        toast.error("거래 완료된 게시물은 관심 목록에 넣을 수 없습니다.");
+      } else {
+        try {
+          await requester.post(`/products/${id}/likes/`);
+          setIsHeartClicked(true);
+        } catch (e) {}
+      }
     }
   };
   const onClickProfileImg = () => {
@@ -281,7 +287,9 @@ const Article = () => {
     if (currentArticle?.chats) navigate(`/request/${id}`);
   };
   const handleRequest = () => {
-    if (
+    if (currentArticle?.status === SalesStatus.SOLD_OUT) {
+      toast.error("거래 완료된 게시물에는 거래 요청을 할 수 없어요.");
+    } else if (
       !user ||
       !(user.is_first_location_active && !user.first_location_verified) ||
       !user.second_location_verified
@@ -296,7 +304,9 @@ const Article = () => {
     }
   };
   const handleRequestSuggest = () => {
-    if (
+    if (currentArticle?.status === SalesStatus.SOLD_OUT) {
+      toast.error("거래 완료된 게시물에는 거래 요청을 할 수 없어요.");
+    } else if (
       !user ||
       !(user.is_first_location_active && !user.first_location_verified) ||
       !user.second_location_verified
@@ -409,7 +419,7 @@ const Article = () => {
           </h1>
           {isSeller ? (
             <p className={styles.priceProposal} onClick={changeToRequests}>
-              가격제안 {currentArticle?.chats}명
+              거래요청 {currentArticle?.chats}명
             </p>
           ) : (
             <p className={styles.priceProposal} onClick={handleRequestSuggest}>
@@ -432,7 +442,7 @@ const Article = () => {
           </div>
           <div className={styles.profile}>
             <img
-              src={"currentArticle?.profileImg"}
+              src={user?.image_url ? user.image_url : ic_profile}
               className={styles.profileImg}
               onClick={onClickProfileImg}
             />

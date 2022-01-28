@@ -253,7 +253,7 @@ const Requests = (props: {
       {requestList.length ? (
         <>{requestComponents}</>
       ) : (
-        <p>거래 요청중인 게시물이 없어요.</p>
+        <p className={styles.emptyText}>거래 요청중인 게시물이 없어요.</p>
       )}
       {purchaseModal && (
         <div className={styles2.box}>

@@ -26,7 +26,9 @@ const RequestPage = () => {
     navigate(-1);
   };
 
-  const goToUserProfile = () => {};
+  const goToUserProfile = () => {
+    navigate(`/profile/${messageInfo?.user.name}`);
+  };
 
   return (
     <div className={styles["request-wrapper"]}>
@@ -64,32 +66,36 @@ const RequestPage = () => {
             <div className={styles2.textBox}>{request.user.phone}</div>
           </div>
         )
-      ) : messageInfo && messageInfo.message ? (
-        <div className={styles2.box}>
-          <div className={styles2.profileContainer} onClick={goToUserProfile}>
-            <img
-              className={styles2.thumbnail}
-              src={profile}
-              alt="프로필 이미지"
-            />
-            <div className={styles2.dataContainer}>
-              <div className={styles2.firstLine}>
-                <p className={styles2.title}>{messageInfo.user.nickname}</p>
-              </div>
-              <div className={styles2.secondLine}>
-                <p className={styles2.region}>
-                  {messageInfo.user.first_location}
-                </p>
+      ) : (
+        messageInfo && (
+          <div className={styles2.box}>
+            <div className={styles2.profileContainer} onClick={goToUserProfile}>
+              <img
+                className={styles2.thumbnail}
+                src={profile}
+                alt="프로필 이미지"
+              />
+              <div className={styles2.dataContainer}>
+                <div className={styles2.firstLine}>
+                  <p className={styles2.title}>{messageInfo.user.nickname}</p>
+                </div>
+                <div className={styles2.secondLine}>
+                  <p className={styles2.region}>
+                    {messageInfo.user.first_location}
+                  </p>
+                </div>
               </div>
             </div>
+            {messageInfo.message && (
+              <>
+                <p className={styles2.title}>
+                  {messageInfo.user.nickname} 님께서 메시지를 보내셨어요
+                </p>
+                <p className={styles2.textBox}>{messageInfo.message}</p>
+              </>
+            )}
           </div>
-          <p className={styles2.title}>
-            {messageInfo.user.nickname} 님께서 메시지를 보내셨어요
-          </p>
-          <p className={styles2.textBox}>{messageInfo.message}</p>
-        </div>
-      ) : (
-        <></>
+        )
       )}
       <header>
         <div className={styles.back}>
