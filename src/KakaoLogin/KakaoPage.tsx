@@ -21,9 +21,7 @@ const KakaoPage = () => {
         console.log(res);
         const ACCESS_TOKEN = res.data.access_token;
         localStorage.setItem("token", ACCESS_TOKEN);
-        navigate("/main?page=home", {
-          state: { kakao_status: res.data.kakao_status },
-        });
+        navigate("/main?page=home");
       })
       .catch((error) => {
         console.log("소셜로그인 에러", error);

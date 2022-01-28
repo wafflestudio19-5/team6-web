@@ -12,6 +12,9 @@ import HomeHeader from "./Home/HomeHeader";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
+import requester from "../../apis/requester";
+import { useUserDispatch } from "../../context/user-context";
+import { toast } from "react-hot-toast";
 
 const Main = () => {
   const [write, setWrite] = useState(false);
@@ -27,23 +30,32 @@ const Main = () => {
   const params = new URLSearchParams(loc.search);
   const pageQuery = params.get("page");
 
-  useEffect(() => {
-    if (loc.state && loc.state.kakao_status === "INVALID") {
-      setFirstSocialLoginModal(true);
-      const interval = setInterval(() => {
-        timerRef.current -= 1;
-        setTimer(timerRef.current);
-        if (timerRef.current === 0) {
-          clearInterval(interval);
-          navigate("/required-information", {
-            state: {
-              prev: "first-social-login",
-            },
-          });
-        }
-      }, 1000);
-    }
+  const setUser = useUserDispatch();
 
+  useEffect(() => {
+    requester
+      .get("/users/me/")
+      .then((res) => {
+        setUser(res.data);
+        if (res.data.kakao_status === "INVALID") {
+          setFirstSocialLoginModal(true);
+          const interval = setInterval(() => {
+            timerRef.current -= 1;
+            setTimer(timerRef.current);
+            if (timerRef.current === 0) {
+              clearInterval(interval);
+              navigate("/required-information", {
+                state: {
+                  prev: "first-social-login",
+                },
+              });
+            }
+          }, 1000);
+        }
+      })
+      .catch(() => {
+        toast.error("프로필 가져오기 오류");
+      });
     pageQuery && setPage(pageQuery);
   }, []);
 

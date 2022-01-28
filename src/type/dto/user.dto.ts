@@ -14,4 +14,5 @@ export type UserDto = {
   second_range_of_location?: RangeOfLocation;
   second_location_verified: boolean;
   is_first: boolean;
+  kakao_status: string | null;
 };
