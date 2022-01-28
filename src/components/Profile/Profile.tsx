@@ -12,6 +12,7 @@ import { productType } from "../../type/types";
 import SalesArticle from "./Sales/SalesArticle/SalesArticle";
 
 const Profile = () => {
+  const [isMe, setIsMe] = useState<boolean>(false);
   const [products, setProducts] = useState<number>(0);
   const [previewList, setPreviewList] = useState<productType[] | null>([]);
   const [myInfo, setMyInfo] = useState<TUserInfoV2>({
@@ -49,6 +50,12 @@ const Profile = () => {
           .then((res) => {
             setProducts(res.data.total_elements);
             setPreviewList(res.data.content);
+            requester
+              .get("/users/me/")
+              .then((res2) => {
+                res2.data.name === name && setIsMe(true);
+              })
+              .catch(() => toast.error("get me error"));
           })
           .catch(() => {
             toast.error("판매상품목록 가져오기 오류");
@@ -84,9 +91,11 @@ const Profile = () => {
         <p className={styles["id-location"]}>{`#${
           myInfo ? myInfo.name : ""
         }`}</p>
-        <button className={styles.edit} onClick={handleToEditProfilePage}>
-          프로필 수정
-        </button>
+        {isMe && (
+          <button className={styles.edit} onClick={handleToEditProfilePage}>
+            프로필 수정
+          </button>
+        )}
         <MannerTemperature />
         <ProfileButtons name={myInfo.name} products={products} />
         <div className={styles.preview}>
