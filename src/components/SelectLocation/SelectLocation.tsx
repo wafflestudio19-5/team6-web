@@ -108,7 +108,10 @@ const SelectLocation = () => {
             location: region,
             range_of_location: "LEVEL_ONE",
           })
-          .then(() => navigate("/main?page=home"))
+          .then(() => {
+            toast("정보 등록이 완료되었습니다.");
+            navigate("/main?page=home");
+          })
           .catch((error) => {
             toast.error(error);
           });
@@ -140,8 +143,9 @@ const SelectLocation = () => {
             toast.error("로그인 오류");
           });
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("회원가입 실패");
+        navigate("/login", { replace: true });
       });
   };
 

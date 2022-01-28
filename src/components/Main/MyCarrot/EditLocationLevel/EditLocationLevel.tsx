@@ -46,7 +46,7 @@ const EditLocationLevel = () => {
     requester
       .get("/users/me/")
       .then((res) => {
-        res.data.kakao_status === "INVALID" && navigate("/main?page=home");
+        res.data.kakao_status === "INVALID" && navigate("/timer");
         setLevel(
           toNumber(
             res.data.is_first_location_active

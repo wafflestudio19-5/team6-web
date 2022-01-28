@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../icons/SelectLocation/spinner-circle.gif";
 import { useEffect } from "react";
+import { REDIRECT_URI } from "./OAuth";
 
 const KakaoPage = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const KakaoPage = () => {
   const socialLogin = (auth: string | null) => {
     axios({
       method: "GET",
-      url: `https://carrotserver.shop/oauth/kakao/?code=${auth}`,
+      url: `https://carrotserver.shop/oauth/kakao/?code=${auth}&redirect_uri=${REDIRECT_URI}`,
     })
       .then((res) => {
         console.log(res);

@@ -37,7 +37,7 @@ const EditProfile = () => {
     requester
       .get("/users/me/")
       .then((res) => {
-        res.data.kakao_status === "INVALID" && navigate("/main?page=home");
+        res.data.kakao_status === "INVALID" && navigate("/timer");
         setName(res.data.name);
         setNickname(res.data.nickname);
         setPrevNickname(res.data.nickname);

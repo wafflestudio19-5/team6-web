@@ -38,7 +38,7 @@ requester.interceptors.response.use(
           .catch() 으로 이어집니다.
       */
     if (error.response.status === 403) {
-      window.location.href = "/required-information";
+      window.location.href = "/timer";
     }
     return Promise.reject(error);
   }
