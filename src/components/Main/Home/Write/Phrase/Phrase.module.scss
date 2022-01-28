@@ -1,0 +1,94 @@
+.box {
+  position: absolute;
+  width: 70%;
+  left: 50%;
+  top: 50%;
+  height: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 10px;
+  z-index: 2;
+  display: block;
+
+  .header {
+    height: 40px;
+    width: 100%;
+    line-height: 40px;
+    border-radius: 10px;
+    background-color: #f1f3f5;
+    .sentence {
+      margin-left: 10px;
+      font-size: 14px;
+      color: #777777;
+    }
+  }
+  .footer {
+    position: relative;
+    top: calc(100% - 80px);
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #cccccc;
+    .inputPhrase {
+      width: calc(100% - 40px);
+      padding: 12px 0 0 10px;
+      border: 0;
+      resize: none;
+      border: none;
+      white-space: pre-wrap;
+      border-radius: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+      "Helvetica Neue", sans-serif;
+      &:focus {
+        outline: none;
+        border: 0;
+      }
+    }
+    .addButton {
+      height: 32px;
+      width: 50px;
+      margin: 4px 6px 4px 0;
+      background-color: #cccccc;
+      color: #f1f3f5;
+      font-weight: bold;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+  }
+  .contents {
+    width: 100%;
+    height: calc(100% - 81px);
+    position: relative;
+    top: -40px;
+    font-size: 11px;
+    .phraseContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: auto;
+      border-bottom: 1px solid #cccccc;
+      .phrase {
+        font-size: 14px;
+        border: 0;
+        padding: 10px;
+        resize: none;
+        border: none;
+        white-space: pre-wrap;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+        &:focus {
+          outline: none;
+          border: 0;
+        }
+      }
+      .deleteButton {
+        width: 30px;
+        height: 30px;
+        margin: 5px 10px 0 0;
+      }
+    }
+  }
+}

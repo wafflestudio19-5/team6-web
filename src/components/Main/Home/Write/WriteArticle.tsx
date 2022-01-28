@@ -19,6 +19,7 @@ import SelectKidage from "./Kidage/SelectKidage";
 import ConfirmModal from "./Confirm/ConfirmModal";
 import { TextareaAutosize } from "@mui/material";
 import Product from "../../../../apis/Product/Product";
+import Phrase from "./Phrase/Phrase";
 
 const settings = {
   className: "left",
@@ -115,6 +116,7 @@ const WriteArticle = () => {
     useState<boolean>(false);
   const [isKidsModalOpen, setIsKidsModalOpen] = useState<boolean>(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+  const [isPhraseOpen, setIsPhraseOpen] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [negotiable, setNegotiable] = useState<boolean>(false);
   const [category, setCategory] = useState<number | undefined>(0);
@@ -196,46 +198,61 @@ const WriteArticle = () => {
         });
       }
     } else {
-      /*
       const formData = new FormData();
       // @ts-ignore
+      console.log(!!imgFiles);
       if (imgFiles) {
         Object.values(imgFiles).map((e) => {
           formData.append("images", e);
         });
-        console.log(Object.values(imgFiles));
-        requester({ method: "POST", url: "/images/", data: formData })
-          .then((res) => {
-            const imageIdList = res.data.contents.map(
-              (e: { created_at: string; id: number; updated_at: string }) => {
-                return e.id;
-              }
-            ); */
-      if (!loc.state) {
-        const myPromise = Product.postProduct({
-          image_urls: imgPreview.filter((e, index) => index !== 0),
-          title: title,
-          content: value,
-          price: parseInt(price.replace(/[^0-9]/g, "")),
-          negotiable: negotiable,
-          category: category,
-          for_age: forAge,
-          range_of_location: 3,
-        }).then((res) => navigate("/main"));
-        toast.promise(myPromise, {
-          loading: "Uploading...",
-          success: "Successfully Uploaded!",
-          error: "Failed",
-        });
+        if (!loc.state) {
+          requester({ method: "POST", url: "/images/", data: formData }).then(
+            (res) => {
+              const myPromise = Product.postProduct({
+                image_urls: res.data.contents.map((data: any) => {
+                  return data.url;
+                }),
+                title: title,
+                content: value,
+                price: parseInt(price.replace(/[^0-9]/g, "")),
+                negotiable: negotiable,
+                category: category,
+                for_age: forAge,
+                range_of_location: 3,
+              }).then((res) => navigate("/main"));
+              toast.promise(myPromise, {
+                loading: "Uploading...",
+                success: "Successfully Uploaded!",
+                error: "Failed",
+              });
+            }
+          );
+        } else {
+          const myPromise = Product.patchProduct(loc.state.id, {
+            image_urls: [],
+            title: title,
+            content: value,
+            price: parseInt(price.replace(/[^0-9]/g, "")),
+            negotiable: negotiable,
+            category: category,
+            for_age: [2, 3],
+            range_of_location: 3,
+          }).then((res) => navigate("/main"));
+          toast.promise(myPromise, {
+            loading: "Uploading...",
+            success: "Successfully Uploaded!",
+            error: "Failed",
+          });
+        }
       } else {
         const myPromise = Product.patchProduct(loc.state.id, {
-          image_urls: imgPreview.filter((e, index) => index !== 0),
+          image_urls: [],
           title: title,
           content: value,
           price: parseInt(price.replace(/[^0-9]/g, "")),
           negotiable: negotiable,
           category: category,
-          for_age: null,
+          for_age: [2, 3],
           range_of_location: 3,
         }).then((res) => navigate("/main"));
         toast.promise(myPromise, {
@@ -244,13 +261,13 @@ const WriteArticle = () => {
           error: "Failed",
         });
       }
-      /*
-          })
-          .catch((e) => toast.error(e.response.data.error_message)); */
     }
   };
   const handleCheck = () => {
     if (!!price) setNegotiable(!negotiable);
+  };
+  const handlePhrase = () => {
+    setIsPhraseOpen(true);
   };
 
   const priceFormat = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,8 +295,7 @@ const WriteArticle = () => {
       }
     }
     if (nowImgUrlList.length <= 11) setImgPreview(nowImgUrlList);
-    else console.log("이미지는 최대 10개까지 첨부할 수 있어요.");
-    console.log(nowImgUrlList);
+    else toast("이미지는 최대 10개까지 첨부할 수 있어요.");
   };
 
   const deleteImg = (image: string) => {
@@ -359,6 +375,10 @@ const WriteArticle = () => {
               setIsKidsModalOpen={setIsKidsModalOpen}
             />
           )}
+          {isPhraseOpen && (
+            <Phrase setValue={setValue} setIsPhraseOpen={setIsPhraseOpen} />
+          )}
+
           <div
             className={`${styles.backShadow} ${
               isConfirmOpen ? styles.show : ""
@@ -370,6 +390,12 @@ const WriteArticle = () => {
               isKidsModalOpen ? styles.show : ""
             }`}
             onClick={() => setIsKidsModalOpen(false)}
+          />
+          <div
+            className={`${styles.backShadow} ${
+              isPhraseOpen ? styles.show : ""
+            }`}
+            onClick={() => setIsPhraseOpen(false)}
           />
           <div className={styles.header}>
             <img
@@ -388,17 +414,20 @@ const WriteArticle = () => {
             </p>
           </div>
           <div className={styles.footer}>
-            <img
-              className={styles.sentence}
-              src={sentence}
-              alt="자주쓰는 문구"
-            />
-            <p className={styles.usually}>자주쓰는 문구</p>
-            <img
-              className={styles.neighborhood}
-              src={setting}
-              alt="보여줄 동네"
-            />
+            <div onClick={handlePhrase}>
+              <img
+                className={styles.sentence}
+                src={sentence}
+                alt="자주쓰는 문구"
+              />
+              <p className={styles.usually}>자주쓰는 문구</p>
+              <img
+                className={styles.neighborhood}
+                src={setting}
+                alt="보여줄 동네"
+              />
+            </div>
+
             <p className={styles.show}>보여줄 동네 설정</p>
           </div>
           <div className={styles.contentWrapper}>
