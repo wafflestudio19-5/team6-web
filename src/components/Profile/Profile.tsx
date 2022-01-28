@@ -80,7 +80,7 @@ const Profile = () => {
         <p>프로필</p>
       </header>
       <div className={styles["body-wrapper"]}>
-        <div className={styles.imageframe}>
+        <div className={styles["image-frame"]}>
           <img
             className={styles.image}
             src={myInfo?.image_url ? myInfo?.image_url : Test}
@@ -96,7 +96,18 @@ const Profile = () => {
             프로필 수정
           </button>
         )}
-        <MannerTemperature />
+        <MannerTemperature
+          activeLocation={
+            myInfo.is_first_location_active
+              ? myInfo.first_location
+              : myInfo.second_location
+          }
+          verified={
+            myInfo.is_first_location_active
+              ? myInfo.first_location_verified
+              : myInfo.second_location_verified
+          }
+        />
         <ProfileButtons name={myInfo.name} products={products} />
         <div className={styles.preview}>
           {previewList?.map((article) => (
