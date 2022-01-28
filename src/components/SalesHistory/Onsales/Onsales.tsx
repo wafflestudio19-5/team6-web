@@ -13,7 +13,6 @@ import { SalesStatus } from "../../../type/enum/sales-status";
 import { ProductStatusAction } from "../../../type/enum/product-status-action";
 
 const Onsales = (props: {
-  setUpdate: Dispatch<SetStateAction<boolean>>;
   setOnsaleActions: Dispatch<SetStateAction<boolean>>;
   setActionTarget: Dispatch<SetStateAction<ActionTarget>>;
 }) => {
@@ -38,7 +37,6 @@ const Onsales = (props: {
         action: ProductStatusAction.RESERVED,
       })
       .then((res) => {
-        props.setUpdate((update) => !update);
         setOnsaleList(
           onsaleList.map((product) => {
             if (product.id !== data.id) {
@@ -57,7 +55,6 @@ const Onsales = (props: {
         action: ProductStatusAction.FOR_SALE,
       })
       .then((res) => {
-        props.setUpdate((update) => !update);
         setOnsaleList(
           onsaleList.map((product) => {
             if (product.id !== data.id) {
@@ -77,7 +74,6 @@ const Onsales = (props: {
         action: ProductStatusAction.SOLD_OUT,
       })
       .then((res) => {
-        props.setUpdate((update) => !update);
         setOnsaleList(onsaleList.filter((product) => product.id !== data.id));
       })
       .catch((e) => console.log(e));

@@ -54,6 +54,46 @@ const readInKorean = (price: number) => {
   return;
 };
 
+export const categoryFormat = (category: string | undefined) => {
+  switch (category) {
+    case "DIGITAL_DEVICE":
+      return "디지털기기";
+    case "HOME_APPLIANCE":
+      return "생활가전";
+    case "FURNITURE_AND_INTERIOR":
+      return "가구/인테리어";
+    case "KIDS":
+      return "유아동";
+    case "LIVING_AND_FOOD":
+      return "생활/가공식품";
+    case "KIDS_BOOK":
+      return "유아도서";
+    case "SPORTS_AND_LEISURE":
+      return "스포츠/레저";
+    case "WOMEN_STUFF":
+      return "여성잡화";
+    case "WOMEN_CLOTHES":
+      return "여성의류";
+    case "MEN_STUFF_AND_CLOTHES":
+      return "남성패션/잡화";
+    case "GAME_AND_HOBBIES":
+      return "게임/취미";
+    case "BEAUTY_AND_COSMETICS":
+      return "뷰티/미용";
+    case "PET":
+      return "반려동물용품";
+    case "BOOKS_AND_TICKETS_AND_RECORDS":
+      return "도서/티켓/음반";
+    case "BOTANICAL":
+      return "식물";
+    case "ETC":
+      return "기타 중고물품";
+    case "I_AM_BUYING":
+      return "삽니다";
+    default:
+      break;
+  }
+};
 const Article = () => {
   const { id } = useParams() as { id: string };
   const navigate = useNavigate();
@@ -124,59 +164,11 @@ const Article = () => {
   const onClickHeart = () => {
     setIsHeartClicked((prevState) => !prevState);
   };
-  const onClickPriceProposal = () => {
-    console.log("Propose Price");
-    // navigate("/proposal");
-  };
-  const onClickChatButton = () => {
-    console.log("chat");
-    // navigate("/chat");
-  };
   const onClickProfileImg = () => {
     console.log("profile image");
     // navigate("/profile/{id}");
   };
 
-  const categoryFormat = (category: string | undefined) => {
-    switch (category) {
-      case "DIGITAL_DEVICE":
-        return "디지털기기";
-      case "HOME_APPLIANCE":
-        return "생활가전";
-      case "FURNITURE_AND_INTERIOR":
-        return "가구/인테리어";
-      case "KIDS":
-        return "유아동";
-      case "LIVING_AND_FOOD":
-        return "생활/가공식품";
-      case "KIDS_BOOK":
-        return "유아도서";
-      case "SPORTS_AND_LEISURE":
-        return "스포츠/레저";
-      case "WOMEN_STUFF":
-        return "여성잡화";
-      case "WOMEN_CLOTHES":
-        return "여성의류";
-      case "MEN_STUFF_AND_CLOTHES":
-        return "남성패션/잡화";
-      case "GAME_AND_HOBBIES":
-        return "게임/취미";
-      case "BEAUTY_AND_COSMETICS":
-        return "뷰티/미용";
-      case "PET":
-        return "반려동물용품";
-      case "BOOKS_AND_TICKETS_AND_RECORDS":
-        return "도서/티켓/음반";
-      case "BOTANICAL":
-        return "식물";
-      case "ETC":
-        return "기타 중고물품";
-      case "I_AM_BUYING":
-        return "삽니다";
-      default:
-        break;
-    }
-  };
   const kidsAgeFormat = (
     ages: (
       | "ZERO_TO_SIX_MONTH"
@@ -293,14 +285,16 @@ const Article = () => {
     if (currentArticle) {
       if (inputs.suggested_price) {
         requester
-          .post(`/products/${currentArticle.id}/purchases/`, {
+          .post(`/purchase-orders/`, {
             suggested_price: inputs.suggested_price,
             message: inputs.message,
+            product_id: currentArticle.id,
           })
           .catch((e) => {
             console.log(e.response);
           });
         setRequestModal(false);
+        setInputs({ suggested_price: "", message: "" });
       } else {
         toast.error("가격은 반드시 입력해야 해요");
       }

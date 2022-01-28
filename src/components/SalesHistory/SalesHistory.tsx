@@ -1,5 +1,5 @@
 import styles from "./SalesHistory.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BackArrow from "../../icons/leftArrow.png";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Onsales from "./Onsales/Onsales";
@@ -10,6 +10,10 @@ import { toast } from "react-hot-toast";
 import requester from "../../apis/requester";
 import { ProductSimpleWithoutUserDto } from "../../type/dto/product-simple-without-user.dto";
 import { ProductStatusAction } from "../../type/enum/product-status-action";
+import { ProductDto } from "../../type/dto/product.dto";
+import { GetProductDto } from "../../type/dto/for-api/get-product.dto";
+import { categoryFormat } from "../Article/Article";
+import product from "../../apis/Product/Product";
 
 export type srcPair = {
   id: number;
@@ -29,16 +33,30 @@ const SalesHistory = () => {
   const [onsaleActions, setOnsaleActions] = useState(false);
   const [soldoutActions, setSoldoutActions] = useState(false);
   const [hiddenActions, setHiddenActions] = useState(false);
-  const [update, setUpdate] = useState(false);
   const [actionTarget, setActionTarget] = useState<ActionTarget>(undefined);
+  const navigate = useNavigate();
 
-  const changeToModification = (id: number | undefined) => {
-    // (next) 게시글 수정 페이지로
+  const changeToModification = async () => {
+    const response = await requester.get<GetProductDto>(
+      `/products/${actionTarget?.id}/`
+    );
+    navigate("/write", {
+      state: {
+        image_urls: response.data.image_urls,
+        title: response.data.title,
+        category: categoryFormat(response.data.category),
+        price: response.data.price,
+        negotiable: response.data.negotiable,
+        for_age: response.data.for_age,
+        content: response.data.content,
+        id: actionTarget?.id,
+      },
+    });
   };
 
   const handleHiding = () => {
     requester
-      .put(`/products/${actionTarget}/status/`, {
+      .put(`/products/${actionTarget?.id}/status/`, {
         action: ProductStatusAction.HIDE,
       })
       .then((res) => {})
@@ -53,7 +71,7 @@ const SalesHistory = () => {
 
   const handleDeletion = () => {
     requester
-      .delete(`/products/${actionTarget}/`)
+      .delete(`/products/${actionTarget?.id}/`)
       .then((res) => {
         actionTarget?.dispatch(
           actionTarget?.list.filter(
@@ -69,9 +87,8 @@ const SalesHistory = () => {
 
   const handleBump = () => {
     requester
-      .put(`/products/${actionTarget}/status/`, { action: "bump" })
+      .put(`/products/${actionTarget?.id}/status/`, { action: "bump" })
       .then((res) => {
-        setUpdate((update) => !update);
         setOnsaleActions(false);
         setSoldoutActions(false);
         setHiddenActions(false);
@@ -86,9 +103,11 @@ const SalesHistory = () => {
   };
   const changeToOnsale = () => {
     requester
-      .put(`/products/${actionTarget}/status/`, { action: "for sale" })
+      .put(`/products/${actionTarget?.id}/status/`, { action: "for sale" })
       .then((res) => {
-        setUpdate((update) => !update);
+        actionTarget?.dispatch(
+          actionTarget.list.filter((product) => product.id !== actionTarget.id)
+        );
       })
       .catch((e) => console.log(e));
     setOnsaleActions(false);
@@ -112,10 +131,7 @@ const SalesHistory = () => {
             }`}
           >
             <div className={styles.upperBox}>
-              <div
-                className={styles.blueText}
-                onClick={() => changeToModification(actionTarget?.id)}
-              >
+              <div className={styles.blueText} onClick={changeToModification}>
                 게시글 수정
               </div>
               <div className={styles.line} />
@@ -158,7 +174,9 @@ const SalesHistory = () => {
                 판매중으로 변경
               </div>
               <div className={styles.line} />
-              <div className={styles.blueText}>게시글 수정</div>
+              <div className={styles.blueText} onClick={changeToModification}>
+                게시글 수정
+              </div>
               <div className={styles.line} />
               <div className={styles.blueText} onClick={handleHiding}>
                 숨기기
@@ -191,7 +209,9 @@ const SalesHistory = () => {
             }`}
           >
             <div className={styles.upperBox}>
-              <div className={styles.blueText}>게시글 수정</div>
+              <div className={styles.blueText} onClick={changeToModification}>
+                게시글 수정
+              </div>
               <div className={styles.line} />
               <div className={styles.redText} onClick={handleDeletion}>
                 삭제
@@ -247,7 +267,6 @@ const SalesHistory = () => {
       <section className={styles["body-wrapper"]}>
         {mode === 1 && (
           <Onsales
-            setUpdate={setUpdate}
             setOnsaleActions={setOnsaleActions}
             setActionTarget={setActionTarget}
           />
@@ -260,7 +279,6 @@ const SalesHistory = () => {
         )}
         {mode === 3 && (
           <Hiddens
-            setUpdate={setUpdate}
             setHiddenActions={setHiddenActions}
             setActionTarget={setActionTarget}
           />

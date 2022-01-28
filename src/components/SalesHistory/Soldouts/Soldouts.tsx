@@ -36,7 +36,7 @@ const Soldouts = (props: {
   };
   const changeToVisible = (data: ProductSimpleWithoutUserDto) => {
     requester
-      .put(`/products/${data.id}/status/`, { action: "show" })
+      .put(`/products/${data.id}/status/`, { action: "for-sale" })
       .catch((e) => console.log(e));
   };
 
@@ -109,17 +109,6 @@ const Soldouts = (props: {
                   <p className={styles.heart}>{article.likes}</p>
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-        <div className={styles.lower}>
-          <div className={styles.line} />
-          <div className={styles.buttons}>
-            <div
-              className={styles.button}
-              onClick={() => changeToVisible(article)}
-            >
-              거래 후기 작성하기
             </div>
           </div>
         </div>

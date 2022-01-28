@@ -69,7 +69,6 @@
   }
 
   .body-wrapper {
-    position: fixed;
     top: 81px;
     width: 100%;
     height: calc(100% - 81px);
@@ -82,7 +81,7 @@
     }
   }
 
-  .back-shadow {
+  .backShadow {
     visibility: hidden;
     position: absolute;
     top: 0;
@@ -90,9 +89,9 @@
     height: 100%;
     opacity: 0;
     transition-duration: 0.3s;
-    z-index: 1;
+    z-index: 2;
   }
-  .back-shadow.show {
+  .backShadow.show {
     visibility: visible;
     background: #777777;
     opacity: 0.4;

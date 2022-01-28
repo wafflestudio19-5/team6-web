@@ -19,8 +19,7 @@ export type srcPair = {
 const PurchaseHistory = () => {
   const [mode, setMode] = useState(1);
   const [requestUser, setRequestUser] = useState<UserDto | null>(null);
-  const [update, setUpdate] = useState(false);
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
+  const [shadow, setShadow] = useState(false);
 
   return (
     <div className={styles["sales-history-wrapper"]}>
@@ -83,10 +82,16 @@ const PurchaseHistory = () => {
         거래반려
       </button>
       <section className={styles["body-wrapper"]}>
-        {mode === 1 && <Requests setRequestUser={setRequestUser} />}
+        {mode === 1 && <Requests shadow={shadow} setShadow={setShadow} />}
         {mode === 2 && <Purchased />}
         {mode === 3 && <Refused />}
       </section>
+      <div
+        className={`${styles.backShadow} ${shadow ? styles.show : ""}`}
+        onClick={() => {
+          setShadow(false);
+        }}
+      />
     </div>
   );
 };
