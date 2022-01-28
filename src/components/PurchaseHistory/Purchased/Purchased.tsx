@@ -8,11 +8,18 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PurchaseOrdersWithoutUserDto } from "../../../type/dto/purchase-orders-without-user.dto";
 import { GetMyPurchaseOrdersDto } from "../../../type/dto/for-api/get-my-purchase-orders.dto";
+import styles2 from "../../Utilities/confirm.module.scss";
 
-const Purchased = () => {
+const Purchased = (props: {
+  shadow: boolean;
+  setShadow: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [purchasedList, setPurchasedList] = useState<
     PurchaseOrdersWithoutUserDto[]
   >([]);
+  const [modal, setModal] = useState(false);
+  const [targetRequest, setTargetRequest] =
+    useState<PurchaseOrdersWithoutUserDto>();
 
   useEffect(() => {
     requester
@@ -24,6 +31,11 @@ const Purchased = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (!props.shadow) {
+      setModal(false);
+    }
+  }, [props.shadow]);
   const navigate = useNavigate();
 
   const goToProductPage = (id: number) => {
@@ -92,6 +104,18 @@ const Purchased = () => {
         </div>
         <div className={styles.lower}>
           <div className={styles.line} />
+          <div className={styles.buttons}>
+            <div
+              className={styles.button}
+              onClick={() => {
+                props.setShadow(true);
+                setModal(true);
+                setTargetRequest(article);
+              }}
+            >
+              연락처 확인하기
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -103,6 +127,23 @@ const Purchased = () => {
         <>{soldoutComponents}</>
       ) : (
         <p>거래완료된 게시물이 없어요.</p>
+      )}
+      {modal && (
+        <div className={styles2.box}>
+          <p className={styles2.title}>거래 완료</p>
+          <p className={styles2.contents}>
+            판매자 {targetRequest?.product.user.nickname}님과 거래한 상품에 대해
+            추가적으로 할 이야기가 있다면 아래 연락처로 연락하세요.
+          </p>
+          <p className={styles2.subTitle}>이메일</p>
+          <div className={styles2.textBox}>
+            {targetRequest?.product.user.email}
+          </div>
+          <p className={styles2.subTitle}>전화번호</p>
+          <div className={styles2.textBox}>
+            {targetRequest?.product.user.phone}
+          </div>
+        </div>
       )}
     </div>
   );

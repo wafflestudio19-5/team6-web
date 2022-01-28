@@ -21,6 +21,7 @@ import moreIcon from "../../icons/more.png";
 import redHeartIcon from "../../icons/redHeart.png";
 import blackHeartIcon from "../../icons/blackHeart.png";
 import Slider from "react-slick";
+import character from "../../icons/Search/noResults.jpg";
 
 import "./slickTheme.scss";
 import "./slick.scss";
@@ -161,8 +162,18 @@ const Article = () => {
   const onClickSetting = () => {
     setIsSettingModalOpen(true);
   };
-  const onClickHeart = () => {
-    setIsHeartClicked((prevState) => !prevState);
+  const onClickHeart = async () => {
+    if (isHeartClicked) {
+      try {
+        await requester.delete(`products/${id}/likes/`);
+        setIsHeartClicked(false);
+      } catch (e) {}
+    } else {
+      try {
+        await requester.post(`/products/${id}/likes/`);
+        setIsHeartClicked(true);
+      } catch (e) {}
+    }
   };
   const onClickProfileImg = () => {
     console.log("profile image");
@@ -254,7 +265,7 @@ const Article = () => {
     }
   };
   const changeToRequests = () => {
-    navigate(`/request/${id}`);
+    if (currentArticle?.chats) navigate(`/request/${id}`);
   };
   const handleRequest = () => {
     if (currentArticle) {
@@ -284,17 +295,31 @@ const Article = () => {
   const handleConfirm = () => {
     if (currentArticle) {
       if (inputs.suggested_price) {
-        requester
-          .post(`/purchase-orders/`, {
-            suggested_price: inputs.suggested_price,
-            message: inputs.message,
-            product_id: currentArticle.id,
-          })
-          .catch((e) => {
-            console.log(e.response);
-          });
-        setRequestModal(false);
-        setInputs({ suggested_price: "", message: "" });
+        if (parseInt(inputs.suggested_price) !== currentArticle.price) {
+          requester
+            .post(`/purchase-orders/`, {
+              suggested_price: inputs.suggested_price,
+              message: inputs.message,
+              product_id: currentArticle.id,
+            })
+            .catch((e) => {
+              console.log(e.response);
+            });
+          setRequestModal(false);
+          setInputs({ suggested_price: "", message: "" });
+        } else {
+          requester
+            .post(`/purchase-orders/`, {
+              suggested_price: null,
+              message: inputs.message,
+              product_id: currentArticle.id,
+            })
+            .catch((e) => {
+              console.log(e.response);
+            });
+          setRequestModal(false);
+          setInputs({ suggested_price: "", message: "" });
+        }
       } else {
         toast.error("가격은 반드시 입력해야 해요");
       }
@@ -334,11 +359,15 @@ const Article = () => {
           />
         </div>
         <div className={styles.footer}>
-          <img
-            className={styles.heart}
-            src={isHeartClicked ? redHeartIcon : blackHeartIcon}
-            onClick={onClickHeart}
-          />
+          {isSeller ? (
+            <img className={styles.heart} src={character} />
+          ) : (
+            <img
+              className={styles.heart}
+              src={isHeartClicked ? redHeartIcon : blackHeartIcon}
+              onClick={onClickHeart}
+            />
+          )}
           <h1 className={styles.price}>
             {currentArticle?.price !== 0 &&
               currentArticle?.price.toLocaleString("ko-KR") + "원"}
@@ -346,7 +375,7 @@ const Article = () => {
           </h1>
           {isSeller ? (
             <p className={styles.priceProposal} onClick={changeToRequests}>
-              가격제안 {currentArticle?.price_suggestions}명
+              가격제안 {currentArticle?.chats}명
             </p>
           ) : (
             <p
@@ -526,7 +555,8 @@ const Article = () => {
               <>
                 <p className={styles2.title}>가격 제안하기</p>
                 <p className={styles2.contents}>
-                  구매하고 싶은 가격을 입력하세요. 판매자가 올린 가격{" "}
+                  구매하고 싶은 가격을 입력하세요. <br />
+                  판매자가 올린 가격{" "}
                   {currentArticle?.price.toLocaleString("ko-KR")}원에 비해 너무
                   높거나 낮은 가격을 적으면 거래가 어려울 수 있어요.
                 </p>
@@ -555,7 +585,8 @@ const Article = () => {
                 <p className={styles2.title}>정가에 구매 요청하기</p>
                 <p className={styles2.contents}>
                   메시지를 정성껏 적어 보내면 거래가 성사될 가능성이 더
-                  높아질거에요. 판매자가 올린 가격{" "}
+                  높아질거에요. <br />
+                  판매자가 올린 가격{" "}
                   {currentArticle?.price.toLocaleString("ko-KR")}원에
                   구매하시려면 확인 버튼을 눌러주세요.
                 </p>
@@ -575,6 +606,7 @@ const Article = () => {
               className={styles2.cancelButton}
               onClick={() => {
                 setRequestModal(false);
+                setInputs({ suggested_price: "", message: "" });
               }}
             >
               닫기

@@ -12,6 +12,73 @@
 
   display: block;
   padding: 5%;
+  .profileContainer{
+    position: relative;
+    width: 100%;
+    display: flex;
+
+    .thumbnail {
+      position: relative;
+      height: 70px;
+      width: 70px;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background-position: center;
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+
+    .dataContainer {
+      height: 70px;
+      position: relative;
+      margin: 10px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .firstLine {
+        position: relative;
+
+        .title {
+          position: relative;
+          color: black;
+          font-size: 18px;
+          font-weight: bold;
+          margin: 0;
+          padding: 0;
+        }
+      }
+
+      .secondLine {
+        position: relative;
+        display: flex;
+        color: #777777;
+        font-size: 13px;
+
+        .region {
+          position: relative;
+          left: 0;
+          margin-top: 5px;
+          margin-bottom: 0;
+        }
+
+        .time {
+          position: relative;
+          left: 0;
+          margin-top: 5px;
+          margin-bottom: 0;
+          margin-left: 5px;
+        }
+
+        .price {
+          position: relative;
+          left: 0;
+          color: black;
+          font-weight: bolder;
+        }
+      }
+
+    }}
 
   .title {
     color: black;

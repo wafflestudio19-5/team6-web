@@ -93,6 +93,10 @@ const Refused = () => {
               )}
             </div>
           </div>
+          <div
+            className={styles.clickArea}
+            onClick={() => goToProductPage(article.product.id)}
+          />
         </div>
         <div className={styles.lower}>
           <div className={styles.line} />

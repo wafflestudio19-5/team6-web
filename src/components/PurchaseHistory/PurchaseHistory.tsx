@@ -83,7 +83,7 @@ const PurchaseHistory = () => {
       </button>
       <section className={styles["body-wrapper"]}>
         {mode === 1 && <Requests shadow={shadow} setShadow={setShadow} />}
-        {mode === 2 && <Purchased />}
+        {mode === 2 && <Purchased shadow={shadow} setShadow={setShadow} />}
         {mode === 3 && <Refused />}
       </section>
       <div

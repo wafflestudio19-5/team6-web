@@ -19,6 +19,7 @@ const Login = () => {
     username: "",
     password: "",
   });
+  const setUser = useUserDispatch();
 
   const navigate = useNavigate();
   const token: string | null = localStorage.getItem("token");

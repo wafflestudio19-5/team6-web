@@ -6,11 +6,15 @@ import BackArrow from "../../icons/leftArrow.png";
 import FixedPrice from "./FixedPrice/FixedPrice";
 import Suggestion from "./Suggestion/Suggestion";
 import { UserDto } from "../../type/dto/user.dto";
+import profile from "../../icons/MyCarrot/test-profile.png";
+import { calculateTimeDifference } from "../Utilities/functions";
+import { PurchaseOrderDto } from "../../type/dto/purchase-order.dto";
+import { RequestStatus } from "../../type/enum/request-status";
 
 const RequestPage = () => {
   const { id } = useParams() as { id: string };
   const [mode, setMode] = useState(1);
-  const [contactUser, setContactUser] = useState<UserDto | null>(null);
+  const [request, setRequest] = useState<PurchaseOrderDto | null>(null);
   const [messageInfo, setMessageInfo] = useState<{
     user: UserDto;
     message: string;
@@ -22,28 +26,63 @@ const RequestPage = () => {
     navigate(-1);
   };
 
+  const goToUserProfile = () => {};
+
   return (
     <div className={styles["request-wrapper"]}>
       <div
         className={`${styles.backShadow} ${
-          contactUser || messageInfo ? styles.show : ""
+          request || messageInfo ? styles.show : ""
         }`}
         onClick={() => {
           setMessageInfo(null);
-          setContactUser(null);
+          setRequest(null);
         }}
       />
-      {contactUser ? (
-        <div className={styles2.box}>
-          <p className={styles2.title}>연락을 주고 받아 보세요.</p>
-          <p className={styles2.contents}>
-            연락을 처음 할 때에는 본인의 신원을 먼저 밝혀주세요.
-          </p>
-          <p className={styles2.subTitle}>이메일</p>
-          <div className={styles2.textBox}>{contactUser.email}</div>
-        </div>
+      {request ? (
+        request.status === RequestStatus.ACCEPTED ? (
+          <div className={styles2.box}>
+            <p className={styles2.title}>연락을 주고 받아 보세요.</p>
+            <p className={styles2.contents}>
+              연락을 처음 할 때에는 본인의 신원을 먼저 밝혀주세요.
+            </p>
+            <p className={styles2.subTitle}>이메일</p>
+            <div className={styles2.textBox}>{request.user.email}</div>
+            <p className={styles2.subTitle}>전화번호</p>
+            <div className={styles2.textBox}>{request.user.phone}</div>
+          </div>
+        ) : (
+          <div className={styles2.box}>
+            <p className={styles2.title}>거래가 완료되었습니다.</p>
+            <p className={styles2.contents}>
+              구매자 {request?.user.nickname}님과 거래한 상품에 대해 추가적으로
+              할 이야기가 있다면 아래 연락처로 연락하세요.
+            </p>
+            <p className={styles2.subTitle}>이메일</p>
+            <div className={styles2.textBox}>{request.user.email}</div>
+            <p className={styles2.subTitle}>전화번호</p>
+            <div className={styles2.textBox}>{request.user.phone}</div>
+          </div>
+        )
       ) : messageInfo && messageInfo.message ? (
         <div className={styles2.box}>
+          <div className={styles2.profileContainer} onClick={goToUserProfile}>
+            <img
+              className={styles2.thumbnail}
+              src={profile}
+              alt="프로필 이미지"
+            />
+            <div className={styles2.dataContainer}>
+              <div className={styles2.firstLine}>
+                <p className={styles2.title}>{messageInfo.user.nickname}</p>
+              </div>
+              <div className={styles2.secondLine}>
+                <p className={styles2.region}>
+                  {messageInfo.user.first_location}
+                </p>
+              </div>
+            </div>
+          </div>
           <p className={styles2.title}>
             {messageInfo.user.nickname} 님께서 메시지를 보내셨어요
           </p>
@@ -84,14 +123,14 @@ const RequestPage = () => {
         {mode === 1 && (
           <FixedPrice
             id={id}
-            setContactUser={setContactUser}
+            setRequest={setRequest}
             setMessageInfo={setMessageInfo}
           />
         )}
         {mode === 2 && (
           <Suggestion
             id={id}
-            setContactUser={setContactUser}
+            setRequest={setRequest}
             setMessageInfo={setMessageInfo}
           />
         )}

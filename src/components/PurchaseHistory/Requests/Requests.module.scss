@@ -12,10 +12,9 @@
 
     .clickArea{
       position: absolute;
-      width: calc(100% - 110px);
+      width: 100%;
       height: calc(100% - 40px);
-      left: 110px;
-      z-index: 1;
+      z-index: 2;
     }
 
     .upper {
@@ -25,6 +24,8 @@
         position: relative;
         height: 100px;
         width: 100px;
+        aspect-ratio: 1;
+        object-fit: cover;
         background-position: center;
         margin-top: 10px;
         margin-left: 10px;
@@ -34,7 +35,7 @@
 
       .dataContainer {
         position: relative;
-        width: calc(100% - 20px);
+        width: calc(100% - 120px);
         height: 80px;
         margin-top: 5px;
         margin-left: 10px;
@@ -47,7 +48,7 @@
           
           .title {
             position: relative;
-            width: 290px;
+            width: calc(100% - 50px);
             left: 10px;
             color: black;
             font-size: 15px;
@@ -58,7 +59,7 @@
             height: 20px;
             cursor: pointer;
 
-            z-index: 4;
+            z-index: 2;
           }
         }
         .secondLine {
@@ -116,12 +117,12 @@
 
         .lastLine {
           position: relative;
+          padding-right: 20px;
           top: 10px;
-          width: 80px;
-          align-items: center;
+          width: calc(100% - 20px);
           justify-content: flex-end;
           display: flex;
-          left: calc(100% - 90px);
+
 
           .chatContainer {
             display: flex;

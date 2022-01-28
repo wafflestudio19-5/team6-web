@@ -127,7 +127,8 @@ const Withdrawal = (props: {
         <h3 className={styles2.title}>'유저 이름'님 탈퇴를 원하시나요?</h3>
         <p className={styles2.contents}>
           계정을 삭제하면 매너온도, 게시글, 관심, 채팅 등 모든 활동 정보가
-          삭제됩니다. 계정 삭제 후 7일간 다시 가입할 수 없어요.
+          삭제됩니다. <br />
+          계정 삭제 후 7일간 다시 가입할 수 없어요.
         </p>
         <h3 className={styles2.title}>계정을 삭제하려는 이유를 알려주세요.</h3>
         <Select

@@ -14,7 +14,7 @@
       position: absolute;
       width: 100%;
       height: calc(100% - 40px);
-      z-index: 3;
+      z-index: 2;
     }
 
     .upper {
@@ -24,6 +24,8 @@
         position: relative;
         height: 100px;
         width: 100px;
+        aspect-ratio: 1;
+        object-fit: cover;
         background-position: center;
         margin-top: 10px;
         margin-left: 10px;
@@ -33,7 +35,7 @@
 
       .dataContainer {
         position: relative;
-        width: calc(100% - 20px);
+        width: calc(100% - 120px);
         height: 80px;
         margin-top: 5px;
         margin-left: 10px;
@@ -47,7 +49,7 @@
           .title {
             position: relative;
             width: 305px;
-            left: 10px;
+            padding-left: 10px;
             color: black;
             font-size: 15px;
           }
@@ -63,7 +65,7 @@
         }
         .secondLine {
           position: relative;
-          left: 10px;
+          padding-left: 10px;
           top: 10px;
           display: flex;
           color: #777777;
@@ -85,7 +87,7 @@
         }
         .thirdLine {
           position: relative;
-          left: 10px;
+          padding-left: 10px;
           top: 10px;
           margin-top: 5px;
           display: flex;
@@ -116,12 +118,11 @@
 
         .lastLine {
           position: relative;
+          padding-right: 20px;
           top: 10px;
-          width: 80px;
-          align-items: center;
+          width: calc(100% - 20px);
           justify-content: flex-end;
           display: flex;
-          left: calc(100% - 90px);
 
           .chatContainer {
             display: flex;

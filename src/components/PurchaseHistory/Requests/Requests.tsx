@@ -81,8 +81,11 @@ const Requests = (props: {
   };
   const handlePurchaseConfirm = () => {
     requester
-      .patch(`/purchase-orders/${targetRequest?.id}/`, {
-        suggested_price: inputs.suggested_price,
+      .put(`/purchase-orders/${targetRequest?.id}/`, {
+        suggested_price:
+          inputs.suggested_price !== `${targetRequest?.product.price}`
+            ? inputs.suggested_price
+            : null,
         message: inputs.message,
       })
       .catch((e) => {
@@ -105,10 +108,6 @@ const Requests = (props: {
   const requestComponents = requestList.map((article) => {
     return (
       <div className={styles.articleWrapper}>
-        <div
-          className={styles.clickArea}
-          onClick={() => goToProductPage(article.product.id)}
-        />
         <div className={styles.upper}>
           <img
             className={styles.thumbnail}
@@ -118,7 +117,7 @@ const Requests = (props: {
           <div className={styles.dataContainer}>
             <div className={styles.firstLine}>
               <p className={styles.title}>{article.product.title}</p>
-              {article.status === RequestStatus.CONFIRMED && (
+              {article.status === RequestStatus.ACCEPTED && (
                 <img
                   className={styles.bell}
                   src={bell}
@@ -170,6 +169,12 @@ const Requests = (props: {
               )}
             </div>
           </div>
+          <div
+            className={styles.clickArea}
+            onClick={() => {
+              goToProductPage(article.product.id);
+            }}
+          />
         </div>
         <div className={styles.lower}>
           <div className={styles.line} />
@@ -178,7 +183,11 @@ const Requests = (props: {
               className={styles.button}
               onClick={() => {
                 setInputs({
-                  suggested_price: `${article.suggested_price}`,
+                  suggested_price: `${
+                    article.suggested_price
+                      ? article.suggested_price
+                      : article.product.price
+                  }`,
                   message: "",
                 });
                 props.setShadow(true);
@@ -282,7 +291,23 @@ const Requests = (props: {
             닫기
           </div>
         </div>
-      )}{" "}
+      )}
+      {alarmModal && (
+        <div className={styles2.box}>
+          <p className={styles2.title}>판매자가 거래 요청을 수락했어요.</p>
+          <p className={styles2.contents}>
+            연락을 처음 할 때에는 본인의 신원을 먼저 밝혀주세요.
+          </p>
+          <p className={styles2.subTitle}>이메일</p>
+          <div className={styles2.textBox}>
+            {targetRequest?.product.user.email}
+          </div>
+          <p className={styles2.subTitle}>전화번호</p>
+          <div className={styles2.textBox}>
+            {targetRequest?.product.user.phone}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -23,8 +23,10 @@
 
       .thumbnail {
         position: relative;
-        height: 100px;
         width: 100px;
+        height: 100px;
+        aspect-ratio: 1;
+        object-fit: cover;
         background-position: center;
         margin-top: 10px;
         margin-left: 10px;
@@ -34,7 +36,7 @@
 
       .dataContainer {
         position: relative;
-        width: calc(100% - 20px);
+        width: calc(100% - 120px);
         height: 80px;
         margin-top: 5px;
         margin-left: 10px;
@@ -117,12 +119,12 @@
 
         .lastLine {
           position: relative;
+          padding-right: 20px;
           top: 10px;
-          width: 80px;
-          align-items: center;
+          width: calc(100% - 20px);
           justify-content: flex-end;
           display: flex;
-          left: calc(100% - 90px);
+
 
           .chatContainer {
             display: flex;
