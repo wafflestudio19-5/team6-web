@@ -8,19 +8,11 @@ import {
 } from "../../../Utilities/functions";
 import { useNavigate } from "react-router-dom";
 
-const SalesArticle = ({
-  article,
-  prev,
-}: {
-  article: productType;
-  prev: string;
-}) => {
+const SalesArticle = ({ article }: { article: productType }) => {
   const navigate = useNavigate();
 
   const LinkToArticle = () => {
-    navigate(`/article/${article.id}`, {
-      state: { prev: prev },
-    });
+    navigate(`/article/${article.id}`);
   };
 
   return (

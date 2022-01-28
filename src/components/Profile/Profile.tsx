@@ -111,11 +111,7 @@ const Profile = () => {
         <ProfileButtons name={myInfo.name} products={products} />
         <div className={styles.preview}>
           {previewList?.map((article) => (
-            <SalesArticle
-              key={article.id}
-              article={article}
-              prev={`/profile/${name}`}
-            />
+            <SalesArticle key={article.id} article={article} />
           ))}
         </div>
       </div>

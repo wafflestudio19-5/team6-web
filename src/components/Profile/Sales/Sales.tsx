@@ -115,27 +115,15 @@ const Sales = () => {
       <div className={styles["body-wrapper"]}>
         {mode === "entire" &&
           salesList?.map((article) => (
-            <SalesArticle
-              key={article.id}
-              prev={`profile/${name}/sales?mode=${mode}`}
-              article={article}
-            />
+            <SalesArticle key={article.id} article={article} />
           ))}
         {mode === "on-sale" &&
           onSaleList?.map((article) => (
-            <SalesArticle
-              key={article.id}
-              prev={`profile/${name}/sales?mode=${mode}`}
-              article={article}
-            />
+            <SalesArticle key={article.id} article={article} />
           ))}
         {mode === "sold" &&
           soldList?.map((article) => (
-            <SalesArticle
-              key={article.id}
-              prev={`profile/${name}/sales?mode=${mode}`}
-              article={article}
-            />
+            <SalesArticle key={article.id} article={article} />
           ))}
         {mode === "entire" && salesList?.length === 0 && (
           <div className={styles.empty}>
