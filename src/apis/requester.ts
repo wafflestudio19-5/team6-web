@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const user = axios.create({
   baseURL: "https://carrotserver.shop/api/v1",
@@ -38,9 +39,10 @@ requester.interceptors.response.use(
           응답 에러 처리를 작성합니다.
           .catch() 으로 이어집니다.
       */
-    if (error.response.status === "401") {
+
+    if (error.response.status === 401) {
       localStorage.removeItem("token");
-      toast("자동 로그아웃 되었습니다.");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
