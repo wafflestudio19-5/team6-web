@@ -5,7 +5,9 @@ import {
   ChangeEventHandler,
   Dispatch,
   SetStateAction,
+  useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
@@ -35,14 +37,46 @@ const Requests = (props: {
   const [alarmModal, setAlarmModal] = useState(false);
   const [cancelModal, setCancelModal] = useState(false);
 
+  const [isLast, setIsLast] = useState(false);
+  const [bottom, setBottom] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const getNewProducts = async () => {
+    try {
+      const response = await requester.get<GetMyPurchaseOrdersDto>(
+        `/users/me/purchase-orders/?pageNumber=${pageCount}&pageSize=10&status=pending`
+      );
+      setIsLast(response.data.last);
+      setPageCount(pageCount + 1);
+      setRequestList(requestList.concat(response.data.content));
+    } catch (e) {
+      return undefined;
+    }
+  };
   useEffect(() => {
-    requester
-      .get<GetMyPurchaseOrdersDto>(
-        "/users/me/purchase-orders/?pageNumber=0&pageSize=15&status=pending"
-      )
-      .then((res) => {
-        setRequestList(res.data.content);
-      });
+    (async () => {
+      await getNewProducts();
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (!isLast && bottom) {
+      (async () => {
+        await getNewProducts();
+      })();
+    }
+  }, [bottom]);
+
+  const handleScroll = useCallback(() => {
+    if (!isLast && listRef.current) {
+      const { clientHeight, scrollHeight, scrollTop } = listRef.current;
+      if (Math.round(scrollTop + clientHeight) >= scrollHeight - 200) {
+        if (!bottom) {
+          setBottom(true);
+        }
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -215,7 +249,7 @@ const Requests = (props: {
   });
 
   return (
-    <div className={styles.wrapper}>
+    <div ref={listRef} onScroll={handleScroll} className={styles.wrapper}>
       {requestList.length ? (
         <>{requestComponents}</>
       ) : (

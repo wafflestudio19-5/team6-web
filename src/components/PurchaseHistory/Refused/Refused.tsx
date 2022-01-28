@@ -8,13 +8,16 @@ import {
   ChangeEventHandler,
   Dispatch,
   SetStateAction,
+  useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { PurchaseOrdersWithoutUserDto } from "../../../type/dto/purchase-orders-without-user.dto";
 import requester from "../../../apis/requester";
 import { GetMyPurchaseOrdersDto } from "../../../type/dto/for-api/get-my-purchase-orders.dto";
 import styles2 from "../../Utilities/confirm.module.scss";
+import { GetMyProductsDto } from "../../../type/dto/for-api/get-my-products.dto";
 
 const Refused = (props: {
   shadow: boolean;
@@ -31,14 +34,46 @@ const Refused = (props: {
     useState<PurchaseOrdersWithoutUserDto>();
   const [modal, setModal] = useState(false);
 
+  const [isLast, setIsLast] = useState(false);
+  const [bottom, setBottom] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const getNewProducts = async () => {
+    try {
+      const response = await requester.get<GetMyPurchaseOrdersDto>(
+        `/users/me/purchase-orders/?pageNumber=${pageCount}&pageSize=10&status=rejected`
+      );
+      setIsLast(response.data.last);
+      setPageCount(pageCount + 1);
+      setRefusedList(refusedList.concat(response.data.content));
+    } catch (e) {
+      return undefined;
+    }
+  };
   useEffect(() => {
-    requester
-      .get<GetMyPurchaseOrdersDto>(
-        "/users/me/purchase-orders/?pageNumber=0&pageSize=15&status=rejected"
-      )
-      .then((res) => {
-        setRefusedList(res.data.content);
-      });
+    (async () => {
+      await getNewProducts();
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (!isLast && bottom) {
+      (async () => {
+        await getNewProducts();
+      })();
+    }
+  }, [bottom]);
+
+  const handleScroll = useCallback(() => {
+    if (!isLast && listRef.current) {
+      const { clientHeight, scrollHeight, scrollTop } = listRef.current;
+      if (Math.round(scrollTop + clientHeight) >= scrollHeight - 200) {
+        if (!bottom) {
+          setBottom(true);
+        }
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -175,7 +210,7 @@ const Refused = (props: {
   });
 
   return (
-    <div className={styles.wrapper}>
+    <div ref={listRef} onScroll={handleScroll} className={styles.wrapper}>
       {refusedList.length ? (
         <>{refusedComponents}</>
       ) : (
