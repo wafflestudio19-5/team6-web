@@ -36,7 +36,6 @@ const Main = () => {
     requester
       .get("/users/me/")
       .then((res) => {
-        setUser(res.data);
         if (res.data.kakao_status === "INVALID") {
           setFirstSocialLoginModal(true);
           const interval = setInterval(() => {
