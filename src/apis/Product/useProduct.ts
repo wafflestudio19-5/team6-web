@@ -11,7 +11,6 @@ type TSearchProduct = {
 export default function useProduct({ pageNumber, searched }: TSearchProduct) {
   const [products, setProducts] = useState<productType[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(false);
-  console.log(products);
 
   useEffect(() => {
     Product.getAllProducts(pageNumber).then((res) => {

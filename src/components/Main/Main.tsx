@@ -16,8 +16,10 @@ import User from "../../apis/User/User";
 import { toShortDivision } from "../Utilities/functions";
 
 const Main = () => {
-  const [location, setLocation] = useState<string>("Loading..");
-  const [inactiveLocation, setInactiveLocation] = useState("");
+  const [firstLocation, setFirstLocation] = useState<string>("Loading..");
+  const [secondLocation, setSecondLocation] = useState("");
+  const [firstVerified, setFirstVerified] = useState<boolean>(false);
+  const [secondVerified, setSecondVerified] = useState<boolean>(false);
   const [write, setWrite] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState("home");
@@ -28,9 +30,12 @@ const Main = () => {
     loc.state && setPage(loc.state.page);
     loc.state = null;
     User.getMe().then((res) => {
-      setLocation(toShortDivision(res.data.first_location));
-      if (!!res.data.second_location)
-        setInactiveLocation(toShortDivision(res.data.second_location));
+      setFirstLocation(toShortDivision(res.data.first_location));
+      setFirstVerified(res.data.first_location_verified);
+      if (!!res.data.second_location) {
+        setSecondLocation(toShortDivision(res.data.second_location));
+        setSecondVerified(res.data.second_location_verified);
+      }
     });
   }, []);
 
@@ -55,10 +60,12 @@ const Main = () => {
         <div className={styles.header}>
           {page === "home" && (
             <HomeHeader
-              activeLocation={location}
-              setActiveLocation={setLocation}
-              inactiveLocation={inactiveLocation}
-              setInactiveLocation={setInactiveLocation}
+              firstLocation={firstLocation}
+              setFirstLocation={setFirstLocation}
+              secondLocation={secondLocation}
+              setSecondLocation={setSecondLocation}
+              firstVerified={firstVerified}
+              secondVerified={secondVerified}
             />
           )}
           {page === "user" && <p>나의 당근</p>}

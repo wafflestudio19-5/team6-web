@@ -12,13 +12,16 @@ import requester from "../../../apis/requester";
 import { GetMeDto } from "../../../type/dto/for-api/get-me.dto";
 
 const HomeHeader = (props: {
-  activeLocation: string;
-  setActiveLocation: Dispatch<SetStateAction<string>>;
-  inactiveLocation: string;
-  setInactiveLocation: Dispatch<SetStateAction<string>>;
+  firstLocation: string;
+  setFirstLocation: Dispatch<SetStateAction<string>>;
+  secondLocation: string;
+  setSecondLocation: Dispatch<SetStateAction<string>>;
+  firstVerified: boolean;
+  secondVerified: boolean;
 }) => {
   const [changeLoc, setChangeLoc] = useState<boolean>(false);
   const [location, setLocation] = useState("");
+  const [isFirst, setIsFirst] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +30,7 @@ const HomeHeader = (props: {
         setLocation(toShortDivision(res.data.first_location));
       }
     });
+    if (localStorage.getItem("region") === "second") setIsFirst(false);
   }, []);
 
   const handleLocation = () => {
@@ -41,22 +45,30 @@ const HomeHeader = (props: {
     console.log("카테고리 선책창으로 push");
   };
 
-  const changeLocation = (isActive: boolean) => {
+  const changeLocation = (isActive: boolean, number: number) => {
     if (!isActive) {
       setChangeLoc(false);
+      if (number === 1) localStorage.setItem("region", "first");
+      else localStorage.setItem("region", "second");
       User.patchMyLocation("alter").then((res) => {
-        props.setActiveLocation(toShortDivision(res.data.first_location));
+        props.setFirstLocation(toShortDivision(res.data.first_location));
         if (!!res.data.second_location)
-          props.setInactiveLocation(toShortDivision(res.data.second_location));
+          props.setSecondLocation(toShortDivision(res.data.second_location));
         window.location.replace("/main");
       });
     }
   };
 
+  const onClickSetLocation = () => {
+    navigate("/set-location");
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.locationBox} onClick={handleLocation}>
-        <p className={styles.location}>{props.activeLocation}</p>
+        <p className={styles.location}>
+          {isFirst ? props.firstLocation : props.secondLocation}
+        </p>
         <img
           className={changeLoc ? styles.locationUpArrow : styles.locationArrow}
           src={DownArrow}
@@ -83,48 +95,23 @@ const HomeHeader = (props: {
       />
       <div className={changeLoc ? styles.bubble : styles.noBubble}>
         <div
-          className={styles.activeLocation}
-          onClick={() => changeLocation(true)}
+          className={isFirst ? styles.activeLocation : styles.inactiveLocation}
+          onClick={() => changeLocation(isFirst, 1)}
         >
-          {props.activeLocation}
+          {props.firstLocation}
         </div>
         <div
-          className={styles.inactiveLocation}
-          onClick={() => changeLocation(false)}
+          className={isFirst ? styles.inactiveLocation : styles.activeLocation}
+          onClick={() => changeLocation(!isFirst, 2)}
         >
-          {props.inactiveLocation}
+          {props.secondLocation}
         </div>
-        <div className={styles.setLocation}>내 동네 설정하기</div>
+        <div className={styles.setLocation} onClick={onClickSetLocation}>
+          내 동네 설정하기
+        </div>
       </div>
     </div>
   );
-  /*
-=======
-        <p className={styles.location}>{location}</p>
-        <img className={styles.locationArrow} src={DownArrow} alt="화살표" />
-      </div>
-      <div className={styles.headerImages}>
-        <img
-          className={styles.headerImg}
-          src={Search}
-          onClick={handleSearch}
-          alt="검색"
-        />
-        <img
-          className={styles.headerImg}
-          src={Category}
-          onClick={handleCategory}
-          alt="카테고리"
-        />
-        <img
-          className={styles.headerImg}
-          src={Notice}
-          onClick={handleNotice}
-          alt="알림"
-        />
-      </div>
-    </div>
->>>>>>> e1123aa0dcb32159f7503ef85847317c4eeabf84 */
 };
 
 export default HomeHeader;
