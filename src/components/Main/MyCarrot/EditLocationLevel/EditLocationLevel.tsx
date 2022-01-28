@@ -1,8 +1,10 @@
 import styles from "./EditLocationLevel.module.scss";
+import confirmStyles from "../../../Utilities/confirm.module.scss";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BackArrowIcon from "../../../../icons/leftArrow.png";
 import CancelIcon from "../../../../icons/MyCarrot/white-cancel.png";
+import BlackCancel from "../../../../icons/MyCarrot/black-cancel.png";
 import LevelZero from "../../../../icons/MyCarrot/level_zero.png";
 import LevelOne from "../../../../icons/MyCarrot/level_one.png";
 import LevelTwo from "../../../../icons/MyCarrot/level_two.png";
@@ -12,11 +14,7 @@ import { toShortDivision } from "../../../Utilities/functions";
 import requester from "../../../../apis/requester";
 import Button from "@mui/material/Button";
 import { toast } from "react-hot-toast";
-
-type TRegion = {
-  region: string;
-  is_active: boolean;
-};
+import confStyles from "../../../Utilities/confirm.module.scss";
 
 type TNumberOfRegions = {
   zero: number;
@@ -26,13 +24,13 @@ type TNumberOfRegions = {
 };
 
 const EditLocationLevel = () => {
+  const [confirmOne, setConfirmOne] = useState<boolean>(false);
+  const [confirmTwo, setConfirmTwo] = useState<boolean>(false);
+  const [deleteFirst, setDeleteFirst] = useState<boolean>(true);
   const [level, setLevel] = useState<number>(1);
-  const [prevLevel, setPrevLevel] = useState<string>("LEVEL_ONE");
-  const [localPosition, setLocalPosition] = useState<string>("");
-  const [rightRegion, setRightRegion] = useState<TRegion>({
-    region: "",
-    is_active: false,
-  });
+  const [firstRegion, setFirstRegion] = useState<string>("");
+  const [secondRegion, setSecondRegion] = useState<string>("");
+  const [isFirstActive, setIsFirstActive] = useState<boolean>(true);
   const [adjacentRegions, setAdjacentRegions] = useState<TNumberOfRegions>({
     zero: 0,
     one: 0,
@@ -50,10 +48,21 @@ const EditLocationLevel = () => {
     requester
       .get("/users/me/")
       .then((res) => {
-        setLevel(toNumber(res.data.active_range_of_location));
-        setPrevLevel(res.data.active_range_of_location);
-        setLocalPosition(res.data.active_location);
-        getAdjacentRegion(res.data.active_location);
+        setLevel(
+          toNumber(
+            res.data.is_first_location_active
+              ? res.data.first_range_of_location
+              : res.data.second_range_of_location
+          )
+        );
+        setFirstRegion(res.data.first_location);
+        setSecondRegion(res.data.second_location);
+        setIsFirstActive(res.data.is_first_location_active);
+        getAdjacentRegion(
+          res.data.is_first_location_active
+            ? res.data.first_location
+            : res.data.second_location
+        );
         console.log(res.data);
       })
       .catch((error) => {
@@ -106,28 +115,53 @@ const EditLocationLevel = () => {
 
   const handleSliderChange = (event: any, newValue: any) => {
     setLevel(newValue);
-  };
-
-  const handleToEditRangeOfLocation = () => {
     requester
-      .patch("/users/me/", {
-        range_of_location: toString(level),
+      .put("/users/me/location/", {
+        location: isFirstActive ? firstRegion : secondRegion,
+        range_of_location: toString(newValue),
       })
       .then(() => {
-        toast("거래 범위가 변경되었습니다.");
-        navigate("/main", {
-          state: { page: "user" },
-        });
+        console.log("거래범위 변경 성공");
       })
       .catch(() => {
-        console.log("edit range_of_location error");
+        toast.error("거래범위 변경 실패");
+      });
+  };
+
+  const handleAlter = (isActive: boolean) => {
+    isActive &&
+      requester({
+        url: "/users/me/location/",
+        method: "PATCH",
+        data: "alter",
+        headers: { "Content-Type": "text/plain" },
+      })
+        .then(getMyInfo)
+        .catch(() => {
+          toast.error("활성화 지역 변경 오류");
+        });
+  };
+
+  const handleConfirm = () => {
+    secondRegion ? setConfirmOne(true) : setConfirmTwo(true);
+  };
+
+  const handleDelete = (isFirstSelected: boolean) => {
+    requester
+      .delete(`/users/me/location/?isFirstSelected=${isFirstSelected}`)
+      .then(() => {
+        toast("지역 삭제 완료");
+        getMyInfo();
+      })
+      .catch(() => {
+        toast.error("지역 삭제 오류");
       });
   };
 
   return (
     <div className={styles.wrapper}>
       <header>
-        <Link to={"/main"} state={{ page: "user" }} className={styles.back}>
+        <Link to={"/main?page=user"} className={styles.back}>
           <img src={BackArrowIcon} alt="뒤로" />
         </Link>
         <p>내 동네 설정</p>
@@ -137,20 +171,66 @@ const EditLocationLevel = () => {
         <p className={styles["extra-text-two"]}>
           지역은 최소 1개 이상 최대 2개까지 설정 가능해요.
         </p>
-        <button
-          className={`${styles["location-button"]} ${styles["left-button"]}`}
+        <div
+          className={`${styles["location-button-container"]} ${styles["left-button"]}`}
         >
-          <span>{toShortDivision(localPosition)}</span>
-          <img src={CancelIcon} alt="삭제" />
-        </button>
-        <button
-          className={`${styles["add-button"]} ${styles["right-button"]}`}
-          onClick={LinkToSelectLocation}
-        >
-          +
-        </button>
+          <button
+            className={`${styles["location-button"]} ${
+              !isFirstActive && styles.inactive
+            }`}
+            onClick={() => handleAlter(!isFirstActive)}
+          >
+            <span>{toShortDivision(firstRegion)}</span>
+          </button>
+          <button
+            className={`${styles.delete} ${!isFirstActive && styles.inactive}`}
+          >
+            <img
+              src={isFirstActive ? CancelIcon : BlackCancel}
+              onClick={() => {
+                handleConfirm();
+                setDeleteFirst(true);
+              }}
+              alt="삭제"
+            />
+          </button>
+        </div>
+        {secondRegion && (
+          <div
+            className={`${styles["location-button-container"]} ${styles["right-button"]}`}
+          >
+            <button
+              className={`${styles["location-button"]} ${
+                isFirstActive && styles.inactive
+              }`}
+              onClick={() => handleAlter(isFirstActive)}
+            >
+              <span>{toShortDivision(secondRegion)}</span>
+            </button>
+            <button
+              className={`${styles.delete} ${isFirstActive && styles.inactive}`}
+            >
+              <img
+                src={isFirstActive ? BlackCancel : CancelIcon}
+                onClick={() => {
+                  handleConfirm();
+                  setDeleteFirst(false);
+                }}
+                alt="삭제"
+              />
+            </button>
+          </div>
+        )}
+        {!secondRegion && (
+          <button
+            className={`${styles["add-button"]} ${styles["right-button"]}`}
+            onClick={LinkToSelectLocation}
+          >
+            +
+          </button>
+        )}
         <p className={styles["first-text"]}>{`${toShortDivision(
-          localPosition
+          isFirstActive ? firstRegion : secondRegion
         )}과 근처 동네 ${numberOfRegionsByLevel(level)}개`}</p>
         <p className={styles["second-text"]}>
           선택한 범위의 게시글만 볼 수 있어요.
@@ -210,17 +290,45 @@ const EditLocationLevel = () => {
           alt="레벨 3"
         />
       </div>
-      <footer>
-        <Button
-          className={styles["complete-button"]}
-          variant="contained"
-          color="warning"
-          disabled={level === toNumber(prevLevel)}
-          onClick={handleToEditRangeOfLocation}
-        >
-          완료
-        </Button>
-      </footer>
+      <div
+        className={`${styles["back-shadow"]} ${
+          (confirmOne || confirmTwo) && styles.visible
+        }`}
+        onClick={() => {
+          confirmOne && setConfirmOne(false);
+          confirmTwo && setConfirmTwo(false);
+        }}
+      />
+      {(confirmOne || confirmTwo) && (
+        <div className={`${confirmStyles.box} ${styles.confirm}`}>
+          <div className={styles.contents}>
+            {confirmOne
+              ? "선택한 지역을 삭제하시겠습니까?"
+              : "동네는 최소 1개 이상 선택되어있어야 합니다. 현재 설정된 동네를 변경하시겠어요?"}
+          </div>
+          <div
+            className={confirmStyles.confirmButton}
+            onClick={() => {
+              confirmTwo
+                ? navigate("/select-location", { state: { prev: "switch" } })
+                : handleDelete(deleteFirst);
+              confirmOne && setConfirmOne(false);
+              confirmTwo && setConfirmTwo(false);
+            }}
+          >
+            {confirmOne ? "확인" : "네, 변경할게요"}
+          </div>
+          <div
+            className={confirmStyles.cancelButton}
+            onClick={() => {
+              confirmOne && setConfirmOne(false);
+              confirmTwo && setConfirmTwo(false);
+            }}
+          >
+            취소
+          </div>
+        </div>
+      )}
     </div>
   );
 };

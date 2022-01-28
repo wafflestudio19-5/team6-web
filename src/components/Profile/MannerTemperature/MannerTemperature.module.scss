@@ -1,16 +1,17 @@
 .manner-wrapper {
   position: relative;
   width: 100%;
-  height: 150px;
+  height: 80px;
 
-  top: 120px;
+  top: 110px;
 
   background: #f2f3f7;
 
   p {
     position: relative;
-    top: calc(50% - 10px);
-    text-align: center;
+    top: 18px;
+    text-align: left;
+    padding-left: 24px;
     color: #777777;
     font-size: 13px;
   }

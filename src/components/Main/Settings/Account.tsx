@@ -13,22 +13,15 @@ import { formatPhoneNumber, regEmail, regPhone } from "../../SignUpPage/SignUp";
 import { GetMeDto } from "../../../type/dto/for-api/get-me.dto";
 import { UserDto } from "../../../type/dto/user.dto";
 import { toast } from "react-hot-toast";
+import { useUserDispatch, useUserState } from "../../../context/user-context";
 
 const Account = (props: { setAccount: Dispatch<SetStateAction<boolean>> }) => {
-  const [user, setUser] = useState<UserDto | null>(null);
   const [emailModal, setEmailModal] = useState(false);
   const [phoneModal, setPhoneModal] = useState(false);
   const [emailInput, setEmailInput] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
-
-  useEffect(() => {
-    requester
-      .get<GetMeDto>("/users/me/")
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch((e) => {});
-  }, []);
+  const user = useUserState();
+  const setUser = useUserDispatch();
 
   if (!user) {
     return <div className={styles.wrapper} />;

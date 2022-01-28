@@ -18,6 +18,7 @@ export type TUserInfoV2 = {
   second_location: string | null;
   second_location_verified: boolean;
   second_range_of_location: string | null;
+  is_first_location_active: boolean;
   is_active: boolean;
   name: string;
   nickname: string;

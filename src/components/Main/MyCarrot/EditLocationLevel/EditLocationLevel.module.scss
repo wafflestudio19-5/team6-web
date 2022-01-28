@@ -43,6 +43,17 @@
   }
 
   .body-wrapper {
+    position: relative;
+    top: 0;
+    height: calc(100% - 41px);
+    overflow: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
     .extra-text-one {
       position: relative;
       top: 15px;
@@ -82,48 +93,91 @@
       }
     }
 
-    .location-button {
+    .location-button-container {
       position: absolute;
       width: 185px;
       height: 40px;
       top: 150px;
-      border: none;
-      border-radius: 5px;
-      background-color: rgba(255, 143, 69, 255);
 
       @media screen and (max-width: 400px) {
         width: calc(40% - 10px);
       }
 
-      span {
+      .location-button {
         position: absolute;
-        top: 13px;
-        left: 15px;
-        color: white;
-        font-size: 15px;
-        font-weight: 700;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        border: none;
+        border-radius: 5px;
+        background-color: rgba(255, 143, 69, 255);
 
-        @media screen and (max-width: 400px) {
-          left: 12px;
-          font-size: 13px;
+        span {
+          position: absolute;
+          top: 11px;
+          left: 15px;
+          color: white;
+          font-size: 15px;
+          font-weight: 700;
+
+          @media screen and (max-width: 400px) {
+            left: 12px;
+            font-size: 13px;
+          }
         }
       }
 
-      img {
+      .delete {
         position: absolute;
         width: 22px;
-        top: 9px;
+        height: 22px;
+        top: 10px;
         right: 10px;
-
-        @media screen and (max-width: 400px) {
-          right: 8px;
-        }
+        border: none;
+        border-radius: 50%;
+        background-color: rgba(255, 143, 69, 255);
 
         &:hover {
           cursor: pointer;
         }
+
+        @media screen and (max-width: 400px) {
+          right: 9px;
+        }
+
+        img {
+          position: absolute;
+          width: 22px;
+          top: -1px;
+          right: -1px;
+        }
+      }
+      .inactive {
+        background-color: white;
+        cursor: pointer;
+        border: 1px solid #aaaaaa;
+
+        &:hover {
+          background-color: lavenderblush;
+          transition-duration: 0.3s;
+        }
+        span {
+          top: 10px;
+          color: black;
+          font-weight: 600;
+        }
+      }
+      .delete.inactive {
+        top: 10px;
+        right: 11px;
+        border: none;
+
+        @media screen and (max-width: 400px) {
+          right: 10px;
+        }
       }
     }
+
     .left-button {
       left: calc(50% - 200px);
 
@@ -206,14 +260,26 @@
     }
   }
 
-  footer {
-    position: fixed;
-    bottom: 0;
+  .back-shadow {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
     width: 100%;
-
-    .complete-button {
-      width: 100%;
-      height: 45px;
-    }
+    height: 100%;
+    opacity: 0;
+    transition-duration: 0.3s;
+  }
+  .back-shadow.visible {
+    visibility: visible;
+    background: #777777;
+    opacity: 0.4;
+    z-index: 1;
+  }
+  .contents {
+    width: 90%;
+    position: relative;
+    font-size: 16px;
+    margin: 5px auto 20px;
+    text-align: center;
   }
 }

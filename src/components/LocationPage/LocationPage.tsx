@@ -38,7 +38,11 @@ const LocationPage = () => {
     requester
       .get("/users/me/")
       .then((res) => {
-        setLocalPosition(res.data.active_location);
+        setLocalPosition(
+          res.data.is_first_location_active
+            ? res.data.first_location
+            : res.data.second_location
+        );
       })
       .catch((error) => {
         toast.error(error);
@@ -88,11 +92,7 @@ const LocationPage = () => {
   };
 
   const handleToGoBack = () => {
-    prev !== ""
-      ? navigate("/main", {
-          state: { page: "user" },
-        })
-      : navigate(-1);
+    prev !== "" ? navigate("/main?page=user") : navigate(-1);
   };
 
   const handleToVerifyLocation = () => {
@@ -105,9 +105,7 @@ const LocationPage = () => {
       .then((res) => {
         console.log(res.data);
         toast("동네인증이 완료되었습니다.");
-        navigate("/main", {
-          state: { page: "user" },
-        });
+        navigate("/main?page=user");
       })
       .catch(() => {
         console.log("verify location error");

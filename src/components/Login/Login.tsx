@@ -4,9 +4,10 @@ import kakaoLogo from "../../icons/kakao-logo.png";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import * as React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { user } from "../../apis/requester";
+import requester, { user } from "../../apis/requester";
 import { toast } from "react-hot-toast";
 import { KAKAO_AUTH_URL } from "../../KakaoLogin/OAuth";
+import { useUserDispatch } from "../../context/user-context";
 
 type TLoginForm = {
   username: string;
@@ -21,6 +22,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const token: string | null = localStorage.getItem("token");
+  const setUser = useUserDispatch();
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setInputs({
@@ -37,6 +39,14 @@ const Login = () => {
         password: inputs.password,
       });
       localStorage.setItem("token", res.data.access_token);
+      requester
+        .get("/users/me/")
+        .then((res2) => {
+          setUser(res2.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       navigate("/main");
     } catch (error) {
       toast.error("로그인 정보 틀림");

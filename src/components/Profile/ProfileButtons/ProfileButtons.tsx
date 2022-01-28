@@ -2,10 +2,16 @@ import styles from "./ProfileButtons.module.scss";
 import RightArrow from "../../../icons/MyCarrot/right-arrow.png";
 import { Link } from "react-router-dom";
 
-const ProfileButtons = ({ products }: { products: number }) => {
+const ProfileButtons = ({
+  name,
+  products,
+}: {
+  name: string;
+  products: number;
+}) => {
   return (
     <div className={styles["sales-wrapper"]}>
-      <Link to={"./sales?mode=entire"} className={styles.link}>
+      <Link to={`/profile/${name}/sales?mode=entire`} className={styles.link}>
         <span>판매상품 {products}개</span>
         <img src={RightArrow} alt="바로가기" />
       </Link>
