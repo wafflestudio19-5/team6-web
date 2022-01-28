@@ -84,7 +84,7 @@ const PurchaseHistory = () => {
       <section className={styles["body-wrapper"]}>
         {mode === 1 && <Requests shadow={shadow} setShadow={setShadow} />}
         {mode === 2 && <Purchased shadow={shadow} setShadow={setShadow} />}
-        {mode === 3 && <Refused />}
+        {mode === 3 && <Refused shadow={shadow} setShadow={setShadow} />}
       </section>
       <div
         className={`${styles.backShadow} ${shadow ? styles.show : ""}`}

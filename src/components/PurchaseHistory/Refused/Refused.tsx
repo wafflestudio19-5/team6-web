@@ -4,15 +4,32 @@ import heartIcon from "../../../icons/blackHeart.png";
 import { calculateTimeDifference } from "../../Utilities/functions";
 
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {
+  ChangeEventHandler,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { PurchaseOrdersWithoutUserDto } from "../../../type/dto/purchase-orders-without-user.dto";
 import requester from "../../../apis/requester";
 import { GetMyPurchaseOrdersDto } from "../../../type/dto/for-api/get-my-purchase-orders.dto";
+import styles2 from "../../Utilities/confirm.module.scss";
 
-const Refused = () => {
+const Refused = (props: {
+  shadow: boolean;
+  setShadow: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [refusedList, setRefusedList] = useState<
     PurchaseOrdersWithoutUserDto[]
   >([]);
+  const [inputs, setInputs] = useState<{
+    suggested_price: string;
+    message: string;
+  }>({ suggested_price: "", message: "" });
+  const [targetRequest, setTargetRequest] =
+    useState<PurchaseOrdersWithoutUserDto>();
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     requester
@@ -24,10 +41,15 @@ const Refused = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (!props.shadow) setModal(false);
+  }, [props.shadow]);
+
   const navigate = useNavigate();
 
   const changeToRequestPage = (id: number) => {
-    // 구매 요청 모달
+    setModal(true);
+    props.setShadow(true);
   };
 
   const goToProductPage = (id: number) => {
@@ -36,6 +58,39 @@ const Refused = () => {
     });
   };
 
+  const handlePriceChange: ChangeEventHandler<
+    HTMLInputElement | HTMLSelectElement
+  > = (e) => {
+    const numRegex = /^[0-9]+$/;
+    if (e.target.value === "" || numRegex.test(e.target.value)) {
+      setInputs({
+        ...inputs,
+        suggested_price: e.target.value,
+      });
+    }
+  };
+
+  const handleMessageChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    setInputs({
+      ...inputs,
+      message: e.target.value,
+    });
+  };
+  const handlePurchaseConfirm = () => {
+    requester
+      .put(`/purchase-orders/${targetRequest?.id}/`, {
+        suggested_price:
+          inputs.suggested_price !== `${targetRequest?.product.price}`
+            ? inputs.suggested_price
+            : null,
+        message: inputs.message,
+      })
+      .catch((e) => {
+        console.log(e.response);
+      });
+    props.setShadow(false);
+    setInputs({ suggested_price: "", message: "" });
+  };
   const refusedComponents = refusedList.map((article) => {
     return (
       <div className={styles.articleWrapper}>
@@ -125,6 +180,57 @@ const Refused = () => {
         <>{refusedComponents}</>
       ) : (
         <p>거래반려된 게시물이 없어요.</p>
+      )}
+      {modal && (
+        <div className={styles2.box}>
+          <p className={styles2.title}>재요청 하기</p>
+          <p className={styles2.contents}>
+            이전 요청 가격은{" "}
+            {targetRequest?.suggested_price
+              ? targetRequest?.suggested_price.toLocaleString("ko-KR")
+              : "0"}
+            원 입니다.
+            <br />
+            판매자가 올린 가격{" "}
+            {targetRequest?.product.price.toLocaleString("ko-KR")}원에 비해 너무
+            높거나 낮은 가격을 적으면 거래가 성사되기 어려워요.
+          </p>
+          <input
+            name="price"
+            className={styles2.priceBox}
+            placeholder="가격을 입력하세요"
+            value={inputs.suggested_price}
+            onChange={handlePriceChange}
+          />
+          <p className={styles2.priceText}>
+            {inputs.suggested_price.length > 0
+              ? parseInt(inputs.suggested_price).toLocaleString("ko-KR")
+              : "0"}
+            원
+          </p>
+          <textarea
+            name="message"
+            className={styles2.messageBox}
+            placeholder="전달할 메시지를 입력해주세요"
+            value={inputs.message}
+            onChange={handleMessageChange}
+          />
+
+          <div
+            className={styles2.confirmButton}
+            onClick={handlePurchaseConfirm}
+          >
+            확인
+          </div>
+          <div
+            className={styles2.cancelButton}
+            onClick={() => {
+              props.setShadow(false);
+            }}
+          >
+            닫기
+          </div>
+        </div>
       )}
     </div>
   );

@@ -233,7 +233,7 @@ const Requests = (props: {
             <br />
             판매자가 올린 가격{" "}
             {targetRequest?.product.price.toLocaleString("ko-KR")}원에 비해 너무
-            높거나 낮은 가격을 적으면 거래가 어려울 수 있어요.
+            높거나 낮은 가격을 적으면 거래가 성사되기 어려워요.
           </p>
           <input
             name="price"
