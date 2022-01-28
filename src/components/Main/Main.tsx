@@ -32,7 +32,7 @@ const Main = () => {
       if (!!res.data.second_location)
         setInactiveLocation(toShortDivision(res.data.second_location));
     });
-  });
+  }, []);
 
   const changeToHome = () => {
     setPage("home");
@@ -45,10 +45,6 @@ const Main = () => {
   const changeToSettings = () => {
     setPage("settings");
   };
-
-  if (location === "") {
-    return <div />;
-  }
 
   return (
     <>

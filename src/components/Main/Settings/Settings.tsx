@@ -1,8 +1,6 @@
 import styles from "./Settings.module.scss";
 import confirmStyles from "../../Utilities/confirm.module.scss";
 import { Dispatch, SetStateAction, useState } from "react";
-import backArrow from "../../../icons/leftArrow.png";
-import Notification from "./Notification";
 import Account from "./Account";
 import Withdrawal from "./Withdrawal";
 
@@ -10,17 +8,12 @@ const Settings = (props: {
   confirm: boolean;
   setConfirm: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [notification, setNotification] = useState(false);
   const [account, setAccount] = useState(false);
   const [withdrawal, setWithdrawal] = useState(false);
 
   const logout = () => {
     localStorage.removeItem("token");
     props.setConfirm(false);
-  };
-
-  const changeToNotification = () => {
-    setNotification(true);
   };
 
   const changeToAccount = () => {
@@ -30,10 +23,6 @@ const Settings = (props: {
   const changeToWithdrawal = () => {
     setWithdrawal(true);
   };
-
-  if (notification) {
-    return <Notification setNotification={setNotification} />;
-  }
 
   if (account) {
     return <Account setAccount={setAccount} />;
@@ -46,12 +35,6 @@ const Settings = (props: {
   return (
     <div className={styles.wrapper}>
       <div className={styles["section-wrapper"]}>
-        <div className={styles.section}>
-          <div className={styles.title}>알림 설정</div>
-          <div className={styles.button} onClick={changeToNotification}>
-            알림
-          </div>
-        </div>
         <div className={styles.section}>
           <div className={styles.title}>사용자 설정</div>
           <div className={styles.button} onClick={changeToAccount}>

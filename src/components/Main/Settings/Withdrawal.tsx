@@ -14,6 +14,8 @@ import Select, {
   SingleValue,
   StylesConfig,
 } from "react-select";
+import requester from "../../../apis/requester";
+import { useNavigate } from "react-router-dom";
 
 type OptionType = {
   value: string;
@@ -43,7 +45,7 @@ const options: OptionsOrGroups<OptionType, GroupBase<OptionType>> = [
     label: "사고 싶은 물품이 없어요",
     text: "혹시 사고싶은 물품을 검색해보셨나요? 카테고리를 설정해 다시 검색해보세요.",
     linkTitle: "지금 검색하러 가기",
-    link: "/main", //검색창 만들면 "/search"로 바꿀 예정
+    link: "/search",
   },
   {
     value: "3",
@@ -88,6 +90,7 @@ const Withdrawal = (props: {
 }) => {
   const [selected, setSelected] = useState(options[0]);
   const [reason, setReason] = useState("");
+  const navigate = useNavigate();
 
   const handleSelect = (
     option: SingleValue<OptionType | GroupBase<OptionType>>
@@ -101,8 +104,12 @@ const Withdrawal = (props: {
     setReason(e.target.value);
   };
 
-  const handleWithdraw = () => {
-    //회원 탈퇴 진행
+  const handleWithdraw = async () => {
+    try {
+      await requester.delete("/users/me/");
+      localStorage.removeItem("token");
+      navigate("/login");
+    } catch (e) {}
   };
 
   return (

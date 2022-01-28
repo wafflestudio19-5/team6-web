@@ -1,40 +1,54 @@
-.locationBox {
-  padding: 2px;
+.wrapper {
   display: flex;
-  margin-right: calc(100% - 170px);
+  justify-content: space-between;
+  width: 100%;
 
-  .location {
-    margin-top: 4px;
-    margin-left: 15px;
-    width: 80px;
-    font-size: 20px;
-    font-weight: bold;
+  .locationBox {
+    padding: 2px;
+    display: flex;
+
+    .location {
+      margin-top: 4px;
+      margin-left: 15px;
+      width: 80px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .locationArrow {
+      position: relative;
+      top: 12px;
+      height: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background-color: lavenderblush;
+      }
+    }
+
+    .locationUpArrow {
+      position: relative;
+      top: 12px;
+      height: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      transform: rotate(180deg);
+    }
   }
 
-  .locationArrow {
+  .headerImages {
     position: relative;
-    top: 12px;
-    height: 15px;
-    cursor: pointer;
-    transition: all 0.3s;
+    display: flex;
+    .headerImg {
+      position: relative;
+      top: 50%;
+      transform: translate(0, -50%);
+      right: 10px;
+      height: 25px;
+      margin-right: 10px;
+    }
   }
-  .locationUpArrow {
-    position: relative;
-    top: 12px;
-    height: 15px;
-    cursor: pointer;
-    transition: all 0.3s;
-    transform: rotate(180deg);
-  }
-}
-
-.headerImg {
-  position: relative;
-  top: 50%;
-  transform: translate(0, -50%);
-  right: 10px;
-  height: 25px;
-  margin-right: 10px;
 }
 
 .backShadow {

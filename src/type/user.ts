@@ -16,9 +16,9 @@ export type TUserInfoV2 = {
   email: string;
   image_url: string;
   second_location: string | null;
-  second_location_verified: true;
+  second_location_verified: boolean;
   second_range_of_location: string | null;
-  is_active: true;
+  is_active: boolean;
   name: string;
   nickname: string;
   phone: string;
