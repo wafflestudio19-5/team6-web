@@ -125,11 +125,13 @@ const WriteArticle = () => {
   const [imgPreview, setImgPreview] = useState<string[]>([camera]);
   const [imgFiles, setImgFiles] = useState<FileList | null>(null);
   const [forAge, setForAge] = useState<number[] | null>(null);
+  const [imgUrl, setImgUrl] = useState<string[]>([]);
   const imgRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!!loc.state) {
       setImgPreview(imgPreview.concat(loc.state.image_urls));
+      setImgUrl(loc.state.image_urls);
       setTitle(loc.state.title);
       setCategory(categoryEncode(loc.state.category));
       setPrice("₩ " + loc.state.price.toLocaleString("ko-KR"));
@@ -247,23 +249,31 @@ const WriteArticle = () => {
             }
           );
         } else {
-          const myPromise = Product.patchProduct(loc.state.id, {
-            image_urls: imgPreview.filter((e, index) => index !== 0),
-            title: title,
-            content: value,
-            price: parseInt(price.replace(/[^0-9]/g, "")),
-            negotiable: negotiable,
-            category: category,
-            for_age: forAge,
-            range_of_location: 3,
-          }).then((res) => navigate("/main"));
-          toast.promise(myPromise, {
-            loading: "Uploading...",
-            success: "Successfully Uploaded!",
-            error: "Failed",
+          // 새로 이미지를 올리는 경우
+          requester.post("/images/", formData).then((res) => {
+            const myPromise = Product.patchProduct(loc.state.id, {
+              image_urls: imgUrl.concat(
+                res.data.contents.map((data: any) => {
+                  return data.url;
+                })
+              ),
+              title: title,
+              content: value,
+              price: parseInt(price.replace(/[^0-9]/g, "")),
+              negotiable: negotiable,
+              category: category,
+              for_age: forAge,
+              range_of_location: 3,
+            }).then((res) => navigate("/main"));
+            toast.promise(myPromise, {
+              loading: "Uploading...",
+              success: "Successfully Uploaded!",
+              error: "Failed",
+            });
           });
         }
       } else {
+        // 원래 이미지에서 제거만 하는 경우
         const myPromise = Product.patchProduct(loc.state.id, {
           image_urls: imgPreview.filter((e, index) => index !== 0),
           title: title,
@@ -320,6 +330,8 @@ const WriteArticle = () => {
   const deleteImg = (image: string) => {
     const newImgPreview = imgPreview.filter((e) => e !== image);
     setImgPreview(newImgPreview);
+    if (imgUrl.includes(image))
+      setImgUrl(imgUrl.filter((url) => url !== image));
   };
 
   const carouselImg = imgPreview.map((image) => {

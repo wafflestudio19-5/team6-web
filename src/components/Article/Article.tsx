@@ -230,26 +230,26 @@ const Article = () => {
     } else if (select === "bump") {
       Product.putStatus(id, select)
         .then((res) => {
-          toast("success");
+          toast.success("Successfully bumped!");
           navigate("/main");
         })
         .catch((e) => toast.error(e.response.data.error_message));
     } else if (select === "hide") {
       Product.putStatus(id, select)
-        .then((res) => toast("success"))
+        .then((res) => toast.success("Successfully hid!"))
         .catch((e) => toast.error(e.response.data.error_message));
     } else if (select === "delete") {
       Product.deleteProduct(id)
         .then((res) => {
-          toast("success");
+          toast.success("Successfully deleted!");
           navigate("/main");
         })
         .catch((e) => toast.error(e.response.data.error_message));
     } else if (select === "report") {
-      toast("신고 완료!");
+      toast.success("신고 완료!");
       setIsSettingModalOpen(false);
     } else if (select === "hideUser") {
-      toast("유저 차단 완료!");
+      toast.success("유저 차단 완료!");
       setIsSettingModalOpen(false);
     }
   };
