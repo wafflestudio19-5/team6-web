@@ -1,51 +1,22 @@
 import styles from "./RequestPage.module.scss";
 import styles2 from "../Utilities/confirm.module.scss";
-import { useEffect, useState } from "react";
-import { otherRequestType } from "../../type/types";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import requester from "../../apis/requester";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import BackArrow from "../../icons/leftArrow.png";
 import FixedPrice from "./FixedPrice/FixedPrice";
 import Suggestion from "./Suggestion/Suggestion";
-import { TUserInfo } from "../../type/user";
+import { UserDto } from "../../type/dto/user.dto";
 
 const RequestPage = () => {
   const { id } = useParams() as { id: string };
   const [mode, setMode] = useState(1);
-  const [fixedList, setFixedList] = useState<otherRequestType[]>([]);
-  const [suggestedList, setSuggestedList] = useState<otherRequestType[]>([]);
-  const [contactUser, setContactUser] = useState<TUserInfo | null>(null);
+  const [contactUser, setContactUser] = useState<UserDto | null>(null);
   const [messageInfo, setMessageInfo] = useState<{
-    user: TUserInfo;
+    user: UserDto;
     message: string;
   } | null>(null);
-  const [update, setUpdate] = useState(false);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    requester
-      .get(`/products/${id}/purchases/?pageNumber=0&pageSize=10`)
-      .then((res) => {
-        console.log(res.data.content);
-        setFixedList(
-          res.data.content.filter(
-            (data: otherRequestType) =>
-              data.suggested_price === data.product.price
-          )
-        );
-        setSuggestedList(
-          res.data.content.filter(
-            (data: otherRequestType) =>
-              data.suggested_price !== data.product.price
-          )
-        );
-      })
-      .catch((e) => {
-        navigate("/main");
-        console.log(e.response);
-      });
-  }, [update]);
 
   const goBack = () => {
     navigate(-1);
@@ -112,18 +83,16 @@ const RequestPage = () => {
       <section className={styles["body-wrapper"]}>
         {mode === 1 && (
           <FixedPrice
-            fixedList={fixedList}
+            id={id}
             setContactUser={setContactUser}
             setMessageInfo={setMessageInfo}
-            setUpdate={setUpdate}
           />
         )}
         {mode === 2 && (
           <Suggestion
-            suggestedList={suggestedList}
+            id={id}
             setContactUser={setContactUser}
             setMessageInfo={setMessageInfo}
-            setUpdate={setUpdate}
           />
         )}
       </section>

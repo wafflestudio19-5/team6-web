@@ -37,6 +37,7 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
+        setUser(undefined);
       });
   }, []);
   return (

@@ -1,48 +1,36 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { otherRequestType } from "../../../type/types";
-import { srcPair } from "../../SalesHistory/SalesHistory";
 import requester from "../../../apis/requester";
 import styles from "../Suggestion/Suggestion.module.scss";
 import profile from "../../../icons/MyCarrot/test-profile.png";
 import { calculateTimeDifference } from "../../Utilities/functions";
-import { TUserInfo } from "../../../type/user";
+import { UserDto } from "../../../type/dto/user.dto";
+import { PurchaseOrderDto } from "../../../type/dto/purchase-order.dto";
+import { GetPurchaseOrdersDto } from "../../../type/dto/for-api/get-purchase-orders.dto";
+import { RequestStatus } from "../../../type/enum/request-status";
 
 type Props = {
-  suggestedList: otherRequestType[];
-  setContactUser: Dispatch<SetStateAction<TUserInfo | null>>;
+  id: string;
+  setContactUser: Dispatch<SetStateAction<UserDto | null>>;
   setMessageInfo: Dispatch<
-    SetStateAction<{ user: TUserInfo; message: string } | null>
+    SetStateAction<{ user: UserDto; message: string } | null>
   >;
-  setUpdate: Dispatch<SetStateAction<boolean>>;
 };
 
-const Suggestion = ({
-  suggestedList,
-  setContactUser,
-  setMessageInfo,
-  setUpdate,
-}: Props) => {
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
+const Suggestion = ({ id, setContactUser, setMessageInfo }: Props) => {
+  const [requests, setRequests] = useState<PurchaseOrderDto[]>([]);
 
-  /* (next) 유저 프로필 이미지 안받아옴
   useEffect(() => {
-    suggestedList.forEach((request) =>
-      requester
-        .get(`/images/${request.user.image}/`)
-        .then((res) => {
-          setSrcList((srcList) => [
-            ...srcList,
-            {
-              id: article.id,
-              src: res.data.url,
-            },
-          ]);
-        })
-        .catch((e) => console.log(e))
-    );
-  });*/
+    requester
+      .get<GetPurchaseOrdersDto>(
+        `/purchase-orders/?productId=${id}&pageNumber=0&pageSize=15&withPriceSuggestion=true`
+      )
+      .then((res) => {
+        setRequests(res.data.content);
+      });
+  }, []);
 
-  const handleAccept = (request: otherRequestType) => {
+  const handleAccept = (request: PurchaseOrderDto) => {
     requester
       .put(
         `/products/${request.product.id}/purchases/${request.id}/approval/`,
@@ -50,15 +38,13 @@ const Suggestion = ({
           accepted: true,
         }
       )
-      .then((res) => {
-        setUpdate((update) => !update);
-      })
+      .then((res) => {})
       .catch((e) => {
         console.log(e.response);
       });
   };
 
-  const handleRefuse = (request: otherRequestType) => {
+  const handleRefuse = (request: PurchaseOrderDto) => {
     requester
       .put(
         `/products/${request.product.id}/purchases/${request.id}/approval/`,
@@ -66,25 +52,21 @@ const Suggestion = ({
           accepted: false,
         }
       )
-      .then((res) => {
-        setUpdate((update) => !update);
-      })
+      .then((res) => {})
       .catch((e) => {
         console.log(e.response);
       });
   };
 
-  const handleSoldout = (request: otherRequestType) => {
+  const handleSoldout = (request: PurchaseOrderDto) => {
     requester
       .put(`/products/${request.product.id}/status/`, { action: "sold out" })
-      .then((res) => {
-        setUpdate((update) => !update);
-      })
+      .then((res) => {})
       .catch((e) => console.log(e));
   };
 
   //(next) profile image
-  const requestComponents = suggestedList.map((request) => {
+  const requestComponents = requests.map((request) => {
     console.log(request.product);
     return (
       <div className={styles.requestWrapper}>
@@ -101,11 +83,11 @@ const Suggestion = ({
               <p className={styles.title}>{request.user.name}</p>
             </div>
             <div className={styles.secondLine}>
-              <p className={styles.region}>{request.user.location}</p>
+              <p className={styles.region}>{request.user.first_location}</p>
               <p className={styles.time}>
                 {calculateTimeDifference(
                   request.updated_at,
-                  request.created_At
+                  request.created_at
                 )}
               </p>
             </div>
@@ -119,7 +101,7 @@ const Suggestion = ({
         <div className={styles.lower}>
           <div className={styles.line}>
             <div className={styles.buttons}>
-              {request.accepted ? (
+              {request.status === RequestStatus.ACCEPTED ? (
                 <>
                   <div
                     className={styles.orangeButton}
@@ -175,7 +157,7 @@ const Suggestion = ({
   });
   return (
     <div className={styles.wrapper}>
-      {suggestedList.length ? (
+      {requests.length ? (
         <>{requestComponents}</>
       ) : (
         <p>정가 구매 요청이 없어요.</p>
