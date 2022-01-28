@@ -24,18 +24,19 @@
       width: 40px;
       left: 5px;
       background: white;
+      cursor: pointer;
 
       img {
         position: relative;
-        top: 9px;
-        left: 9px;
+        top: 0;
+        left: 0;
         width: 22px;
       }
     }
 
     p {
       position: relative;
-      margin-top: 9px;
+      margin-top: 7px;
       left: 17px;
       font-size: 20px;
       font-weight: bold;

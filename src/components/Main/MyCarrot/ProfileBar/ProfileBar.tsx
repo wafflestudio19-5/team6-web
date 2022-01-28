@@ -7,10 +7,12 @@ import { toShortDivision } from "../../../Utilities/functions";
 
 const ProfileBar = ({
   image,
+  name,
   nickname,
   division,
 }: {
   image: string;
+  name: string;
   nickname: string;
   division: string;
 }) => {
@@ -22,7 +24,7 @@ const ProfileBar = ({
 
   return (
     <div>
-      <Link to="/profile" className={styles["profile-button"]}>
+      <Link to={`/profile/${name}`} className={styles["profile-button"]}>
         <div className={styles.imageframe}>
           <img
             className={styles.image}

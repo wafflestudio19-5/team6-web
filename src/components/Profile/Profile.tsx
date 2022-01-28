@@ -1,16 +1,19 @@
 import styles from "./Profile.module.scss";
 import BackArrow from "../../icons/leftArrow.png";
 import Test from "../../icons/MyCarrot/default-profile-image.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import MannerTemperature from "./MannerTemperature/MannerTemperature";
 import ProfileButtons from "./ProfileButtons/ProfileButtons";
 import requester from "../../apis/requester";
 import { useEffect, useState } from "react";
 import { TUserInfoV2 } from "../../type/user";
 import { toast } from "react-hot-toast";
+import { productType } from "../../type/types";
+import SalesArticle from "./Sales/SalesArticle/SalesArticle";
 
 const Profile = () => {
   const [products, setProducts] = useState<number>(0);
+  const [previewList, setPreviewList] = useState<productType[] | null>([]);
   const [myInfo, setMyInfo] = useState<TUserInfoV2>({
     first_location: "",
     first_location_verified: false,
@@ -26,6 +29,8 @@ const Profile = () => {
     phone: "",
     email: "",
   });
+
+  const { name } = useParams() as { name: string };
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,27 +39,29 @@ const Profile = () => {
 
   const getInfo = () => {
     requester
-      .get("/users/me/")
+      .get(`/users/${name}/`)
       .then((res) => {
         setMyInfo(res.data);
         requester
           .get(
-            `/users/${res.data.name}/products/?pageNumber=0&pageSize=10&status=all`
+            `/users/${res.data.name}/products/?pageNumber=0&pageSize=4&status=all`
           )
           .then((res) => {
             setProducts(res.data.total_elements);
+            setPreviewList(res.data.content);
           })
-          .catch((error) => {
-            toast.error(error);
+          .catch(() => {
+            toast.error("판매상품목록 가져오기 오류");
           });
       })
-      .catch((error) => {
-        toast.error(error);
+      .catch(() => {
+        navigate(-1);
+        toast.error("프로필 가져오기 오류");
       });
   };
 
   const handleToEditProfilePage = () => {
-    navigate("./edit", { state: { prev: "profile" } });
+    navigate("/profile/edit", { state: { prev: "profile" } });
   };
 
   return (
@@ -81,7 +88,16 @@ const Profile = () => {
           프로필 수정
         </button>
         <MannerTemperature />
-        <ProfileButtons products={products} />
+        <ProfileButtons name={myInfo.name} products={products} />
+        <div className={styles.preview}>
+          {previewList?.map((article) => (
+            <SalesArticle
+              key={article.id}
+              article={article}
+              prev={`/profile/${name}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

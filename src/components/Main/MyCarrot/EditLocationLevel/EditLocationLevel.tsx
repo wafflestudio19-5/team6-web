@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BackArrowIcon from "../../../../icons/leftArrow.png";
 import CancelIcon from "../../../../icons/MyCarrot/white-cancel.png";
+import BlackCancel from "../../../../icons/MyCarrot/black-cancel.png";
 import LevelZero from "../../../../icons/MyCarrot/level_zero.png";
 import LevelOne from "../../../../icons/MyCarrot/level_one.png";
 import LevelTwo from "../../../../icons/MyCarrot/level_two.png";
@@ -13,11 +14,6 @@ import requester from "../../../../apis/requester";
 import Button from "@mui/material/Button";
 import { toast } from "react-hot-toast";
 
-type TRegion = {
-  region: string;
-  is_active: boolean;
-};
-
 type TNumberOfRegions = {
   zero: number;
   one: number;
@@ -26,13 +22,12 @@ type TNumberOfRegions = {
 };
 
 const EditLocationLevel = () => {
+  const [update, setUpdate] = useState<number>(0);
   const [level, setLevel] = useState<number>(1);
   const [prevLevel, setPrevLevel] = useState<string>("LEVEL_ONE");
-  const [localPosition, setLocalPosition] = useState<string>("");
-  const [rightRegion, setRightRegion] = useState<TRegion>({
-    region: "",
-    is_active: false,
-  });
+  const [firstRegion, setFirstRegion] = useState<string>("");
+  const [secondRegion, setSecondRegion] = useState<string>("");
+  const [isFirstActive, setIsFirstActive] = useState<boolean>(true);
   const [adjacentRegions, setAdjacentRegions] = useState<TNumberOfRegions>({
     zero: 0,
     one: 0,
@@ -50,10 +45,22 @@ const EditLocationLevel = () => {
     requester
       .get("/users/me/")
       .then((res) => {
-        setLevel(toNumber(res.data.active_range_of_location));
-        setPrevLevel(res.data.active_range_of_location);
-        setLocalPosition(res.data.first_location);
-        getAdjacentRegion(res.data.first_location);
+        setLevel(
+          toNumber(
+            res.data.is_first_location_active
+              ? res.data.first_range_of_location
+              : res.data.second_range_of_location
+          )
+        );
+        setPrevLevel(res.data.first_range_of_location);
+        setFirstRegion(res.data.first_location);
+        setSecondRegion(res.data.second_location);
+        setIsFirstActive(res.data.is_first_location_active);
+        getAdjacentRegion(
+          res.data.is_first_location_active
+            ? res.data.first_location
+            : res.data.second_location
+        );
         console.log(res.data);
       })
       .catch((error) => {
@@ -106,6 +113,43 @@ const EditLocationLevel = () => {
 
   const handleSliderChange = (event: any, newValue: any) => {
     setLevel(newValue);
+    requester
+      .put("/users/me/location/", {
+        location: isFirstActive ? firstRegion : secondRegion,
+        range_of_location: toString(newValue),
+      })
+      .then(() => {
+        console.log("거래범위 변경 성공");
+      })
+      .catch(() => {
+        toast.error("거래범위 변경 실패");
+      });
+  };
+
+  const handleAlter = (isActive: boolean) => {
+    isActive &&
+      requester({
+        url: "/users/me/location/",
+        method: "PATCH",
+        data: "alter",
+        headers: { "Content-Type": "text/plain" },
+      })
+        .then(getMyInfo)
+        .catch(() => {
+          toast.error("활성화 지역 변경 오류");
+        });
+  };
+
+  const handleDelete = (isFirstSelected: boolean) => {
+    requester
+      .delete(`/users/me/location/?isFirstSelected=${isFirstSelected}`)
+      .then(() => {
+        toast("지역 삭제 완료");
+        getMyInfo();
+      })
+      .catch(() => {
+        toast.error("지역 삭제 오류");
+      });
   };
 
   const handleToEditRangeOfLocation = () => {
@@ -135,20 +179,60 @@ const EditLocationLevel = () => {
         <p className={styles["extra-text-two"]}>
           지역은 최소 1개 이상 최대 2개까지 설정 가능해요.
         </p>
-        <button
-          className={`${styles["location-button"]} ${styles["left-button"]}`}
+        <div
+          className={`${styles["location-button-container"]} ${styles["left-button"]}`}
         >
-          <span>{toShortDivision(localPosition)}</span>
-          <img src={CancelIcon} alt="삭제" />
-        </button>
-        <button
-          className={`${styles["add-button"]} ${styles["right-button"]}`}
-          onClick={LinkToSelectLocation}
-        >
-          +
-        </button>
+          <button
+            className={`${styles["location-button"]} ${
+              !isFirstActive && styles.inactive
+            }`}
+            onClick={() => handleAlter(!isFirstActive)}
+          >
+            <span>{toShortDivision(firstRegion)}</span>
+          </button>
+          <button
+            className={`${styles.delete} ${!isFirstActive && styles.inactive}`}
+          >
+            <img
+              src={isFirstActive ? CancelIcon : BlackCancel}
+              onClick={() => handleDelete(true)}
+              alt="삭제"
+            />
+          </button>
+        </div>
+        {secondRegion && (
+          <div
+            className={`${styles["location-button-container"]} ${styles["right-button"]}`}
+          >
+            <button
+              className={`${styles["location-button"]} ${
+                isFirstActive && styles.inactive
+              }`}
+              onClick={() => handleAlter(isFirstActive)}
+            >
+              <span>{toShortDivision(secondRegion)}</span>
+            </button>
+            <button
+              className={`${styles.delete} ${isFirstActive && styles.inactive}`}
+            >
+              <img
+                src={isFirstActive ? BlackCancel : CancelIcon}
+                onClick={() => handleDelete(false)}
+                alt="삭제"
+              />
+            </button>
+          </div>
+        )}
+        {!secondRegion && (
+          <button
+            className={`${styles["add-button"]} ${styles["right-button"]}`}
+            onClick={LinkToSelectLocation}
+          >
+            +
+          </button>
+        )}
         <p className={styles["first-text"]}>{`${toShortDivision(
-          localPosition
+          isFirstActive ? firstRegion : secondRegion
         )}과 근처 동네 ${numberOfRegionsByLevel(level)}개`}</p>
         <p className={styles["second-text"]}>
           선택한 범위의 게시글만 볼 수 있어요.
@@ -208,17 +292,6 @@ const EditLocationLevel = () => {
           alt="레벨 3"
         />
       </div>
-      <footer>
-        <Button
-          className={styles["complete-button"]}
-          variant="contained"
-          color="warning"
-          disabled={level === toNumber(prevLevel)}
-          onClick={handleToEditRangeOfLocation}
-        >
-          완료
-        </Button>
-      </footer>
     </div>
   );
 };

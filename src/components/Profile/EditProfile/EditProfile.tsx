@@ -16,7 +16,8 @@ const EditProfile = () => {
   const [image, setImage] = useState<string>("");
   const [imageID, setImageID] = useState<number | null>(null);
   const [prevImage, setPrevImage] = useState<string>("");
-  const [nickname, setNickname] = useState<string>("  ");
+  const [name, setName] = useState<string>("");
+  const [nickname, setNickname] = useState<string>("");
   const [prevNickname, setPrevNickname] = useState<string>("");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -36,6 +37,7 @@ const EditProfile = () => {
     requester
       .get("/users/me/")
       .then((res) => {
+        setName(res.data.name);
         setNickname(res.data.nickname);
         setPrevNickname(res.data.nickname);
         setImage(res.data.image_url);
@@ -81,17 +83,21 @@ const EditProfile = () => {
   };
 
   const handleToEditProfile = () => {
+    const changes =
+      nickname !== prevNickname
+        ? image !== prevImage
+          ? { nickname: nickname, image_url: image }
+          : { nickname: nickname }
+        : { image_url: image };
     requester
-      .patch("/users/me/", {
-        nickname: nickname,
-        image_url: image,
-      })
+      .patch("/users/me/", { nickname: nickname, image_url: image })
       .then(() => {
         toast("프로필이 변경되었습니다.");
-        navigate(`${prev === "main" ? "/main?page=user" : "/profile"}`);
+        prev === "main" ? navigate("/main?page=user") : navigate(-1);
       })
       .catch(() => {
-        console.log("edit nickname error");
+        toast.error("프로필 수정 오류");
+        imageID && handleToCancelEditing();
       });
   };
 

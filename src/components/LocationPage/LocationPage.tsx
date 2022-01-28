@@ -101,9 +101,7 @@ const LocationPage = () => {
       .then((res) => {
         console.log(res.data);
         toast("동네인증이 완료되었습니다.");
-        navigate("/main", {
-          state: { page: "user" },
-        });
+        navigate("/main?page=user");
       })
       .catch(() => {
         console.log("verify location error");

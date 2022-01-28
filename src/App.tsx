@@ -36,9 +36,9 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/select-location" element={<SelectLocation />} />
           <Route path="/main" element={<Main />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:name" element={<Profile />} />
           <Route path="/profile/edit" element={<EditProfile />} />
-          <Route path="/profile/sales" element={<Sales />} />
+          <Route path="/profile/:name/sales" element={<Sales />} />
           <Route path="/sales-history" element={<SalesHistory />} />
           <Route path="/purchase-history" element={<PurchaseHistory />} />
           <Route path="/hearts" element={<Hearts />} />

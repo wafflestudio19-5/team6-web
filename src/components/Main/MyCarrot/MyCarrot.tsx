@@ -63,6 +63,7 @@ const MyCarrot = () => {
       <div className={styles["profile-wrapper"]}>
         <ProfileBar
           image={myInfo.image_url}
+          name={myInfo.name}
           nickname={myInfo.nickname}
           division={toShortDivision(activeLocation)}
         />

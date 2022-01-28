@@ -147,7 +147,18 @@ const SelectLocation = () => {
   };
 
   const handleToAddLocation = (region: string) => {
-    console.log(region);
+    requester
+      .post("/users/me/location/", {
+        location: region,
+        range_of_location: "LEVEL_ONE",
+      })
+      .then(() => {
+        navigate("/set-location");
+      })
+      .catch(() => {
+        toast.error("지역 추가 오류");
+        navigate("/set-location");
+      });
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -195,13 +206,12 @@ const SelectLocation = () => {
               }
             )
             .then((res) => {
-              searchState === "GET-LOCATION" &&
-                setSearchingList(
-                  regionData.filter(
-                    (region) =>
-                      region.match(res.data.documents[1].address_name) !== null
-                  )
-                );
+              setSearchingList(
+                regionData.filter(
+                  (region) =>
+                    region.match(res.data.documents[1].address_name) !== null
+                )
+              );
               setLoading(false);
             })
             .catch(() => {
