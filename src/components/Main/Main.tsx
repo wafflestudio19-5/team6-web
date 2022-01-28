@@ -28,8 +28,9 @@ const Main = () => {
     loc.state && setPage(loc.state.page);
     loc.state = null;
     User.getMe().then((res) => {
-      setLocation(toShortDivision(res.data.active_location));
-      setInactiveLocation(toShortDivision(res.data.inactive_location));
+      setLocation(toShortDivision(res.data.first_location));
+      if (!!res.data.second_location)
+        setInactiveLocation(toShortDivision(res.data.second_location));
     });
   });
 

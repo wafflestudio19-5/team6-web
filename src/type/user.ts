@@ -9,15 +9,15 @@ export type TUserInfo = {
   range_of_location: string;
 };
 
-export type userInfo = {
-  active_location: string;
-  active_location_verified: boolean;
-  active_range_of_location: string;
+export type TUserInfoV2 = {
+  first_location: string;
+  first_location_verified: boolean;
+  first_range_of_location: string;
   email: string;
   image_url: string;
-  inactive_location: string;
-  inactive_location_verified: true;
-  inactive_range_of_location: string;
+  second_location: string | null;
+  second_location_verified: true;
+  second_range_of_location: string | null;
   is_active: true;
   name: string;
   nickname: string;

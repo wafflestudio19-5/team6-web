@@ -32,8 +32,9 @@ const HomeHeader = (props: {
     if (!isActive) {
       setChangeLoc(false);
       User.patchMyLocation("alter").then((res) => {
-        props.setActiveLocation(toShortDivision(res.data.active_location));
-        props.setInactiveLocation(toShortDivision(res.data.inactive_location));
+        props.setActiveLocation(toShortDivision(res.data.first_location));
+        if (!!res.data.second_location)
+          props.setInactiveLocation(toShortDivision(res.data.second_location));
         window.location.replace("/main");
       });
     }

@@ -6,7 +6,7 @@ import LevelZero from "../../../../icons/MyCarrot/level_zero.png";
 import LevelOne from "../../../../icons/MyCarrot/level_one.png";
 import LevelTwo from "../../../../icons/MyCarrot/level_two.png";
 import LevelThree from "../../../../icons/MyCarrot/level_three.png";
-import { Box, Slider } from "@mui/material";
+import { Slider } from "@mui/material";
 import { toShortDivision } from "../../../Utilities/functions";
 import requester from "../../../../apis/requester";
 import Button from "@mui/material/Button";
