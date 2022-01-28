@@ -35,7 +35,7 @@ function App() {
         setUser(res.data);
       })
       .catch((error) => {
-        toast.error(error);
+        console.log(error);
       });
   }, []);
   return (
