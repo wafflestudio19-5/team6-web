@@ -37,13 +37,14 @@ const EditProfile = () => {
     requester
       .get("/users/me/")
       .then((res) => {
+        res.data.kakao_status === "INVALID" && navigate("/main?page=home");
         setName(res.data.name);
         setNickname(res.data.nickname);
         setPrevNickname(res.data.nickname);
         setImage(res.data.image_url);
         setPrevImage(res.data.image_url);
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("프로필 가져오기 오류");
       });
   };
