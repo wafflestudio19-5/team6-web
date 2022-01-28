@@ -7,7 +7,7 @@ import SearchIcon from "../../icons/SelectLocation/search.png";
 import CancelIcon from "../../icons/SelectLocation/cancel.png";
 import CurrentIcon from "../../icons/SelectLocation/current.png";
 import SearchResultIcon from "../../icons/SelectLocation/search-result.png";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CLIENT_ID } from "../../KakaoLogin/OAuth";
 import RegionList from "./RegionList/RegionList";
@@ -61,9 +61,9 @@ const SelectLocation = () => {
         });
       location.state.prev === "edit" &&
         !localStorage.getItem("token") &&
-        navigate("/login");
+        navigate("/login", { replace: true });
     } else {
-      navigate("/login");
+      navigate("/login", { replace: true });
     }
     if (regionQuery !== null) {
       if (regionQuery !== "") {
@@ -92,10 +92,9 @@ const SelectLocation = () => {
     prev === "signup"
       ? navigate("/signup", {
           state: { inputs: signupForm },
+          replace: true,
         })
-      : navigate("/set-location", {
-          state: { page: "user" },
-        });
+      : navigate(-1);
   };
 
   const handleToFirstSocialLogin = (region: string) => {
@@ -153,11 +152,26 @@ const SelectLocation = () => {
         range_of_location: "LEVEL_ONE",
       })
       .then(() => {
-        navigate("/set-location");
+        navigate(-1);
       })
       .catch(() => {
         toast.error("지역 추가 오류");
-        navigate("/set-location");
+        navigate(-1);
+      });
+  };
+
+  const handleToSwitchLocation = (region: string) => {
+    requester
+      .put("/users/me/location/", {
+        location: region,
+        range_of_location: "LEVEL_ONE",
+      })
+      .then(() => {
+        navigate(-1);
+      })
+      .catch(() => {
+        toast.error("지역 변경 오류");
+        navigate(-1);
       });
   };
 
@@ -272,6 +286,8 @@ const SelectLocation = () => {
                     ? handleToSignUp
                     : prev === "edit"
                     ? handleToAddLocation
+                    : prev === "switch"
+                    ? handleToSwitchLocation
                     : handleToFirstSocialLogin
                 }
               />
@@ -287,6 +303,8 @@ const SelectLocation = () => {
                   ? handleToSignUp
                   : prev === "edit"
                   ? handleToAddLocation
+                  : prev === "switch"
+                  ? handleToSwitchLocation
                   : handleToFirstSocialLogin
               }
             />

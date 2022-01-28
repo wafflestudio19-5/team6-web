@@ -38,7 +38,11 @@ const LocationPage = () => {
     requester
       .get("/users/me/")
       .then((res) => {
-        setLocalPosition(res.data.first_location);
+        setLocalPosition(
+          res.data.is_first_location_active
+            ? res.data.first_location
+            : res.data.second_location
+        );
       })
       .catch((error) => {
         toast.error(error);

@@ -1,4 +1,5 @@
 import styles from "./EditLocationLevel.module.scss";
+import confirmStyles from "../../../Utilities/confirm.module.scss";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BackArrowIcon from "../../../../icons/leftArrow.png";
@@ -13,6 +14,7 @@ import { toShortDivision } from "../../../Utilities/functions";
 import requester from "../../../../apis/requester";
 import Button from "@mui/material/Button";
 import { toast } from "react-hot-toast";
+import confStyles from "../../../Utilities/confirm.module.scss";
 
 type TNumberOfRegions = {
   zero: number;
@@ -22,9 +24,10 @@ type TNumberOfRegions = {
 };
 
 const EditLocationLevel = () => {
-  const [update, setUpdate] = useState<number>(0);
+  const [confirmOne, setConfirmOne] = useState<boolean>(false);
+  const [confirmTwo, setConfirmTwo] = useState<boolean>(false);
+  const [deleteFirst, setDeleteFirst] = useState<boolean>(true);
   const [level, setLevel] = useState<number>(1);
-  const [prevLevel, setPrevLevel] = useState<string>("LEVEL_ONE");
   const [firstRegion, setFirstRegion] = useState<string>("");
   const [secondRegion, setSecondRegion] = useState<string>("");
   const [isFirstActive, setIsFirstActive] = useState<boolean>(true);
@@ -52,7 +55,6 @@ const EditLocationLevel = () => {
               : res.data.second_range_of_location
           )
         );
-        setPrevLevel(res.data.first_range_of_location);
         setFirstRegion(res.data.first_location);
         setSecondRegion(res.data.second_location);
         setIsFirstActive(res.data.is_first_location_active);
@@ -140,6 +142,10 @@ const EditLocationLevel = () => {
         });
   };
 
+  const handleConfirm = () => {
+    secondRegion ? setConfirmOne(true) : setConfirmTwo(true);
+  };
+
   const handleDelete = (isFirstSelected: boolean) => {
     requester
       .delete(`/users/me/location/?isFirstSelected=${isFirstSelected}`)
@@ -149,20 +155,6 @@ const EditLocationLevel = () => {
       })
       .catch(() => {
         toast.error("지역 삭제 오류");
-      });
-  };
-
-  const handleToEditRangeOfLocation = () => {
-    requester
-      .patch("/users/me/", {
-        range_of_location: toString(level),
-      })
-      .then(() => {
-        toast("거래 범위가 변경되었습니다.");
-        navigate("/main?page=user");
-      })
-      .catch(() => {
-        console.log("edit range_of_location error");
       });
   };
 
@@ -195,7 +187,10 @@ const EditLocationLevel = () => {
           >
             <img
               src={isFirstActive ? CancelIcon : BlackCancel}
-              onClick={() => handleDelete(true)}
+              onClick={() => {
+                handleConfirm();
+                setDeleteFirst(true);
+              }}
               alt="삭제"
             />
           </button>
@@ -217,7 +212,10 @@ const EditLocationLevel = () => {
             >
               <img
                 src={isFirstActive ? BlackCancel : CancelIcon}
-                onClick={() => handleDelete(false)}
+                onClick={() => {
+                  handleConfirm();
+                  setDeleteFirst(false);
+                }}
                 alt="삭제"
               />
             </button>
@@ -292,6 +290,45 @@ const EditLocationLevel = () => {
           alt="레벨 3"
         />
       </div>
+      <div
+        className={`${styles["back-shadow"]} ${
+          (confirmOne || confirmTwo) && styles.visible
+        }`}
+        onClick={() => {
+          confirmOne && setConfirmOne(false);
+          confirmTwo && setConfirmTwo(false);
+        }}
+      />
+      {(confirmOne || confirmTwo) && (
+        <div className={`${confirmStyles.box} ${styles.confirm}`}>
+          <div className={styles.contents}>
+            {confirmOne
+              ? "선택한 지역을 삭제하시겠습니까?"
+              : "동네는 최소 1개 이상 선택되어있어야 합니다. 현재 설정된 동네를 변경하시겠어요?"}
+          </div>
+          <div
+            className={confirmStyles.confirmButton}
+            onClick={() => {
+              confirmTwo
+                ? navigate("/select-location", { state: { prev: "switch" } })
+                : handleDelete(deleteFirst);
+              confirmOne && setConfirmOne(false);
+              confirmTwo && setConfirmTwo(false);
+            }}
+          >
+            {confirmOne ? "확인" : "네, 변경할게요"}
+          </div>
+          <div
+            className={confirmStyles.cancelButton}
+            onClick={() => {
+              confirmOne && setConfirmOne(false);
+              confirmTwo && setConfirmTwo(false);
+            }}
+          >
+            취소
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -90,15 +90,21 @@ const EditProfile = () => {
           : { nickname: nickname }
         : { image_url: image };
     requester
-      .patch("/users/me/", { nickname: nickname, image_url: image })
+      .patch("/users/me/", changes)
       .then(() => {
         toast("프로필이 변경되었습니다.");
         prev === "main" ? navigate("/main?page=user") : navigate(-1);
       })
       .catch(() => {
-        toast.error("프로필 수정 오류");
+        toast.error(`${nickname} ${prevImage}`);
         imageID && handleToCancelEditing();
       });
+    /*if (nickname !== prevNickname) {
+      requester.patch("/users/me/", { nickname: nickname }).then(() => {
+        if (image !== prevImage) {
+        }
+      });
+    }*/
   };
 
   const handleToUpload = (e: React.MouseEvent) => {
