@@ -20,6 +20,7 @@ import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/Edit
 import KakaoPage from "./KakaoLogin/KakaoPage";
 import SelectLocation from "./components/SelectLocation/SelectLocation";
 import Hearts from "./components/Hearts/Hearts";
+import InterestCategory from "./components/Main/MyCarrot/InterestCategory/InterestCategory";
 
 function App() {
   const token: string | null = localStorage.getItem("token");
@@ -46,6 +47,7 @@ function App() {
           <Route path="/set-location" element={<EditLocationLevel />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/request/:id" element={<RequestPage />} />
+          <Route path="/set-category" element={<InterestCategory />} />
           <Route
             path="/*"
             element={<Navigate replace to={token ? "/main" : "/login"} />}

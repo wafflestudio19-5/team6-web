@@ -134,7 +134,7 @@ const WriteArticle = () => {
       setCategory(categoryEncode(loc.state.category));
       setPrice("₩ " + loc.state.price.toLocaleString("ko-KR"));
       setNegotiable(loc.state.negotiable);
-      setForAge(loc.state.for_age);
+      setForAge(kidsAgeFormat(loc.state.for_age));
       setValue(loc.state.content);
     }
   }, []);
@@ -148,6 +148,25 @@ const WriteArticle = () => {
   };
   const onClickClose = () => {
     navigate(-1);
+  };
+  const kidsAgeFormat = (
+    ages: (
+      | "ZERO_TO_SIX_MONTH"
+      | "SEVEN_TO_TWELVE_MONTH"
+      | "OVER_ONE_TO_TWO"
+      | "THREE_TO_FIVE"
+      | "SIX_TO_EIGHT"
+      | "OVER_NINE"
+    )[]
+  ) => {
+    const kidsAgeFormattedList: number[] = [];
+    if (ages.includes("ZERO_TO_SIX_MONTH")) kidsAgeFormattedList.push(1);
+    if (ages.includes("SEVEN_TO_TWELVE_MONTH")) kidsAgeFormattedList.push(2);
+    if (ages.includes("OVER_ONE_TO_TWO")) kidsAgeFormattedList.push(3);
+    if (ages.includes("THREE_TO_FIVE")) kidsAgeFormattedList.push(4);
+    if (ages.includes("SIX_TO_EIGHT")) kidsAgeFormattedList.push(5);
+    if (ages.includes("OVER_NINE")) kidsAgeFormattedList.push(6);
+    return kidsAgeFormattedList;
   };
 
   const onClickDone = () => {
@@ -173,7 +192,7 @@ const WriteArticle = () => {
           negotiable: negotiable,
           category: category,
           for_age: forAge,
-          range_of_location: 0, // temporary
+          range_of_location: 3, // temporary
         }).then((res) => navigate("/main"));
         toast.promise(myPromise, {
           loading: "Uploading...",
@@ -189,7 +208,7 @@ const WriteArticle = () => {
           negotiable: negotiable,
           category: category,
           for_age: forAge,
-          range_of_location: 0, // temporary
+          range_of_location: 3, // temporary
         }).then((res) => navigate("/main"));
         toast.promise(myPromise, {
           loading: "Uploading...",
@@ -229,13 +248,13 @@ const WriteArticle = () => {
           );
         } else {
           const myPromise = Product.patchProduct(loc.state.id, {
-            image_urls: [],
+            image_urls: imgPreview.filter((e, index) => index !== 0),
             title: title,
             content: value,
             price: parseInt(price.replace(/[^0-9]/g, "")),
             negotiable: negotiable,
             category: category,
-            for_age: [2, 3],
+            for_age: forAge,
             range_of_location: 3,
           }).then((res) => navigate("/main"));
           toast.promise(myPromise, {
@@ -246,13 +265,13 @@ const WriteArticle = () => {
         }
       } else {
         const myPromise = Product.patchProduct(loc.state.id, {
-          image_urls: [],
+          image_urls: imgPreview.filter((e, index) => index !== 0),
           title: title,
           content: value,
           price: parseInt(price.replace(/[^0-9]/g, "")),
           negotiable: negotiable,
           category: category,
-          for_age: [2, 3],
+          for_age: forAge,
           range_of_location: 3,
         }).then((res) => navigate("/main"));
         toast.promise(myPromise, {
