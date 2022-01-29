@@ -20,6 +20,7 @@ import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/Edit
 import KakaoPage from "./KakaoLogin/KakaoPage";
 import SelectLocation from "./components/SelectLocation/SelectLocation";
 import GetInformation from "./components/GetInformation/GetInformation";
+import InterestCategory from "./components/Main/MyCarrot/InterestCategory/InterestCategory";
 import Likes from "./components/Likes/Likes";
 import { UserDto } from "./type/dto/user.dto";
 
@@ -65,6 +66,7 @@ function App() {
             <Route path="/set-location" element={<EditLocationLevel />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/request/:id" element={<RequestPage />} />
+            <Route path="/set-category" element={<InterestCategory />} />
             <Route path="/timer" element={<Timer />} />
             <Route
               path="/*"

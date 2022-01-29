@@ -117,32 +117,32 @@ const Article = () => {
   }>({ suggested_price: "", message: "" });
   const [suggest, setSuggest] = useState(false);
   const user = useUserState();
-
+  const [name, setName] = useState("");
+  
   useEffect(() => {
-    Product.getProduct(id)
-      .then((res) => {
-        if (res.data.id !== parseInt(id)) navigate("/main");
-        else {
-          setCurrentArticle(res.data);
-          User.getMe().then((r) => {
-            if (res.data.user.email === r.data.email) setIsSeller(true);
-            else setIsSeller(false);
-          });
-        }
-        setStatus(res.data.status);
-        res.data.image_urls?.map((image: string) => {
-          setCarouselImg((prevState: any) => {
-            const tempState = prevState.concat(
-              <div>
-                <img
-                  className={styles.carouselImg}
-                  src={image}
-                  alt={"상품 이미지"}
-                />
-              </div>
-            );
-            return tempState;
-          });
+    Product.getProduct(id).then((res) => {
+      if (res.data.id !== parseInt(id)) navigate("/main");
+      else {
+        setCurrentArticle(res.data);
+        User.getMe().then((r) => {
+          if (res.data.user.email === r.data.email) setIsSeller(true);
+          else setIsSeller(false);
+          setName(r.data.user?.name);
+        });
+      }
+      setStatus(res.data.status);
+      res.data.image_urls?.map((image: string) => {
+        setCarouselImg((prevState: any) => {
+          const tempState = prevState.concat(
+            <div>
+              <img
+                className={styles.carouselImg}
+                src={image}
+                alt={"상품 이미지"}
+              />
+            </div>
+          );
+          return tempState;
         });
       })
       .catch((e: any) => {
@@ -187,8 +187,7 @@ const Article = () => {
     }
   };
   const onClickProfileImg = () => {
-    console.log("profile image");
-    // navigate("/profile/{id}");
+    navigate(`/profile/${name}`);
   };
 
   const kidsAgeFormat = (
@@ -252,31 +251,34 @@ const Article = () => {
     } else if (select === "bump") {
       Product.putStatus(id, select)
         .then((res) => {
-          toast("success");
+          toast.success("Successfully bumped!");
           navigate("/main");
         })
         .catch((e) => toast.error(e.response.data.error_message));
     } else if (select === "hide") {
       Product.putStatus(id, select)
-        .then((res) => toast("success"))
+        .then((res) => toast.success("Successfully hid!"))
         .catch((e) => toast.error(e.response.data.error_message));
     } else if (select === "delete") {
       Product.deleteProduct(id)
         .then((res) => {
-          toast("success");
+          toast.success("Successfully deleted!");
           navigate("/main");
         })
         .catch((e) => toast.error(e.response.data.error_message));
     } else if (select === "report") {
-      toast("신고 완료!");
+      toast.success("신고 완료!");
       setIsSettingModalOpen(false);
     } else if (select === "hideUser") {
-      toast("유저 차단 완료!");
+      toast.success("유저 차단 완료!");
       setIsSettingModalOpen(false);
     }
   };
   const changeToRequests = () => {
-    if (currentArticle?.chats) navigate(`/request/${id}`);
+    if (localStorage.getItem("verified") === "false") {
+      navigate("/main");
+      toast("지역 인증이 필요해요!");
+    } else navigate(`/request/${id}`);
   };
   const handleRequest = () => {
     if (currentArticle?.status === SalesStatus.SOLD_OUT) {

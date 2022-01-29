@@ -12,6 +12,7 @@ import requester from "../../../apis/requester";
 import { useEffect, useState } from "react";
 import { TUserInfo, TUserInfoV2 } from "../../../type/user";
 import { toShortDivision } from "../../Utilities/functions";
+import InterestCategory from "./InterestCategory/InterestCategory";
 
 const MyCarrot = () => {
   const [activeLocation, setActiveLocation] = useState<string>("");
@@ -58,44 +59,53 @@ const MyCarrot = () => {
       state: { prev: "edit" },
     });
   };
+  const handleCategory = () => {
+    navigate("/set-category");
+  };
   return (
-    <div className={styles["mycarrot-wrapper"]}>
-      <div className={styles["profile-wrapper"]}>
-        <ProfileBar
-          image={myInfo.image_url}
-          name={myInfo.name}
-          nickname={myInfo.nickname}
-          division={toShortDivision(activeLocation)}
-        />
-        <HistoryButtons />
+    <>
+      <div className={styles["mycarrot-wrapper"]}>
+        <div className={styles["profile-wrapper"]}>
+          <ProfileBar
+            image={myInfo.image_url}
+            name={myInfo.name}
+            nickname={myInfo.nickname}
+            division={toShortDivision(activeLocation)}
+          />
+          <HistoryButtons />
+        </div>
+        <div className={styles.settings}>
+          <button onClick={LinkToEditLocationLevel}>
+            <img src={icon1} alt="location" />
+            <p>내 동네 설정</p>
+          </button>
+          <button onClick={LinkToEditLocation}>
+            <img src={icon2} alt="current location" />
+            <p>동네 인증하기</p>
+          </button>
+          <button
+            onClick={() => {
+              console.log("알림 키워드 등록");
+            }}
+          >
+            <img src={icon3} alt="tag" />
+            <p>알림 키워드 등록</p>
+          </button>
+          <button onClick={handleCategory}>
+            <img src={icon6} alt="toggle switch" />
+            <p>관심 카테고리 설정</p>
+          </button>
+          <button
+            onClick={() => {
+              console.log("모아보기");
+            }}
+          >
+            <img src={icon5} alt="모아보기" />
+            <p>모아보기</p>
+          </button>
+        </div>
       </div>
-      <div className={styles.settings}>
-        <button onClick={LinkToEditLocationLevel}>
-          <img src={icon1} alt="location" />
-          <p>내 동네 설정</p>
-        </button>
-        <button onClick={LinkToEditLocation}>
-          <img src={icon2} alt="current location" />
-          <p>동네 인증하기</p>
-        </button>
-        <button
-          onClick={() => {
-            console.log("알림 키워드 등록");
-          }}
-        >
-          <img src={icon3} alt="tag" />
-          <p>알림 키워드 등록</p>
-        </button>
-        <button
-          onClick={() => {
-            console.log(myInfo);
-          }}
-        >
-          <img src={icon6} alt="toggle switch" />
-          <p>관심 카테고리 설정</p>
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 

@@ -47,7 +47,7 @@ const Main = () => {
         toast.error("프로필 가져오기 오류");
       });
     pageQuery && setPage(pageQuery);
-  }, []);
+  }, [loc.state?.location_changed]);
 
   const changeToHome = () => {
     navigate("/main?page=home", { replace: true });

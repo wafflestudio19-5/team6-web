@@ -34,11 +34,20 @@ const HomeHeader = (props: {
       }
     });
     if (localStorage.getItem("region") === "second") setIsFirst(false);
+    if (isFirst && props.firstVerified)
+      localStorage.setItem("verified", "true");
+    else if (isFirst && !props.firstVerified)
+      localStorage.setItem("verified", "false");
+    else if (!isFirst && props.secondVerified)
+      localStorage.setItem("verified", "true");
+    else if (!isFirst && !props.secondVerified)
+      localStorage.setItem("verified", "false");
   }, []);
   const user = useUserState();
 
   const handleLocation = () => {
-    setChangeLoc(true);
+    if (!!props.secondLocation) setChangeLoc(true);
+    else navigate("/set-location");
   };
 
   const handleSearch = () => {
@@ -58,7 +67,17 @@ const HomeHeader = (props: {
         props.setFirstLocation(toShortDivision(res.data.first_location));
         if (!!res.data.second_location)
           props.setSecondLocation(toShortDivision(res.data.second_location));
-        window.location.replace("/main");
+        toast("동네 변경이 완료되었어요!", {
+          style: {
+            borderRadius: "4px",
+            background: "black",
+            padding: "6px",
+            color: "#fff",
+            font: "-moz-initial",
+          },
+          position: "bottom-center",
+        });
+        navigate("/main&page=home", { state: { location_changed: true } });
       });
     }
   };

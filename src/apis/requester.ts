@@ -48,6 +48,7 @@ requester.interceptors.response.use(
     if (error.response.status === 403) {
       window.location.href = "/timer";
     }
+
     return Promise.reject(error);
   }
 );

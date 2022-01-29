@@ -19,6 +19,8 @@ import SelectKidage from "./Kidage/SelectKidage";
 import ConfirmModal from "./Confirm/ConfirmModal";
 import { TextareaAutosize } from "@mui/material";
 import Product from "../../../../apis/Product/Product";
+import Phrase from "./Phrase/Phrase";
+import LocationRange from "./Location/LocationRange";
 
 const settings = {
   className: "left",
@@ -115,25 +117,34 @@ const WriteArticle = () => {
     useState<boolean>(false);
   const [isKidsModalOpen, setIsKidsModalOpen] = useState<boolean>(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+  const [isPhraseOpen, setIsPhraseOpen] = useState<boolean>(false);
+  const [isLocationOpen, setIsLocationOpen] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [negotiable, setNegotiable] = useState<boolean>(false);
   const [category, setCategory] = useState<number | undefined>(0);
   const [price, setPrice] = useState<string>("");
   const [value, setValue] = useState<string>("");
+  const [rangeOfLocation, setRangeOfLocation] = useState<number>(3);
   const [imgPreview, setImgPreview] = useState<string[]>([camera]);
   const [imgFiles, setImgFiles] = useState<FileList | null>(null);
   const [forAge, setForAge] = useState<number[] | null>(null);
+  const [imgUrl, setImgUrl] = useState<string[]>([]);
   const imgRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!!loc.state) {
       setImgPreview(imgPreview.concat(loc.state.image_urls));
+      setImgUrl(loc.state.image_urls);
       setTitle(loc.state.title);
       setCategory(categoryEncode(loc.state.category));
       setPrice("₩ " + loc.state.price.toLocaleString("ko-KR"));
       setNegotiable(loc.state.negotiable);
-      setForAge(loc.state.for_age);
+      setForAge(kidsAgeFormat(loc.state.for_age));
       setValue(loc.state.content);
+    }
+    if (localStorage.getItem("verified") === "false") {
+      navigate("/main");
+      toast("지역 인증을 해야 해요!");
     }
   }, []);
 
@@ -146,6 +157,25 @@ const WriteArticle = () => {
   };
   const onClickClose = () => {
     navigate(-1);
+  };
+  const kidsAgeFormat = (
+    ages: (
+      | "ZERO_TO_SIX_MONTH"
+      | "SEVEN_TO_TWELVE_MONTH"
+      | "OVER_ONE_TO_TWO"
+      | "THREE_TO_FIVE"
+      | "SIX_TO_EIGHT"
+      | "OVER_NINE"
+    )[]
+  ) => {
+    const kidsAgeFormattedList: number[] = [];
+    if (ages.includes("ZERO_TO_SIX_MONTH")) kidsAgeFormattedList.push(1);
+    if (ages.includes("SEVEN_TO_TWELVE_MONTH")) kidsAgeFormattedList.push(2);
+    if (ages.includes("OVER_ONE_TO_TWO")) kidsAgeFormattedList.push(3);
+    if (ages.includes("THREE_TO_FIVE")) kidsAgeFormattedList.push(4);
+    if (ages.includes("SIX_TO_EIGHT")) kidsAgeFormattedList.push(5);
+    if (ages.includes("OVER_NINE")) kidsAgeFormattedList.push(6);
+    return kidsAgeFormattedList;
   };
 
   const onClickDone = () => {
@@ -171,7 +201,7 @@ const WriteArticle = () => {
           negotiable: negotiable,
           category: category,
           for_age: forAge,
-          range_of_location: 0, // temporary
+          range_of_location: rangeOfLocation,
         }).then((res) => navigate("/main"));
         toast.promise(myPromise, {
           loading: "Uploading...",
@@ -187,7 +217,7 @@ const WriteArticle = () => {
           negotiable: negotiable,
           category: category,
           for_age: forAge,
-          range_of_location: 0, // temporary
+          range_of_location: rangeOfLocation,
         }).then((res) => navigate("/main"));
         toast.promise(myPromise, {
           loading: "Uploading...",
@@ -196,38 +226,61 @@ const WriteArticle = () => {
         });
       }
     } else {
-      /*
       const formData = new FormData();
       // @ts-ignore
+      console.log(!!imgFiles);
       if (imgFiles) {
         Object.values(imgFiles).map((e) => {
           formData.append("images", e);
         });
-        console.log(Object.values(imgFiles));
-        requester({ method: "POST", url: "/images/", data: formData })
-          .then((res) => {
-            const imageIdList = res.data.contents.map(
-              (e: { created_at: string; id: number; updated_at: string }) => {
-                return e.id;
-              }
-            ); */
-      if (!loc.state) {
-        const myPromise = Product.postProduct({
-          image_urls: imgPreview.filter((e, index) => index !== 0),
-          title: title,
-          content: value,
-          price: parseInt(price.replace(/[^0-9]/g, "")),
-          negotiable: negotiable,
-          category: category,
-          for_age: forAge,
-          range_of_location: 3,
-        }).then((res) => navigate("/main"));
-        toast.promise(myPromise, {
-          loading: "Uploading...",
-          success: "Successfully Uploaded!",
-          error: "Failed",
-        });
+        if (!loc.state) {
+          requester({ method: "POST", url: "/images/", data: formData }).then(
+            (res) => {
+              const myPromise = Product.postProduct({
+                image_urls: res.data.contents.map((data: any) => {
+                  return data.url;
+                }),
+                title: title,
+                content: value,
+                price: parseInt(price.replace(/[^0-9]/g, "")),
+                negotiable: negotiable,
+                category: category,
+                for_age: forAge,
+                range_of_location: rangeOfLocation,
+              }).then((res) => navigate("/main"));
+              toast.promise(myPromise, {
+                loading: "Uploading...",
+                success: "Successfully Uploaded!",
+                error: "Failed",
+              });
+            }
+          );
+        } else {
+          // 새로 이미지를 올리는 경우
+          requester.post("/images/", formData).then((res) => {
+            const myPromise = Product.patchProduct(loc.state.id, {
+              image_urls: imgUrl.concat(
+                res.data.contents.map((data: any) => {
+                  return data.url;
+                })
+              ),
+              title: title,
+              content: value,
+              price: parseInt(price.replace(/[^0-9]/g, "")),
+              negotiable: negotiable,
+              category: category,
+              for_age: forAge,
+              range_of_location: rangeOfLocation,
+            }).then((res) => navigate("/main"));
+            toast.promise(myPromise, {
+              loading: "Uploading...",
+              success: "Successfully Uploaded!",
+              error: "Failed",
+            });
+          });
+        }
       } else {
+        // 원래 이미지에서 제거만 하는 경우
         const myPromise = Product.patchProduct(loc.state.id, {
           image_urls: imgPreview.filter((e, index) => index !== 0),
           title: title,
@@ -235,8 +288,8 @@ const WriteArticle = () => {
           price: parseInt(price.replace(/[^0-9]/g, "")),
           negotiable: negotiable,
           category: category,
-          for_age: null,
-          range_of_location: 3,
+          for_age: forAge,
+          range_of_location: rangeOfLocation,
         }).then((res) => navigate("/main"));
         toast.promise(myPromise, {
           loading: "Uploading...",
@@ -244,15 +297,17 @@ const WriteArticle = () => {
           error: "Failed",
         });
       }
-      /*
-          })
-          .catch((e) => toast.error(e.response.data.error_message)); */
     }
   };
   const handleCheck = () => {
     if (!!price) setNegotiable(!negotiable);
   };
-
+  const handlePhrase = () => {
+    setIsPhraseOpen(true);
+  };
+  const handleRegion = () => {
+    setIsLocationOpen(true);
+  };
   const priceFormat = (e: React.ChangeEvent<HTMLInputElement>) => {
     const numberFormat = e.target.value.replace(/[^0-9]/g, "");
     if (!!numberFormat) {
@@ -278,13 +333,14 @@ const WriteArticle = () => {
       }
     }
     if (nowImgUrlList.length <= 11) setImgPreview(nowImgUrlList);
-    else console.log("이미지는 최대 10개까지 첨부할 수 있어요.");
-    console.log(nowImgUrlList);
+    else toast("이미지는 최대 10개까지 첨부할 수 있어요.");
   };
 
   const deleteImg = (image: string) => {
     const newImgPreview = imgPreview.filter((e) => e !== image);
     setImgPreview(newImgPreview);
+    if (imgUrl.includes(image))
+      setImgUrl(imgUrl.filter((url) => url !== image));
   };
 
   const carouselImg = imgPreview.map((image) => {
@@ -359,6 +415,17 @@ const WriteArticle = () => {
               setIsKidsModalOpen={setIsKidsModalOpen}
             />
           )}
+          {isPhraseOpen && (
+            <Phrase setValue={setValue} setIsPhraseOpen={setIsPhraseOpen} />
+          )}
+          {isLocationOpen && (
+            <LocationRange
+              isLocationOpen={isLocationOpen}
+              setIsLocationOpen={setIsLocationOpen}
+              rangeOfLocation={rangeOfLocation}
+              setRangeOfLocation={setRangeOfLocation}
+            />
+          )}
           <div
             className={`${styles.backShadow} ${
               isConfirmOpen ? styles.show : ""
@@ -370,6 +437,12 @@ const WriteArticle = () => {
               isKidsModalOpen ? styles.show : ""
             }`}
             onClick={() => setIsKidsModalOpen(false)}
+          />
+          <div
+            className={`${styles.backShadow} ${
+              isPhraseOpen ? styles.show : ""
+            }`}
+            onClick={() => setIsPhraseOpen(false)}
           />
           <div className={styles.header}>
             <img
@@ -388,18 +461,28 @@ const WriteArticle = () => {
             </p>
           </div>
           <div className={styles.footer}>
-            <img
-              className={styles.sentence}
-              src={sentence}
-              alt="자주쓰는 문구"
-            />
-            <p className={styles.usually}>자주쓰는 문구</p>
-            <img
-              className={styles.neighborhood}
-              src={setting}
-              alt="보여줄 동네"
-            />
-            <p className={styles.show}>보여줄 동네 설정</p>
+            <div>
+              <img
+                className={styles.sentence}
+                src={sentence}
+                alt="자주쓰는 문구"
+                onClick={handlePhrase}
+              />
+              <p className={styles.usually} onClick={handlePhrase}>
+                자주쓰는 문구
+              </p>
+            </div>
+            <div>
+              <img
+                className={styles.neighborhood}
+                src={setting}
+                alt="보여줄 동네"
+                onClick={handleRegion}
+              />
+              <p className={styles.show} onClick={handleRegion}>
+                보여줄 동네 설정
+              </p>
+            </div>
           </div>
           <div className={styles.contentWrapper}>
             <div className={styles.imageUploadWrapper}>
