@@ -83,14 +83,6 @@ const MyCarrot = () => {
             <img src={icon2} alt="current location" />
             <p>동네 인증하기</p>
           </button>
-          <button
-            onClick={() => {
-              console.log("알림 키워드 등록");
-            }}
-          >
-            <img src={icon3} alt="tag" />
-            <p>알림 키워드 등록</p>
-          </button>
           <button onClick={handleCategory}>
             <img src={icon6} alt="toggle switch" />
             <p>관심 카테고리 설정</p>
