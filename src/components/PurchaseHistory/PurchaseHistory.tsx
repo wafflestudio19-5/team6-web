@@ -19,8 +19,7 @@ export type srcPair = {
 const PurchaseHistory = () => {
   const [mode, setMode] = useState(1);
   const [requestUser, setRequestUser] = useState<UserDto | null>(null);
-  const [update, setUpdate] = useState(false);
-  const [srcList, setSrcList] = useState<srcPair[]>([]);
+  const [shadow, setShadow] = useState(false);
 
   return (
     <div className={styles["sales-history-wrapper"]}>
@@ -45,7 +44,7 @@ const PurchaseHistory = () => {
         </>
       )}
       <header>
-        <Link to="/main" state={{ page: "user" }} className={styles.back}>
+        <Link to="/main&page=user" className={styles.back}>
           <img src={BackArrow} alt="뒤로" />
         </Link>
         <p>구매내역</p>
@@ -83,10 +82,16 @@ const PurchaseHistory = () => {
         거래반려
       </button>
       <section className={styles["body-wrapper"]}>
-        {mode === 1 && <Requests setRequestUser={setRequestUser} />}
-        {mode === 2 && <Purchased />}
-        {mode === 3 && <Refused />}
+        {mode === 1 && <Requests shadow={shadow} setShadow={setShadow} />}
+        {mode === 2 && <Purchased shadow={shadow} setShadow={setShadow} />}
+        {mode === 3 && <Refused shadow={shadow} setShadow={setShadow} />}
       </section>
+      <div
+        className={`${styles.backShadow} ${shadow ? styles.show : ""}`}
+        onClick={() => {
+          setShadow(false);
+        }}
+      />
     </div>
   );
 };

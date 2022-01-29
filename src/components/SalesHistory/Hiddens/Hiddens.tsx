@@ -3,31 +3,68 @@ import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import moreActions from "../../../icons/more.png";
 import requester from "../../../apis/requester";
-import { productType } from "../../../type/types";
 import { calculateTimeDifference } from "../../Utilities/functions";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { ActionTarget, srcPair } from "../SalesHistory";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { ActionTarget } from "../SalesHistory";
 
 import { useNavigate } from "react-router-dom";
 import { ProductSimpleWithoutUserDto } from "../../../type/dto/product-simple-without-user.dto";
 import { GetMyProductsDto } from "../../../type/dto/for-api/get-my-products.dto";
 
 const Hiddens = (props: {
-  setUpdate: Dispatch<SetStateAction<boolean>>;
   setHiddenActions: Dispatch<SetStateAction<boolean>>;
   setActionTarget: Dispatch<SetStateAction<ActionTarget>>;
 }) => {
   const [hiddenList, setHiddenList] = useState<ProductSimpleWithoutUserDto[]>(
     []
   );
+  const [isLast, setIsLast] = useState(false);
+  const [bottom, setBottom] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const getNewProducts = async () => {
+    try {
+      const response = await requester.get<GetMyProductsDto>(
+        `/users/me/products/?pageNumber=${pageCount}&pageSize=10&status=hidden`
+      );
+      setIsLast(response.data.last);
+      setPageCount(pageCount + 1);
+      setHiddenList(hiddenList.concat(response.data.content));
+    } catch (e) {
+      return undefined;
+    }
+  };
   useEffect(() => {
-    requester
-      .get<GetMyProductsDto>(
-        "/users/me/products/?pageNumber=0&pageSize=15&status=hidden"
-      )
-      .then((res) => {
-        setHiddenList(res.data.content);
-      });
+    (async () => {
+      await getNewProducts();
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (!isLast && bottom) {
+      (async () => {
+        await getNewProducts();
+      })();
+    }
+  }, [bottom]);
+
+  const handleScroll = useCallback(() => {
+    if (!isLast && listRef.current) {
+      const { clientHeight, scrollHeight, scrollTop } = listRef.current;
+      if (Math.round(scrollTop + clientHeight) >= scrollHeight - 200) {
+        if (!bottom) {
+          setBottom(true);
+        }
+      }
+    }
   }, []);
 
   const navigate = useNavigate();
@@ -36,7 +73,7 @@ const Hiddens = (props: {
     requester
       .put(`/products/${data.id}/status/`, { action: "show" })
       .then((res) => {
-        props.setUpdate((update) => !update);
+        setHiddenList(hiddenList.filter((product) => product.id !== data.id));
       })
       .catch((e) => console.log(e));
   };
@@ -57,7 +94,7 @@ const Hiddens = (props: {
 
   const hiddenComponents = hiddenList.map((article) => {
     return (
-      <div className={styles.articleWrapper}>
+      <div key={article.id} className={styles.articleWrapper}>
         <div
           className={styles.clickArea}
           onClick={() => goToProductPage(article)}
@@ -134,11 +171,11 @@ const Hiddens = (props: {
   });
 
   return (
-    <div className={styles.wrapper}>
+    <div ref={listRef} className={styles.wrapper}>
       {hiddenList.length ? (
         <>{hiddenComponents}</>
       ) : (
-        <p>숨기기한 게시물이 없어요.</p>
+        <p className={styles.emptyText}>숨기기한 게시물이 없어요.</p>
       )}
     </div>
   );

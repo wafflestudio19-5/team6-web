@@ -3,27 +3,78 @@ import chatIcon from "../../../icons/chat.png";
 import heartIcon from "../../../icons/blackHeart.png";
 import requester from "../../../apis/requester";
 import { calculateTimeDifference } from "../../Utilities/functions";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { useNavigate } from "react-router-dom";
 import { PurchaseOrdersWithoutUserDto } from "../../../type/dto/purchase-orders-without-user.dto";
 import { GetMyPurchaseOrdersDto } from "../../../type/dto/for-api/get-my-purchase-orders.dto";
+import styles2 from "../../Utilities/confirm.module.scss";
 
-const Purchased = () => {
+const Purchased = (props: {
+  shadow: boolean;
+  setShadow: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [purchasedList, setPurchasedList] = useState<
     PurchaseOrdersWithoutUserDto[]
   >([]);
+  const [modal, setModal] = useState(false);
+  const [targetRequest, setTargetRequest] =
+    useState<PurchaseOrdersWithoutUserDto>();
 
+  const [isLast, setIsLast] = useState(false);
+  const [bottom, setBottom] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const getNewProducts = async () => {
+    try {
+      const response = await requester.get<GetMyPurchaseOrdersDto>(
+        `/users/me/purchase-orders/?pageNumber=${pageCount}&pageSize=10&status=confirmed`
+      );
+      setIsLast(response.data.last);
+      setPageCount(pageCount + 1);
+      setPurchasedList(purchasedList.concat(response.data.content));
+    } catch (e) {
+      return undefined;
+    }
+  };
   useEffect(() => {
-    requester
-      .get<GetMyPurchaseOrdersDto>(
-        "/users/me/purchase-orders/?pageNumber=0&pageSize=15&status=accepted"
-      )
-      .then((res) => {
-        setPurchasedList(res.data.content);
-      });
+    (async () => {
+      await getNewProducts();
+    })();
   }, []);
 
+  useEffect(() => {
+    if (!isLast && bottom) {
+      (async () => {
+        await getNewProducts();
+      })();
+    }
+  }, [bottom]);
+
+  const handleScroll = useCallback(() => {
+    if (!isLast && listRef.current) {
+      const { clientHeight, scrollHeight, scrollTop } = listRef.current;
+      if (Math.round(scrollTop + clientHeight) >= scrollHeight - 200) {
+        if (!bottom) {
+          setBottom(true);
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!props.shadow) {
+      setModal(false);
+    }
+  }, [props.shadow]);
   const navigate = useNavigate();
 
   const goToProductPage = (id: number) => {
@@ -92,17 +143,46 @@ const Purchased = () => {
         </div>
         <div className={styles.lower}>
           <div className={styles.line} />
+          <div className={styles.buttons}>
+            <div
+              className={styles.button}
+              onClick={() => {
+                props.setShadow(true);
+                setModal(true);
+                setTargetRequest(article);
+              }}
+            >
+              연락처 확인하기
+            </div>
+          </div>
         </div>
       </div>
     );
   });
 
   return (
-    <div className={styles.wrapper}>
+    <div ref={listRef} onScroll={handleScroll} className={styles.wrapper}>
       {purchasedList.length ? (
         <>{soldoutComponents}</>
       ) : (
-        <p>거래완료된 게시물이 없어요.</p>
+        <p className={styles.emptyText}>거래완료된 게시물이 없어요.</p>
+      )}
+      {modal && (
+        <div className={styles2.box}>
+          <p className={styles2.title}>거래 완료</p>
+          <p className={styles2.contents}>
+            판매자 {targetRequest?.product.user.nickname}님과 거래한 상품에 대해
+            추가적으로 할 이야기가 있다면 아래 연락처로 연락하세요.
+          </p>
+          <p className={styles2.subTitle}>이메일</p>
+          <div className={styles2.textBox}>
+            {targetRequest?.product.user.email}
+          </div>
+          <p className={styles2.subTitle}>전화번호</p>
+          <div className={styles2.textBox}>
+            {targetRequest?.product.user.phone}
+          </div>
+        </div>
       )}
     </div>
   );
