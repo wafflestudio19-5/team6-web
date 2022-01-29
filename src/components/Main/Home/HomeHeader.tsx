@@ -34,7 +34,8 @@ const HomeHeader = (props: {
   }, []);
 
   const handleLocation = () => {
-    setChangeLoc(true);
+    if (!!props.secondLocation) setChangeLoc(true);
+    else navigate("/set-location");
   };
 
   const handleSearch = () => {
