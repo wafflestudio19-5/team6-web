@@ -4,14 +4,15 @@ export default {
   getAllProducts(
     pageNumber: number,
     title?: string,
-    category?: number,
-    minPrice?: number,
-    maxPrice?: number,
+    category?: number[],
+    minPrice?: number | string,
+    maxPrice?: number | string,
     rangeOfLocation?: number
   ) {
     const searchParams = new URLSearchParams();
     if (!!title) searchParams.set("title", title);
-    if (!!category) searchParams.set("category", category.toString());
+    if (!!category && category.length !== 0)
+      searchParams.set("categories", category.toString());
     if (!!minPrice) searchParams.set("minPrice", minPrice.toString());
     if (!!maxPrice) searchParams.set("maxPrice", maxPrice.toString());
     if (!!rangeOfLocation || rangeOfLocation === 0)

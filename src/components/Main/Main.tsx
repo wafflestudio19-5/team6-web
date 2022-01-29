@@ -12,11 +12,17 @@ import HomeHeader from "./Home/HomeHeader";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
+import User from "../../apis/User/User";
+import { toShortDivision } from "../Utilities/functions";
 import requester from "../../apis/requester";
 import { useUserDispatch } from "../../context/user-context";
 import { toast } from "react-hot-toast";
 
 const Main = () => {
+  const [firstLocation, setFirstLocation] = useState<string>("Loading..");
+  const [secondLocation, setSecondLocation] = useState("");
+  const [firstVerified, setFirstVerified] = useState<boolean>(false);
+  const [secondVerified, setSecondVerified] = useState<boolean>(false);
   const [write, setWrite] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState("home");
@@ -25,16 +31,19 @@ const Main = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const pageQuery = params.get("page");
-
   const setUser = useUserDispatch();
 
   useEffect(() => {
-    requester
-      .get("/users/me/")
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch(() => {
+    User.getMe().then((res) => {
+      setUser(res.data);
+      setFirstLocation(toShortDivision(res.data.first_location));
+      setFirstVerified(res.data.first_location_verified);
+      if (!!res.data.second_location) {
+        setSecondLocation(toShortDivision(res.data.second_location));
+        setSecondVerified(res.data.second_location_verified);
+      }
+    })
+    .catch(() => {
         toast.error("프로필 가져오기 오류");
       });
     pageQuery && setPage(pageQuery);
@@ -62,7 +71,16 @@ const Main = () => {
       )}
       <div className={styles.wrapper}>
         <div className={styles.header}>
-          {page === "home" && <HomeHeader />}
+          {page === "home" && (
+            <HomeHeader
+              firstLocation={firstLocation}
+              setFirstLocation={setFirstLocation}
+              secondLocation={secondLocation}
+              setSecondLocation={setSecondLocation}
+              firstVerified={firstVerified}
+              secondVerified={secondVerified}
+            />
+          )}
           {page === "user" && <p>나의 당근</p>}
           {page === "settings" && <p>앱 설정</p>}
         </div>

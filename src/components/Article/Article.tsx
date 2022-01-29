@@ -158,15 +158,7 @@ const Article = () => {
   }, [id]);
 
   const onClickArrow = () => {
-    if (location?.state) {
-      if (location.state.prev === "profile/sales") {
-        navigate("/" + location.state.prev + `?mode=${location.state.mode}`);
-      } else {
-        navigate("/" + location.state.prev);
-      }
-    } else {
-      navigate("/main");
-    }
+    navigate(-1);
   };
   const onClickHome = () => {
     navigate("/main");
@@ -448,7 +440,6 @@ const Article = () => {
             />
             <h1 className={styles.userName}>{currentArticle?.user.name}</h1>
             <p className={styles.userRegion}>{currentArticle?.location}</p>
-            <h1 className={styles.mannerTemp}>{""}°C</h1>
           </div>
           {isSeller && (
             <div className={styles.statusSelect}>

@@ -23,7 +23,6 @@ const HomeGoods = (props: {
   setWriteHandle: Dispatch<SetStateAction<boolean>>;
 }) => {
   const navigate = useNavigate();
-  const [data, setData] = useState<any>([]);
   const [pageNumber, setPageNumber] = useState<number>(0);
   const observer = useRef<IntersectionObserver | null>(null);
 
