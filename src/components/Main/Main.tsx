@@ -34,20 +34,21 @@ const Main = () => {
   const setUser = useUserDispatch();
 
   useEffect(() => {
-    User.getMe().then((res) => {
-      setUser(res.data);
-      setFirstLocation(toShortDivision(res.data.first_location));
-      setFirstVerified(res.data.first_location_verified);
-      if (!!res.data.second_location) {
-        setSecondLocation(toShortDivision(res.data.second_location));
-        setSecondVerified(res.data.second_location_verified);
-      }
-    })
-    .catch(() => {
+    User.getMe()
+      .then((res) => {
+        setUser(res.data);
+        setFirstLocation(toShortDivision(res.data.first_location));
+        setFirstVerified(res.data.first_location_verified);
+        if (!!res.data.second_location) {
+          setSecondLocation(toShortDivision(res.data.second_location));
+          setSecondVerified(res.data.second_location_verified);
+        }
+      })
+      .catch(() => {
         toast.error("프로필 가져오기 오류");
       });
     pageQuery && setPage(pageQuery);
-  }, [loc.state?.location_changed]);
+  }, [location.state?.location_changed]);
 
   const changeToHome = () => {
     navigate("/main?page=home", { replace: true });

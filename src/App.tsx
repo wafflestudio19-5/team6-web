@@ -32,15 +32,16 @@ function App() {
   const [user, setUser] = useState<UserDto | undefined>(undefined);
   const token: string | null = localStorage.getItem("token");
   useEffect(() => {
-    requester
-      .get("/users/me/")
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        setUser(undefined);
-      });
+    token &&
+      requester
+        .get("/users/me/")
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          setUser(undefined);
+        });
   }, []);
   return (
     <UserDispatchContext.Provider value={setUser}>
