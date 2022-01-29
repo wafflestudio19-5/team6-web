@@ -1,9 +1,6 @@
 import styles from "./MyCarrot.module.scss";
 import icon1 from "../../../icons/MyCarrot/location.png";
 import icon2 from "../../../icons/MyCarrot/current_location.png";
-import icon3 from "../../../icons/MyCarrot/tag.png";
-import icon4 from "../../../icons/MyCarrot/book.png";
-import icon5 from "../../../icons/MyCarrot/four_square.png";
 import icon6 from "../../../icons/MyCarrot/category.png";
 import ProfileBar from "./ProfileBar/ProfileBar";
 import HistoryButtons from "./HistoryButtons/HistoryButtons";
@@ -83,25 +80,9 @@ const MyCarrot = () => {
             <img src={icon2} alt="current location" />
             <p>동네 인증하기</p>
           </button>
-          <button
-            onClick={() => {
-              console.log("알림 키워드 등록");
-            }}
-          >
-            <img src={icon3} alt="tag" />
-            <p>알림 키워드 등록</p>
-          </button>
           <button onClick={handleCategory}>
             <img src={icon6} alt="toggle switch" />
             <p>관심 카테고리 설정</p>
-          </button>
-          <button
-            onClick={() => {
-              console.log("모아보기");
-            }}
-          >
-            <img src={icon5} alt="모아보기" />
-            <p>모아보기</p>
           </button>
         </div>
       </div>
