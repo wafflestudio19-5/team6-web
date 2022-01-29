@@ -118,31 +118,33 @@ const Article = () => {
   const [suggest, setSuggest] = useState(false);
   const user = useUserState();
   const [name, setName] = useState("");
-  
+
   useEffect(() => {
-    Product.getProduct(id).then((res) => {
-      if (res.data.id !== parseInt(id)) navigate("/main");
-      else {
-        setCurrentArticle(res.data);
-        User.getMe().then((r) => {
-          if (res.data.user.email === r.data.email) setIsSeller(true);
-          else setIsSeller(false);
-          setName(r.data.user?.name);
-        });
-      }
-      setStatus(res.data.status);
-      res.data.image_urls?.map((image: string) => {
-        setCarouselImg((prevState: any) => {
-          const tempState = prevState.concat(
-            <div>
-              <img
-                className={styles.carouselImg}
-                src={image}
-                alt={"상품 이미지"}
-              />
-            </div>
-          );
-          return tempState;
+    Product.getProduct(id)
+      .then((res) => {
+        if (res.data.id !== parseInt(id)) navigate("/main");
+        else {
+          setCurrentArticle(res.data);
+          User.getMe().then((r) => {
+            if (res.data.user.email === r.data.email) setIsSeller(true);
+            else setIsSeller(false);
+            setName(r.data.user?.name);
+          });
+        }
+        setStatus(res.data.status);
+        res.data.image_urls?.map((image: string) => {
+          setCarouselImg((prevState: any) => {
+            const tempState = prevState.concat(
+              <div>
+                <img
+                  className={styles.carouselImg}
+                  src={image}
+                  alt={"상품 이미지"}
+                />
+              </div>
+            );
+            return tempState;
+          });
         });
       })
       .catch((e: any) => {
