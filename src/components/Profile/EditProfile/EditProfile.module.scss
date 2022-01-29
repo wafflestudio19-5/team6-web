@@ -25,11 +25,10 @@
       width: 40px;
       left: 5px;
       background: white;
+      cursor: pointer;
 
       img {
         position: relative;
-        top: 9px;
-        left: 9px;
         width: 22px;
       }
     }
@@ -133,6 +132,10 @@
         font-size: 10px;
       }
     }
+
+    .image-input {
+      visibility: hidden;
+    }
   }
 
   footer {
@@ -202,5 +205,12 @@
     background: #777777;
     opacity: 0.4;
     z-index: 1;
+  }
+  .contents {
+    width: 90%;
+    position: relative;
+    font-size: 16px;
+    margin: 5px auto 20px;
+    text-align: center;
   }
 }

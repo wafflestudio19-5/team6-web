@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import Notice from "../../../icons/Header/bell.png";
 import requester from "../../../apis/requester";
 import { GetMeDto } from "../../../type/dto/for-api/get-me.dto";
+import { useUserState } from "../../../context/user-context";
 
 const HomeHeader = (props: {
   firstLocation: string;
@@ -32,6 +33,7 @@ const HomeHeader = (props: {
     });
     if (localStorage.getItem("region") === "second") setIsFirst(false);
   }, []);
+  const user = useUserState();
 
   const handleLocation = () => {
     if (!!props.secondLocation) setChangeLoc(true);
@@ -73,6 +75,10 @@ const HomeHeader = (props: {
   const onClickSetLocation = () => {
     navigate("/set-location");
   };
+
+  if (!user) {
+    return <div className={styles.wrapper} />;
+  }
 
   return (
     <div className={styles.wrapper}>

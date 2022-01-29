@@ -7,11 +7,12 @@ import SearchIcon from "../../icons/SelectLocation/search.png";
 import CancelIcon from "../../icons/SelectLocation/cancel.png";
 import CurrentIcon from "../../icons/SelectLocation/current.png";
 import SearchResultIcon from "../../icons/SelectLocation/search-result.png";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CLIENT_ID } from "../../KakaoLogin/OAuth";
 import RegionList from "./RegionList/RegionList";
 import { user } from "../../apis/requester";
+import requester from "../../apis/requester";
 import { toast } from "react-hot-toast";
 
 type TSignupForm = {
@@ -24,9 +25,19 @@ type TSignupForm = {
   location: string;
 };
 
+type TRequiredInformation = {
+  phone: string;
+  email: string;
+};
+
 const SelectLocation = () => {
   const [prev, setPrev] = useState<string>("");
   const [signupForm, setSignupForm] = useState<TSignupForm>();
+  const [requiredInformation, setRequiredInformation] =
+    useState<TRequiredInformation>({
+      phone: "",
+      email: "",
+    });
   const [searchingRegion, setSearchingRegion] = useState<string>("");
   const [searchingList, setSearchingList] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,11 +54,16 @@ const SelectLocation = () => {
       setPrev(location.state.prev);
       location.state.prev === "signup" &&
         setSignupForm(location.state.signupForm);
+      location.state.prev === "first-social-login" &&
+        setRequiredInformation({
+          phone: location.state.phone,
+          email: location.state.email,
+        });
       location.state.prev === "edit" &&
         !localStorage.getItem("token") &&
-        navigate("/login");
+        navigate("/login", { replace: true });
     } else {
-      navigate("/login");
+      navigate("/login", { replace: true });
     }
     if (regionQuery !== null) {
       if (regionQuery !== "") {
@@ -76,10 +92,30 @@ const SelectLocation = () => {
     prev === "signup"
       ? navigate("/signup", {
           state: { inputs: signupForm },
+          replace: true,
         })
-      : navigate("/set-location", {
-          state: { page: "user" },
-        });
+      : navigate(-1);
+  };
+
+  const handleToFirstSocialLogin = (region: string) => {
+    requester
+      .patch("/users/me/", {
+        ...requiredInformation,
+      })
+      .then(() => {
+        requester
+          .put("/users/me/location/", {
+            location: region,
+            range_of_location: "LEVEL_ONE",
+          })
+          .then(() => navigate("/main?page=home"))
+          .catch((error) => {
+            toast.error(error);
+          });
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   };
 
   const handleToSignUp = (region: string) => {
@@ -98,7 +134,7 @@ const SelectLocation = () => {
           })
           .then((res) => {
             localStorage.setItem("token", res.data.access_token);
-            navigate("/main");
+            navigate("/main?page=home");
           })
           .catch((error) => {
             toast.error("로그인 오류");
@@ -110,7 +146,33 @@ const SelectLocation = () => {
   };
 
   const handleToAddLocation = (region: string) => {
-    console.log(region);
+    requester
+      .post("/users/me/location/", {
+        location: region,
+        range_of_location: "LEVEL_ONE",
+      })
+      .then(() => {
+        navigate(-1);
+      })
+      .catch(() => {
+        toast.error("지역 추가 오류");
+        navigate(-1);
+      });
+  };
+
+  const handleToSwitchLocation = (region: string) => {
+    requester
+      .put("/users/me/location/", {
+        location: region,
+        range_of_location: "LEVEL_ONE",
+      })
+      .then(() => {
+        navigate(-1);
+      })
+      .catch(() => {
+        toast.error("지역 변경 오류");
+        navigate(-1);
+      });
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -121,7 +183,7 @@ const SelectLocation = () => {
       setSearchState("NO_INPUT");
       setSearchingList([]);
     } else {
-      navigate(`/select-location?region=${searchWord}`);
+      navigate(`/select-location?region=${searchWord}`, { replace: true });
       const regionList = regionData.filter(
         (region) => region.match(searchWord) !== null
       );
@@ -220,7 +282,13 @@ const SelectLocation = () => {
               <RegionList
                 searchingList={searchingList}
                 handleCallback={
-                  prev === "signup" ? handleToSignUp : handleToAddLocation
+                  prev === "signup"
+                    ? handleToSignUp
+                    : prev === "edit"
+                    ? handleToAddLocation
+                    : prev === "switch"
+                    ? handleToSwitchLocation
+                    : handleToFirstSocialLogin
                 }
               />
             </>
@@ -231,7 +299,13 @@ const SelectLocation = () => {
             <RegionList
               searchingList={searchingList}
               handleCallback={
-                prev === "signup" ? handleToSignUp : handleToAddLocation
+                prev === "signup"
+                  ? handleToSignUp
+                  : prev === "edit"
+                  ? handleToAddLocation
+                  : prev === "switch"
+                  ? handleToSwitchLocation
+                  : handleToFirstSocialLogin
               }
             />
           </>

@@ -15,10 +15,12 @@ import { toShortDivision } from "../../Utilities/functions";
 import InterestCategory from "./InterestCategory/InterestCategory";
 
 const MyCarrot = () => {
+  const [activeLocation, setActiveLocation] = useState<string>("");
   const [myInfo, setMyInfo] = useState<TUserInfoV2>({
     first_location: "",
     first_location_verified: false,
     first_range_of_location: "LEVEL_ONE",
+    is_first_location_active: true,
     second_location: "",
     second_location_verified: false,
     second_range_of_location: "LEVEL_ONE",
@@ -40,6 +42,9 @@ const MyCarrot = () => {
     try {
       const res = await requester.get("/users/me/");
       setMyInfo(res.data);
+      res.data.is_first_location_active
+        ? setActiveLocation(res.data.first_location)
+        : setActiveLocation(res.data.second_location);
     } catch (error) {
       console.log("getMe error");
     }
@@ -62,8 +67,10 @@ const MyCarrot = () => {
       <div className={styles["mycarrot-wrapper"]}>
         <div className={styles["profile-wrapper"]}>
           <ProfileBar
+            image={myInfo.image_url}
+            name={myInfo.name}
             nickname={myInfo.nickname}
-            division={toShortDivision(myInfo.first_location)}
+            division={toShortDivision(activeLocation)}
           />
           <HistoryButtons />
         </div>
