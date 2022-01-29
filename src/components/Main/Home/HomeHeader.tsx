@@ -32,6 +32,14 @@ const HomeHeader = (props: {
       }
     });
     if (localStorage.getItem("region") === "second") setIsFirst(false);
+    if (isFirst && props.firstVerified)
+      localStorage.setItem("verified", "true");
+    else if (isFirst && !props.firstVerified)
+      localStorage.setItem("verified", "false");
+    else if (!isFirst && props.secondVerified)
+      localStorage.setItem("verified", "true");
+    else if (!isFirst && !props.secondVerified)
+      localStorage.setItem("verified", "false");
   }, []);
   const user = useUserState();
 

@@ -72,7 +72,7 @@ const Article = () => {
     message: string;
   }>({ suggested_price: "", message: "" });
   const [suggest, setSuggest] = useState(false);
-
+  const [name, setName] = useState("");
   useEffect(() => {
     Product.getProduct(id).then((res) => {
       if (res.data.id !== parseInt(id)) navigate("/main");
@@ -81,6 +81,7 @@ const Article = () => {
         User.getMe().then((r) => {
           if (res.data.user.email === r.data.email) setIsSeller(true);
           else setIsSeller(false);
+          setName(r.data.user?.name);
         });
       }
       setStatus(res.data.status);
@@ -125,8 +126,7 @@ const Article = () => {
     // navigate("/chat");
   };
   const onClickProfileImg = () => {
-    console.log("profile image");
-    // navigate("/profile/{id}");
+    navigate(`/profile/{name}`);
   };
 
   const categoryFormat = (category: string | undefined) => {
@@ -254,7 +254,10 @@ const Article = () => {
     }
   };
   const changeToRequests = () => {
-    navigate(`/request/${id}`);
+    if (localStorage.getItem("verified") === "false") {
+      navigate("/main");
+      toast("지역 인증이 필요해요!");
+    } else navigate(`/request/${id}`);
   };
   const handleRequest = () => {
     if (currentArticle) {

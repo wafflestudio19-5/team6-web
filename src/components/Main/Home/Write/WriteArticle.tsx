@@ -142,6 +142,10 @@ const WriteArticle = () => {
       setForAge(kidsAgeFormat(loc.state.for_age));
       setValue(loc.state.content);
     }
+    if (localStorage.getItem("verified") === "false") {
+      navigate("/main");
+      toast("지역 인증을 해야 해요!");
+    }
   }, []);
 
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
