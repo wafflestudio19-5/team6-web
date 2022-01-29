@@ -3,6 +3,13 @@
   height: 100%;
   background: #f2f3f7;
 
+
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
   .articleWrapper {
     position: relative;
     width: 100%;
@@ -12,9 +19,8 @@
 
     .clickArea{
       position: absolute;
-      width: calc(100% - 110px);
+      width: 100%;
       height: calc(100% - 40px);
-      left: 110px;
 
       z-index: 2;
     }
@@ -24,8 +30,9 @@
 
       .thumbnail {
         position: relative;
-        height: 100px;
         width: 100px;
+        aspect-ratio: 1;
+        object-fit: cover;
         background-position: center;
         margin-top: 10px;
         margin-left: 10px;
@@ -35,7 +42,7 @@
 
       .dataContainer {
         position: relative;
-        width: calc(100% - 20px);
+        width: calc(100% - 120px);
         height: 80px;
         margin-top: 5px;
         margin-left: 10px;
@@ -118,12 +125,13 @@
 
         .lastLine {
           position: relative;
+          padding-right: 20px;
           top: 10px;
-          width: 80px;
-          align-items: center;
+          width: calc(100% - 20px);
           justify-content: flex-end;
           display: flex;
-          left: calc(100% - 90px);
+
+
 
           .chatContainer {
             display: flex;
@@ -202,8 +210,12 @@
   p {
     position: absolute;
     top: calc(50% - 5px);
-    left: calc(50% - 80px);
     margin: 0;
     color: silver;
+  }
+
+  .emptyText{
+    width: 100%;
+    text-align: center;
   }
 }

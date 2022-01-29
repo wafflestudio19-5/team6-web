@@ -11,7 +11,7 @@ import WriteArticle from "./components/Main/Home/Write/WriteArticle";
 import LocationPage from "./components/LocationPage/LocationPage";
 import EditProfile from "./components/Profile/EditProfile/EditProfile";
 import SearchPage from "./components/SearchPage/SearchPage";
-import { toast, Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import PurchaseHistory from "./components/PurchaseHistory/PurchaseHistory";
 import RequestPage from "./components/Requests/RequestPage";
 import Sales from "./components/Profile/Sales/Sales";
@@ -20,11 +20,12 @@ import EditLocationLevel from "./components/Main/MyCarrot/EditLocationLevel/Edit
 import KakaoPage from "./KakaoLogin/KakaoPage";
 import SelectLocation from "./components/SelectLocation/SelectLocation";
 import GetInformation from "./components/GetInformation/GetInformation";
-import Hearts from "./components/Hearts/Hearts";
+import Likes from "./components/Likes/Likes";
 import { UserDto } from "./type/dto/user.dto";
 
 import { UserDispatchContext, UserStateContext } from "./context/user-context";
 import requester from "./apis/requester";
+import Timer from "./components/Timer/Timer";
 
 function App() {
   const [user, setUser] = useState<UserDto | undefined>(undefined);
@@ -37,6 +38,7 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
+        setUser(undefined);
       });
   }, []);
   return (
@@ -56,13 +58,14 @@ function App() {
             <Route path="/profile/:name/sales" element={<Sales />} />
             <Route path="/sales-history" element={<SalesHistory />} />
             <Route path="/purchase-history" element={<PurchaseHistory />} />
-            <Route path="/hearts" element={<Hearts />} />
+            <Route path="/likes" element={<Likes />} />
             <Route path="/article/:id" element={<Article />} />
             <Route path="/write" element={<WriteArticle />} />
             <Route path="/verify-location" element={<LocationPage />} />
             <Route path="/set-location" element={<EditLocationLevel />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/request/:id" element={<RequestPage />} />
+            <Route path="/timer" element={<Timer />} />
             <Route
               path="/*"
               element={<Navigate replace to={token ? "/main" : "/login"} />}

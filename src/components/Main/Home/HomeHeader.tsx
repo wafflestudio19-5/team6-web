@@ -2,6 +2,7 @@ import styles from "./HomeHeader.module.scss";
 import DownArrow from "../../../icons/Header/down-arrow.png";
 import Search from "../../../icons/Header/search.png";
 import Category from "../../../icons/Header/category.png";
+
 import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import User from "../../../apis/User/User";
@@ -23,6 +24,7 @@ const HomeHeader = (props: {
   const [changeLoc, setChangeLoc] = useState<boolean>(false);
   const [location, setLocation] = useState("");
   const [isFirst, setIsFirst] = useState<boolean>(true);
+
   const navigate = useNavigate();
 
   useEffect(() => {

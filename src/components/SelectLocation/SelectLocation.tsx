@@ -14,6 +14,8 @@ import RegionList from "./RegionList/RegionList";
 import { user } from "../../apis/requester";
 import requester from "../../apis/requester";
 import { toast } from "react-hot-toast";
+import { useRestoreDom } from "slate-react/dist/components/android/use-restore-dom";
+import { useUserDispatch } from "../../context/user-context";
 
 type TSignupForm = {
   username: string;
@@ -42,6 +44,8 @@ const SelectLocation = () => {
   const [searchingList, setSearchingList] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchState, setSearchState] = useState<string>("NO_INPUT");
+
+  const setUser = useUserDispatch();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -108,7 +112,10 @@ const SelectLocation = () => {
             location: region,
             range_of_location: "LEVEL_ONE",
           })
-          .then(() => navigate("/main?page=home"))
+          .then(() => {
+            toast("정보 등록이 완료되었습니다.");
+            navigate("/main?page=home");
+          })
           .catch((error) => {
             toast.error(error);
           });
@@ -134,14 +141,18 @@ const SelectLocation = () => {
           })
           .then((res) => {
             localStorage.setItem("token", res.data.access_token);
+            requester.get("/users/me/").then((res) => {
+              setUser(res.data);
+            });
             navigate("/main?page=home");
           })
           .catch((error) => {
             toast.error("로그인 오류");
           });
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("회원가입 실패");
+        navigate("/login", { replace: true });
       });
   };
 

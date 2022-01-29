@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../icons/SelectLocation/spinner-circle.gif";
 import { useEffect } from "react";
+import { REDIRECT_URI } from "./OAuth";
+import { toast } from "react-hot-toast";
 
 const KakaoPage = () => {
   const navigate = useNavigate();
@@ -15,19 +17,16 @@ const KakaoPage = () => {
   const socialLogin = (auth: string | null) => {
     axios({
       method: "GET",
-      url: `https://carrotserver.shop/oauth/kakao/?code=${auth}`,
+      url: `https://carrotserver.shop/oauth/kakao/?code=${auth}&redirect_uri=${REDIRECT_URI}`,
     })
       .then((res) => {
-        console.log(res);
         const ACCESS_TOKEN = res.data.access_token;
         localStorage.setItem("token", ACCESS_TOKEN);
-        navigate("/main?page=home", {
-          state: { kakao_status: res.data.kakao_status },
-        });
+        navigate("/main", { replace: true });
       })
       .catch((error) => {
         console.log("소셜로그인 에러", error);
-        window.alert("로그인에 실패하였습니다.");
+        toast.error("로그인에 실패하였습니다.");
         navigate("/login");
       });
   };
