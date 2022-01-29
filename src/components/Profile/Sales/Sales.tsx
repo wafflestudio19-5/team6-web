@@ -2,22 +2,102 @@ import styles from "./Sales.module.scss";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import BackArrowIcon from "../../../icons/leftArrow.png";
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SalesArticle from "./SalesArticle/SalesArticle";
 import { productType } from "../../../type/types";
 import requester from "../../../apis/requester";
+import { GetMyProductsDto } from "../../../type/dto/for-api/get-my-products.dto";
+
+type Point = {
+  x: number;
+  y: number;
+};
 
 const Sales = () => {
   const [mode, setMode] = useState<string>("");
-  const [salesList, setSalesList] = useState<productType[] | null>(null);
-  const [onSaleList, setOnSaleList] = useState<productType[] | null>(null);
-  const [soldList, setSoldList] = useState<productType[] | null>(null);
+  const [salesList, setSalesList] = useState<productType[]>([]);
+  const [onSaleList, setOnSaleList] = useState<productType[]>([]);
+  const [soldList, setSoldList] = useState<productType[]>([]);
 
   const navigate = useNavigate();
   const location = useLocation();
   const { name } = useParams() as { name: string };
   const params = new URLSearchParams(location.search);
   const modeQuery = params.get("mode");
+  const [isLast, setIsLast] = useState<{
+    entire: boolean;
+    forSale: boolean;
+    sold: boolean;
+  }>({ entire: false, forSale: false, sold: false });
+  const [bottom, setBottom] = useState<{
+    entire: boolean;
+    forSale: boolean;
+    sold: boolean;
+  }>({ entire: false, forSale: false, sold: false });
+  const [pageCount, setPageCount] = useState<{
+    entire: number;
+    forSale: number;
+    sold: number;
+  }>({ entire: 0, forSale: 0, sold: 0 });
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isLast && bottom) {
+      (async () => {
+        await getSalesAll();
+      })();
+    }
+  }, [bottom.entire]);
+
+  useEffect(() => {
+    if (!isLast && bottom) {
+      (async () => {
+        await getSalesForSale();
+      })();
+    }
+  }, [bottom.forSale]);
+
+  useEffect(() => {
+    if (!isLast && bottom) {
+      (async () => {
+        await getSalesSoldOut();
+      })();
+    }
+  }, [bottom.sold]);
+
+  const handleScroll = useCallback(() => {
+    if (modeQuery === "entire") {
+      if (!isLast.entire && listRef.current) {
+        const { clientHeight, scrollHeight, scrollTop } = listRef.current;
+        console.log(scrollTop, clientHeight, scrollHeight);
+        if (Math.round(scrollTop + clientHeight) >= scrollHeight - 200) {
+          if (!bottom.entire) {
+            setBottom({ ...bottom, entire: true });
+          }
+        }
+      }
+    } else if (modeQuery === "on-sale") {
+      if (!isLast.forSale && listRef.current) {
+        const { clientHeight, scrollHeight, scrollTop } = listRef.current;
+        console.log(scrollTop, clientHeight, scrollHeight);
+        if (Math.round(scrollTop + clientHeight) >= scrollHeight - 200) {
+          if (!bottom.forSale) {
+            setBottom({ ...bottom, forSale: true });
+          }
+        }
+      }
+    } else {
+      if (!isLast.sold && listRef.current) {
+        const { clientHeight, scrollHeight, scrollTop } = listRef.current;
+        console.log(scrollTop, clientHeight, scrollHeight);
+        if (Math.round(scrollTop + clientHeight) >= scrollHeight - 200) {
+          if (!bottom.sold) {
+            setBottom({ ...bottom, sold: true });
+          }
+        }
+      }
+    }
+  }, []);
 
   useEffect(() => {
     modeQuery && setMode(modeQuery);
@@ -28,9 +108,13 @@ const Sales = () => {
 
   const getSalesAll = () => {
     requester
-      .get(`/users/${name}/products/?pageNumber=0&pageSize=20&status=all`)
+      .get(
+        `/users/${name}/products/?pageNumber=${pageCount.entire}&pageSize=10&status=all`
+      )
       .then((res) => {
-        setSalesList(res.data.content);
+        setSalesList(salesList.concat(res.data.content));
+        setIsLast(res.data.last);
+        setPageCount({ ...pageCount, entire: pageCount.entire + 1 });
       })
       .catch(() => {
         console.log("전체 목록 받아오기 오류");
@@ -39,9 +123,14 @@ const Sales = () => {
 
   const getSalesForSale = () => {
     requester
-      .get(`/users/${name}/products/?pageNumber=0&pageSize=20&status=for-sale`)
+      .get(
+        `/users/${name}/products/?pageNumber=${pageCount.forSale}&pageSize=10&status=for-sale`
+      )
       .then((res) => {
-        setOnSaleList(res.data.content);
+        setOnSaleList(onSaleList.concat(res.data.content));
+        setSalesList(res.data.content);
+        setIsLast(res.data.last);
+        setPageCount({ ...pageCount, entire: pageCount.entire + 1 });
       })
       .catch(() => {
         console.log("판매중 목록 받아오기 오류");
@@ -50,9 +139,14 @@ const Sales = () => {
 
   const getSalesSoldOut = () => {
     requester
-      .get(`/users/${name}/products/?pageNumber=0&pageSize=20&status=sold-out`)
+      .get(
+        `/users/${name}/products/?pageNumber=${pageCount.sold}&pageSize=10&status=sold-out`
+      )
       .then((res) => {
-        setSoldList(res.data.content);
+        setSoldList(soldList.concat(res.data.content));
+        setSalesList(res.data.content);
+        setIsLast(res.data.last);
+        setPageCount({ ...pageCount, sold: pageCount.sold + 1 });
       })
       .catch(() => {
         console.log("판매완료 목록 받아오기 오류");
@@ -112,7 +206,11 @@ const Sales = () => {
         </Button>
         <div className={`${styles.underline} ${styles[mode]}`} />
       </div>
-      <div className={styles["body-wrapper"]}>
+      <div
+        ref={listRef}
+        onScroll={handleScroll}
+        className={styles["body-wrapper"]}
+      >
         {mode === "entire" &&
           salesList?.map((article) => (
             <SalesArticle key={article.id} article={article} />

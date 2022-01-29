@@ -8,34 +8,111 @@
   background: white;
   border-radius: 15px;
 
-  z-index: 2;
+  z-index: 3;
 
   display: block;
   padding: 5%;
+  .profileContainer{
+    position: relative;
+    width: 100%;
+    display: flex;
+
+    &:hover{
+      background: lavenderblush;
+      transition: 0.3s;
+    }
+
+    .thumbnail {
+      position: relative;
+      width: 70px;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background-position: center;
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+
+    .dataContainer {
+      height: 70px;
+      position: relative;
+      margin: 10px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .firstLine {
+        position: relative;
+
+        .title {
+          position: relative;
+          color: black;
+          font-size: 18px;
+          font-weight: bold;
+          margin: 0;
+          padding: 0;
+        }
+      }
+
+      .secondLine {
+        position: relative;
+        display: flex;
+        color: #777777;
+        font-size: 13px;
+
+        .region {
+          position: relative;
+          left: 0;
+          margin-top: 5px;
+          margin-bottom: 0;
+        }
+
+        .time {
+          position: relative;
+          left: 0;
+          margin-top: 5px;
+          margin-bottom: 0;
+          margin-left: 5px;
+        }
+
+        .price {
+          position: relative;
+          left: 0;
+          color: black;
+          font-weight: bolder;
+        }
+      }
+
+    }}
 
   .title {
-    margin-left: auto;
-    margin-right: auto;
+    color: black;
     width: 90%;
+    left: 5%;
     position: relative;
     font-size: 16px;
-    margin-bottom: 0;
+    padding: 0 5px;
+    margin-top: 10px;
   }
   .subTitle{
-
-    margin-left: auto;
-    margin-right: auto;
+    color: black;
     width: 90%;
+    left: 5%;
     position: relative;
     font-size: 11px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin: 5px 0;
+    padding-left: 5px;
+    padding-right: 5px;
   }
   .contents {
     width: 90%;
     position: relative;
-    font-size: 11px;
-    margin: 5px auto 20px;
+    font-size: 12px;
+    color: black;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 10px 0;
+    left: 5%;
   }
   .input{
     position: relative;
@@ -173,7 +250,8 @@
     display: none;
   }
   .priceText{
-  text-align: center;
+  text-align: right;
+    left: 0;
     width: 90%;
     position: relative;
     font-size: 11px;
