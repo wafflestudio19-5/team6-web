@@ -6,44 +6,37 @@ import User2 from "../../icons/Footer/user-unselected.png";
 import Set1 from "../../icons/Footer/settings-selected.png";
 import Set2 from "../../icons/Footer/settings-unselected.png";
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import HomeGoods from "./Home/HomeGoods";
 import HomeHeader from "./Home/HomeHeader";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import MyCarrot from "./MyCarrot/MyCarrot";
 import Settings from "./Settings/Settings";
+import requester from "../../apis/requester";
+import { useUserDispatch } from "../../context/user-context";
+import { toast } from "react-hot-toast";
 
 const Main = () => {
   const [write, setWrite] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState("home");
-  const [firstSocialLoginModal, setFirstSocialLoginModal] =
-    useState<boolean>(false);
-  const [timer, setTimer] = useState<number>(5);
-  const timerRef = useRef(5);
 
   const navigate = useNavigate();
-  const loc = useLocation();
-  const params = new URLSearchParams(loc.search);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
   const pageQuery = params.get("page");
 
-  useEffect(() => {
-    if (loc.state && loc.state.kakao_status === "INVALID") {
-      setFirstSocialLoginModal(true);
-      const interval = setInterval(() => {
-        timerRef.current -= 1;
-        setTimer(timerRef.current);
-        if (timerRef.current === 0) {
-          clearInterval(interval);
-          navigate("/required-information", {
-            state: {
-              prev: "first-social-login",
-            },
-          });
-        }
-      }, 1000);
-    }
+  const setUser = useUserDispatch();
 
+  useEffect(() => {
+    requester
+      .get("/users/me/")
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch(() => {
+        toast.error("프로필 가져오기 오류");
+      });
     pageQuery && setPage(pageQuery);
   }, []);
 
@@ -117,20 +110,6 @@ const Main = () => {
           className={`${styles.backShadow} ${confirm ? styles.show : ""}`}
           onClick={() => setConfirm(false)}
         />
-        <div
-          className={`${styles["social-login-shadow"]} ${
-            firstSocialLoginModal && styles["social-shadow-show"]
-          }`}
-        />
-        {firstSocialLoginModal && (
-          <div className={styles["first-social-login"]}>
-            <p>서비스 이용 전에 아래 정보들을 입력해야 합니다.</p>
-            <p className={styles.needed}>· 휴대폰 번호</p>
-            <p className={styles.needed}>· 이메일</p>
-            <p className={styles.needed}>· 거주 동네</p>
-            <p>{timer}초 후에 정보 입력 페이지로 이동합니다.</p>
-          </div>
-        )}
       </div>
     </>
   );

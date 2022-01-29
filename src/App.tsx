@@ -11,7 +11,7 @@ import WriteArticle from "./components/Main/Home/Write/WriteArticle";
 import LocationPage from "./components/LocationPage/LocationPage";
 import EditProfile from "./components/Profile/EditProfile/EditProfile";
 import SearchPage from "./components/SearchPage/SearchPage";
-import { toast, Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import PurchaseHistory from "./components/PurchaseHistory/PurchaseHistory";
 import RequestPage from "./components/Requests/RequestPage";
 import Sales from "./components/Profile/Sales/Sales";
@@ -25,6 +25,7 @@ import { UserDto } from "./type/dto/user.dto";
 
 import { UserDispatchContext, UserStateContext } from "./context/user-context";
 import requester from "./apis/requester";
+import Timer from "./components/Timer/Timer";
 
 function App() {
   const [user, setUser] = useState<UserDto | undefined>(undefined);
@@ -64,6 +65,7 @@ function App() {
             <Route path="/set-location" element={<EditLocationLevel />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/request/:id" element={<RequestPage />} />
+            <Route path="/timer" element={<Timer />} />
             <Route
               path="/*"
               element={<Navigate replace to={token ? "/main" : "/login"} />}

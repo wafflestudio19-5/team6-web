@@ -12,9 +12,7 @@ import LevelThree from "../../../../icons/MyCarrot/level_three.png";
 import { Box, Slider } from "@mui/material";
 import { toShortDivision } from "../../../Utilities/functions";
 import requester from "../../../../apis/requester";
-import Button from "@mui/material/Button";
 import { toast } from "react-hot-toast";
-import confStyles from "../../../Utilities/confirm.module.scss";
 
 type TNumberOfRegions = {
   zero: number;
@@ -48,6 +46,7 @@ const EditLocationLevel = () => {
     requester
       .get("/users/me/")
       .then((res) => {
+        res.data.kakao_status === "INVALID" && navigate("/timer");
         setLevel(
           toNumber(
             res.data.is_first_location_active
