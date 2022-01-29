@@ -22,6 +22,7 @@
     display: flex;
     width: 100px;
     height: 100px;
+    object-fit: cover;
     top: 15px;
     justify-content: center;
     align-items: center;
@@ -31,8 +32,9 @@
     overflow: hidden;
 
     img {
-      width: auto;
-      height: 100%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
     }
 
     @media screen and (max-width: 400px) {
@@ -40,7 +42,9 @@
       height: 90px;
 
       img {
+        width: 90px;
         height: 90px;
+        object-fit: cover;
       }
     }
   }

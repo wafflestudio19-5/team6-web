@@ -3,7 +3,7 @@ import { PageableDto } from "../pageable.dto";
 import { SortDto } from "../sort.dto";
 
 export type GetPurchaseOrdersDto = {
-  content: PurchaseOrderDto;
+  content: PurchaseOrderDto[];
   empty: boolean;
   first: boolean;
   last: boolean;

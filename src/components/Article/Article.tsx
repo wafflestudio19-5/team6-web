@@ -21,7 +21,9 @@ import moreIcon from "../../icons/more.png";
 import redHeartIcon from "../../icons/redHeart.png";
 import blackHeartIcon from "../../icons/blackHeart.png";
 import Slider from "react-slick";
+import character from "../../icons/Search/noResults.jpg";
 
+import ic_profile from "../../icons/MyCarrot/default-profile-image.png";
 import "./slickTheme.scss";
 import "./slick.scss";
 
@@ -40,6 +42,8 @@ import requester from "../../apis/requester";
 import { calculateTimeDifference } from "../Utilities/functions";
 import confirmModal from "../Main/Home/Write/Confirm/ConfirmModal";
 import { articleData } from "../../type/types";
+import { useUserState } from "../../context/user-context";
+import { SalesStatus } from "../../type/enum/sales-status";
 
 const settings = {
   dots: true,
@@ -54,6 +58,46 @@ const readInKorean = (price: number) => {
   return;
 };
 
+export const categoryFormat = (category: string | undefined) => {
+  switch (category) {
+    case "DIGITAL_DEVICE":
+      return "디지털기기";
+    case "HOME_APPLIANCE":
+      return "생활가전";
+    case "FURNITURE_AND_INTERIOR":
+      return "가구/인테리어";
+    case "KIDS":
+      return "유아동";
+    case "LIVING_AND_FOOD":
+      return "생활/가공식품";
+    case "KIDS_BOOK":
+      return "유아도서";
+    case "SPORTS_AND_LEISURE":
+      return "스포츠/레저";
+    case "WOMEN_STUFF":
+      return "여성잡화";
+    case "WOMEN_CLOTHES":
+      return "여성의류";
+    case "MEN_STUFF_AND_CLOTHES":
+      return "남성패션/잡화";
+    case "GAME_AND_HOBBIES":
+      return "게임/취미";
+    case "BEAUTY_AND_COSMETICS":
+      return "뷰티/미용";
+    case "PET":
+      return "반려동물용품";
+    case "BOOKS_AND_TICKETS_AND_RECORDS":
+      return "도서/티켓/음반";
+    case "BOTANICAL":
+      return "식물";
+    case "ETC":
+      return "기타 중고물품";
+    case "I_AM_BUYING":
+      return "삽니다";
+    default:
+      break;
+  }
+};
 const Article = () => {
   const { id } = useParams() as { id: string };
   const navigate = useNavigate();
@@ -72,7 +116,9 @@ const Article = () => {
     message: string;
   }>({ suggested_price: "", message: "" });
   const [suggest, setSuggest] = useState(false);
+  const user = useUserState();
   const [name, setName] = useState("");
+  
   useEffect(() => {
     Product.getProduct(id).then((res) => {
       if (res.data.id !== parseInt(id)) navigate("/main");
@@ -98,7 +144,16 @@ const Article = () => {
           );
           return tempState;
         });
+      })
+      .catch((e: any) => {
+        console.log(e.response);
+        if (e.response.data.error_code === 3212) {
+          toast.error("접근할 수 없는 게시글입니다. (숨김, 삭제 등)");
+          navigate(-1);
+        }
       });
+    requester.get(`/users/me/likes/products/${id}`).then((res) => {
+      setIsHeartClicked(res.data);
     });
   }, [id]);
 
@@ -114,61 +169,27 @@ const Article = () => {
   const onClickSetting = () => {
     setIsSettingModalOpen(true);
   };
-  const onClickHeart = () => {
-    setIsHeartClicked((prevState) => !prevState);
-  };
-  const onClickPriceProposal = () => {
-    console.log("Propose Price");
-    // navigate("/proposal");
-  };
-  const onClickChatButton = () => {
-    console.log("chat");
-    // navigate("/chat");
-  };
-  const onClickProfileImg = () => {
-    navigate(`/profile/{name}`);
-  };
-
-  const categoryFormat = (category: string | undefined) => {
-    switch (category) {
-      case "DIGITAL_DEVICE":
-        return "디지털기기";
-      case "HOME_APPLIANCE":
-        return "생활가전";
-      case "FURNITURE_AND_INTERIOR":
-        return "가구/인테리어";
-      case "KIDS":
-        return "유아동";
-      case "LIVING_AND_FOOD":
-        return "생활/가공식품";
-      case "KIDS_BOOK":
-        return "유아도서";
-      case "SPORTS_AND_LEISURE":
-        return "스포츠/레저";
-      case "WOMEN_STUFF":
-        return "여성잡화";
-      case "WOMEN_CLOTHES":
-        return "여성의류";
-      case "MEN_STUFF_AND_CLOTHES":
-        return "남성패션/잡화";
-      case "GAME_AND_HOBBIES":
-        return "게임/취미";
-      case "BEAUTY_AND_COSMETICS":
-        return "뷰티/미용";
-      case "PET":
-        return "반려동물용품";
-      case "BOOKS_AND_TICKETS_AND_RECORDS":
-        return "도서/티켓/음반";
-      case "BOTANICAL":
-        return "식물";
-      case "ETC":
-        return "기타 중고물품";
-      case "I_AM_BUYING":
-        return "삽니다";
-      default:
-        break;
+  const onClickHeart = async () => {
+    if (isHeartClicked) {
+      try {
+        await requester.delete(`products/${id}/likes/`);
+        setIsHeartClicked(false);
+      } catch (e) {}
+    } else {
+      if (currentArticle?.status === SalesStatus.SOLD_OUT) {
+        toast.error("거래 완료된 게시물은 관심 목록에 넣을 수 없습니다.");
+      } else {
+        try {
+          await requester.post(`/products/${id}/likes/`);
+          setIsHeartClicked(true);
+        } catch (e) {}
+      }
     }
   };
+  const onClickProfileImg = () => {
+    navigate(`/profile/${name}`);
+  };
+
   const kidsAgeFormat = (
     ages: (
       | "ZERO_TO_SIX_MONTH"
@@ -260,11 +281,36 @@ const Article = () => {
     } else navigate(`/request/${id}`);
   };
   const handleRequest = () => {
-    if (currentArticle) {
-      setInputs({ ...inputs, suggested_price: `${currentArticle.price}` });
+    if (currentArticle?.status === SalesStatus.SOLD_OUT) {
+      toast.error("거래 완료된 게시물에는 거래 요청을 할 수 없어요.");
+    } else if (
+      !user ||
+      !(user.is_first_location_active && !user.first_location_verified) ||
+      !user.second_location_verified
+    ) {
+      toast.error("거래 요청을 하기 위해서는 지역 인증을 해야해요.");
+    } else {
+      if (currentArticle) {
+        setInputs({ ...inputs, suggested_price: `${currentArticle.price}` });
+      }
+      setSuggest(false);
+      setRequestModal(true);
     }
-    setSuggest(false);
-    setRequestModal(true);
+  };
+  const handleRequestSuggest = () => {
+    if (currentArticle?.status === SalesStatus.SOLD_OUT) {
+      toast.error("거래 완료된 게시물에는 거래 요청을 할 수 없어요.");
+    } else if (
+      !user ||
+      !(user.is_first_location_active && !user.first_location_verified) ||
+      !user.second_location_verified
+    ) {
+      toast.error("거래 요청을 하기 위해서는 지역 인증을 해야해요.");
+    } else {
+      setSuggest(true);
+      setInputs({ suggested_price: "", message: "" });
+      setRequestModal(true);
+    }
   };
   const handlePriceChange: ChangeEventHandler<
     HTMLInputElement | HTMLSelectElement
@@ -287,15 +333,31 @@ const Article = () => {
   const handleConfirm = () => {
     if (currentArticle) {
       if (inputs.suggested_price) {
-        requester
-          .post(`/products/${currentArticle.id}/purchases/`, {
-            suggested_price: inputs.suggested_price,
-            message: inputs.message,
-          })
-          .catch((e) => {
-            console.log(e.response);
-          });
-        setRequestModal(false);
+        if (parseInt(inputs.suggested_price) !== currentArticle.price) {
+          requester
+            .post(`/purchase-orders/`, {
+              suggested_price: inputs.suggested_price,
+              message: inputs.message,
+              product_id: currentArticle.id,
+            })
+            .catch((e) => {
+              console.log(e.response);
+            });
+          setRequestModal(false);
+          setInputs({ suggested_price: "", message: "" });
+        } else {
+          requester
+            .post(`/purchase-orders/`, {
+              suggested_price: null,
+              message: inputs.message,
+              product_id: currentArticle.id,
+            })
+            .catch((e) => {
+              console.log(e.response);
+            });
+          setRequestModal(false);
+          setInputs({ suggested_price: "", message: "" });
+        }
       } else {
         toast.error("가격은 반드시 입력해야 해요");
       }
@@ -335,11 +397,15 @@ const Article = () => {
           />
         </div>
         <div className={styles.footer}>
-          <img
-            className={styles.heart}
-            src={isHeartClicked ? redHeartIcon : blackHeartIcon}
-            onClick={onClickHeart}
-          />
+          {isSeller ? (
+            <img className={styles.heart} src={character} />
+          ) : (
+            <img
+              className={styles.heart}
+              src={isHeartClicked ? redHeartIcon : blackHeartIcon}
+              onClick={onClickHeart}
+            />
+          )}
           <h1 className={styles.price}>
             {currentArticle?.price !== 0 &&
               currentArticle?.price.toLocaleString("ko-KR") + "원"}
@@ -347,17 +413,10 @@ const Article = () => {
           </h1>
           {isSeller ? (
             <p className={styles.priceProposal} onClick={changeToRequests}>
-              가격제안 {currentArticle?.price_suggestions}명
+              거래요청 {currentArticle?.chats}명
             </p>
           ) : (
-            <p
-              className={styles.priceProposal}
-              onClick={() => {
-                setSuggest(true);
-                setInputs({ suggested_price: "", message: "" });
-                setRequestModal(true);
-              }}
-            >
+            <p className={styles.priceProposal} onClick={handleRequestSuggest}>
               가격 제안하기
             </p>
           )}
@@ -377,7 +436,7 @@ const Article = () => {
           </div>
           <div className={styles.profile}>
             <img
-              src={"currentArticle?.profileImg"}
+              src={user?.image_url ? user.image_url : ic_profile}
               className={styles.profileImg}
               onClick={onClickProfileImg}
             />
@@ -526,9 +585,10 @@ const Article = () => {
               <>
                 <p className={styles2.title}>가격 제안하기</p>
                 <p className={styles2.contents}>
-                  구매하고 싶은 가격을 입력하세요. 판매자가 올린 가격{" "}
+                  구매하고 싶은 가격을 입력하세요. <br />
+                  판매자가 올린 가격{" "}
                   {currentArticle?.price.toLocaleString("ko-KR")}원에 비해 너무
-                  높거나 낮은 가격을 적으면 거래가 어려울 수 있어요.
+                  높거나 낮은 가격을 적으면 거래가 성사되기 어려워요.
                 </p>
                 <input
                   name="price"
@@ -555,7 +615,8 @@ const Article = () => {
                 <p className={styles2.title}>정가에 구매 요청하기</p>
                 <p className={styles2.contents}>
                   메시지를 정성껏 적어 보내면 거래가 성사될 가능성이 더
-                  높아질거에요. 판매자가 올린 가격{" "}
+                  높아질거에요. <br />
+                  판매자가 올린 가격{" "}
                   {currentArticle?.price.toLocaleString("ko-KR")}원에
                   구매하시려면 확인 버튼을 눌러주세요.
                 </p>
@@ -575,6 +636,7 @@ const Article = () => {
               className={styles2.cancelButton}
               onClick={() => {
                 setRequestModal(false);
+                setInputs({ suggested_price: "", message: "" });
               }}
             >
               닫기

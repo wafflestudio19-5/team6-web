@@ -1,13 +1,7 @@
 import styles from "./Settings.module.scss";
 import styles2 from "./Withdrawal.module.scss";
 import backArrow from "../../../icons/leftArrow.png";
-import {
-  ChangeEventHandler,
-  CSSProperties,
-  Dispatch,
-  SetStateAction,
-  useState,
-} from "react";
+import { ChangeEventHandler, Dispatch, SetStateAction, useState } from "react";
 import Select, {
   GroupBase,
   OptionsOrGroups,
@@ -16,6 +10,7 @@ import Select, {
 } from "react-select";
 import requester from "../../../apis/requester";
 import { useNavigate } from "react-router-dom";
+import { useUserState } from "../../../context/user-context";
 
 type OptionType = {
   value: string;
@@ -91,6 +86,7 @@ const Withdrawal = (props: {
   const [selected, setSelected] = useState(options[0]);
   const [reason, setReason] = useState("");
   const navigate = useNavigate();
+  const user = useUserState();
 
   const handleSelect = (
     option: SingleValue<OptionType | GroupBase<OptionType>>
@@ -124,10 +120,11 @@ const Withdrawal = (props: {
         <div className={styles.pageName}>탈퇴하기</div>
       </div>
       <div className={styles2.wrapper}>
-        <h3 className={styles2.title}>'유저 이름'님 탈퇴를 원하시나요?</h3>
+        <h3 className={styles2.title}>{user?.nickname}님 탈퇴를 원하시나요?</h3>
         <p className={styles2.contents}>
           계정을 삭제하면 매너온도, 게시글, 관심, 채팅 등 모든 활동 정보가
-          삭제됩니다. 계정 삭제 후 7일간 다시 가입할 수 없어요.
+          삭제됩니다. <br />
+          계정 삭제 후 7일간 다시 가입할 수 없어요.
         </p>
         <h3 className={styles2.title}>계정을 삭제하려는 이유를 알려주세요.</h3>
         <Select

@@ -5,7 +5,7 @@ const MannerTemperature = ({
   activeLocation,
   verified,
 }: {
-  activeLocation: string;
+  activeLocation: string | null;
   verified: boolean;
 }) => {
   return (

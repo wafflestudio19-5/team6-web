@@ -9,10 +9,10 @@ export type UserDto = {
   first_location?: string;
   first_range_of_location?: RangeOfLocation;
   first_location_verified: boolean;
-  is_active: boolean;
-  is_first_location_active: boolean;
   second_location?: string;
   second_range_of_location?: RangeOfLocation;
   second_location_verified: boolean;
-  is_first: boolean;
+  is_first_location_active: boolean;
+  kakao_status: string | null;
+  is_active: boolean;
 };
