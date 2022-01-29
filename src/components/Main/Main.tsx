@@ -32,9 +32,7 @@ const Main = () => {
     requester
       .get("/users/me/")
       .then((res) => {
-        if (res.data.kakao_status === "INVALID") {
-          setUser(res.data);
-        }
+        setUser(res.data);
       })
       .catch(() => {
         toast.error("프로필 가져오기 오류");
